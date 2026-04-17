@@ -1,0 +1,18 @@
+{
+  "name": "set-win32-priority-separation",
+  "title": {
+    "vi": "Tối ưu ưu tiên CPU",
+    "en": "Optimize CPU Priority"
+  },
+  "deepDescription": {
+    "vi": "Đặt khóa registry 'Win32PrioritySeparation' để ưu tiên tiến trình foreground, tăng cảm giác phản hồi nhanh.",
+    "en": "Adjusts Win32PrioritySeparation for responsiveness."
+  },
+  "description": {
+    "vi": "Điều chỉnh Win32PrioritySeparation để tăng độ phản hồi.",
+    "en": "Adjusts Win32PrioritySeparation for responsiveness."
+  },
+  "category": [
+    "Performance"
+  ]
+}

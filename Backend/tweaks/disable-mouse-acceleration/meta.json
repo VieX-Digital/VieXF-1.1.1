@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Tắt gia tốc chuột",
+    "en": "Disable Mouse Acceleration"
+  },
+  "name": "disable-mouse-acceleration",
+  "modal": "Thao tác này sẽ ghi đè thiết lập tăng tốc chuột mặc định của Windows.",
+  "description": {
+    "vi": "Tắt tính năng 'Enhance pointer precision' để chuột chính xác hơn.",
+    "en": "Disables 'Enhance pointer precision' for 1:1 aim."
+  },
+  "deepDescription": {
+    "vi": "Tắt tăng tốc chuột Windows bằng cách đặt MouseSpeed, MouseThreshold1 và MouseThreshold2 về 0, giúp con trỏ di chuyển tuyến tính và chính xác hơn.",
+    "en": "Disables 'Enhance pointer precision' for 1:1 aim."
+  },
+  "category": [
+    "Performance",
+    "Gaming"
+  ]
+}

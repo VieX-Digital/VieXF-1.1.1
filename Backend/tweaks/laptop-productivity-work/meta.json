@@ -1,0 +1,20 @@
+{
+    "title": {
+        "vi": "Tối ưu hóa Laptop (Văn phòng)",
+        "en": "Laptop Productivity Optimization"
+    },
+    "name": "laptop-productivity-work",
+    "description": {
+        "vi": "Tối ưu hóa pin và nhiệt độ cho tác vụ văn phòng. Giữ lại in ấn, update.",
+        "en": "Optimizes battery and thermals for office tasks. Keeps printing and updates enabled."
+    },
+    "deepDescription": {
+        "vi": "Chế độ này tập trung vào sự ổn định và thời lượng pin. Nó loại bỏ các ứng dụng rác không cần thiết nhưng giữ nguyên các tính năng quan trọng như Windows Update, Defender, và In ấn.",
+        "en": "This mode focuses on stability and battery life. It removes unnecessary bloatware but keeps critical features like Windows Update, Defender, and Printing intact."
+    },
+    "recommended": true,
+    "category": [
+        "Productivity",
+        "Battery"
+    ]
+}

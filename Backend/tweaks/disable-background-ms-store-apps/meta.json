@@ -1,0 +1,19 @@
+{
+  "title": {
+    "vi": "Tắt ứng dụng Store chạy ngầm",
+    "en": "Disable Background Store Apps"
+  },
+  "name": "disable-background-ms-store-apps",
+  "category": [
+    "Performance",
+    "Privacy"
+  ],
+  "description": {
+    "vi": "Ngăn các ứng dụng Microsoft Store chạy ngầm.",
+    "en": "Prevents Store apps from running in background."
+  },
+  "deepDescription": {
+    "vi": "Tắt mọi hoạt động nền của ứng dụng UWP bằng cách đặt 'GlobalUserDisabled' thành 1 dưới khóa registry BackgroundAccessApplications của người dùng hiện tại, tạo khóa nếu chưa có.",
+    "en": "Prevents Store apps from running in background."
+  }
+}

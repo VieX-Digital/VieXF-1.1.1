@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Tắt chế độ ngủ đông",
+    "en": "Disable Hibernation"
+  },
+  "name": "disable-hibernation",
+  "category": [
+    "Performance",
+    "General"
+  ],
+  "warning": "Không khuyến nghị cho laptop!",
+  "description": {
+    "vi": "Tắt chế độ ngủ đông và xóa file hiberfil.sys.",
+    "en": "Disables hibernation and deletes hiberfil.sys."
+  },
+  "deepDescription": {
+    "vi": "Tắt hibernation ở cấp hệ thống bằng powercfg.exe, xóa hiberfil.sys để giải phóng dung lượng và có thể giúp tắt máy nhanh hơn.",
+    "en": "Disables hibernation and deletes hiberfil.sys."
+  }
+}

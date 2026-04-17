@@ -1,0 +1,23 @@
+{
+    "title": {
+        "vi": "Ultra Debloat (một chạm)",
+        "en": "Ultra Debloat (one-click)"
+    },
+    "name": "ultra-debloat",
+    "tier": "free",
+    "description": {
+        "vi": "Gói tối ưu miễn phí: gỡ bloatware, tác vụ nền, dịch vụ an toàn, nguồn, BCD, độ trễ mạng & multimedia.",
+        "en": "Free bundle: remove bloat apps & tasks, tune safe services, power, BCD, network latency & multimedia scheduling."
+    },
+    "deepDescription": {
+        "vi": "Gồm: AppX/Provisioned cleanup, Scheduled Tasks telemetry, dịch vụ nền (có danh sách bảo vệ), Startup Run, gói nguồn Ultimate/High, BCD disabledynamictick + useplatformtick, Win32PrioritySeparation & SystemProfile Games, TCP global (TcpAckFrequency), tắt Game DVR overhead, Widgets/Copilot taskbar, GPU scaling gợi ý. Có rollback qua VieXF (unapply).",
+        "en": "Includes: AppX cleanup, telemetry tasks, protected-service tuning, startup cleanup, Ultimate/High power, BCD tweaks, scheduler/multimedia Games profile, TCP latency-friendly globals, Game DVR off, taskbar widgets, GPU scaling hints. Roll back via VieXF unapply."
+    },
+    "recommended": true,
+    "top": true,
+    "category": [
+        "Remember",
+        "Performance",
+        "Gaming"
+    ]
+}

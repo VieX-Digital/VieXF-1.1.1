@@ -1,0 +1,21 @@
+{
+    "title": {
+        "vi": "Tối ưu Discord và giảm RAM",
+        "en": "Optimize Discord and reduce RAM"
+    },
+    "name": "optimize-dscs",
+    "category": [
+        "Network",
+        "Gaming"
+    ],
+    "restart": true,
+    "updatedversion": "3.0.0",
+    "description": {
+        "vi": "Tối ưu hóa Discord và giảm RAM.",
+        "en": "Optimizes Discord and reduce RAM."
+    },
+    "deepDescription": {
+        "vi": "Tắt các tính năng gây trễ, bật fast open, đẩy tác vụ mạng xuống phần cứng, tinh chỉnh kiểm soát tắc nghẽn và đặt MTU tối ưu nhằm tối đa tốc độ, giảm tải CPU và tăng phản hồi cho gaming/lướt mạng hiệu năng cao.",
+        "en": "Disable latency-causing features, enable fast open, offload network tasks to hardware, tune congestion control, and set optimal MTU to maximize speed, reduce CPU load, and increase responsiveness for gaming/high-performance browsing."
+    }
+}

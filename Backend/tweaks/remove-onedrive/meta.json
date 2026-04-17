@@ -1,0 +1,21 @@
+{
+  "title": {
+    "vi": "Gỡ OneDrive",
+    "en": "Remove OneDrive"
+  },
+  "name": "remove-onedrive",
+  "category": [
+    "Performance",
+    "General",
+    "Privacy"
+  ],
+  "description": {
+    "vi": "Gỡ bỏ hoàn toàn OneDrive khỏi hệ thống.",
+    "en": "Uninstalls OneDrive completely."
+  },
+  "deepDescription": {
+    "vi": "Dùng registry, thao tác file và tiến trình để gỡ OneDrive, dọn phần còn sót và đưa thiết lập về mặc định—giải phóng RAM, CPU và I/O bằng cách bỏ tác vụ đồng bộ khởi động nền.",
+    "en": "Uninstalls OneDrive completely."
+  },
+  "modal": "Thao tác này sẽ gỡ OneDrive khỏi máy. Bạn có thể cài lại sau nếu cần. Các file OneDrive cũng được chuyển về thư mục người dùng."
+}

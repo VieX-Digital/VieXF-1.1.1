@@ -1,0 +1,26 @@
+{
+  "title": {
+    "vi": "Bật Game Mode",
+    "en": "Enable Game Mode"
+  },
+  "name": "enable-game-mode",
+  "category": [
+    "General",
+    "Performance",
+    "Gaming"
+  ],
+  "description": {
+    "vi": "Đảm bảo chế độ Game Mode được bật.",
+    "en": "Ensures Windows Game Mode is ON."
+  },
+  "deepDescription": {
+    "vi": "Bật Game Mode để cải thiện hiệu năng và giảm độ trễ. Không phải ai cũng thấy tăng FPS, thậm chí có thể kém hơn; nên thử bật/tắt để xem có hợp với máy bạn không.",
+    "en": "Ensures Windows Game Mode is ON."
+  },
+  "links": [
+    {
+      "name": "Game Mode (Microsoft)",
+      "url": "https://support.xbox.com/en-US/help/games-apps/game-setup-and-play/use-game-mode-gaming-on-pc"
+    }
+  ]
+}

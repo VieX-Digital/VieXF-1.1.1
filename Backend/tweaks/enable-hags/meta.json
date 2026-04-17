@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Bật HAGS",
+    "en": "Enable HAGS"
+  },
+  "name": "enable-hags",
+  "category": [
+    "Performance",
+    "Gaming",
+    "GPU"
+  ],
+  "description": {
+    "vi": "Bật tính năng lập lịch GPU bằng phần cứng.",
+    "en": "Enables Hardware Accelerated GPU Scheduling."
+  },
+  "deepDescription": {
+    "vi": "Hardware-Accelerated GPU Scheduling (HAGS) chuyển phần quản lý/lên lịch GPU từ CPU sang GPU, giúp giảm tải CPU và có thể cải thiện hiệu năng lẫn độ trễ.",
+    "en": "Enables Hardware Accelerated GPU Scheduling."
+  }
+}

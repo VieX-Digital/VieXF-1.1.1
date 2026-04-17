@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Tắt Core Isolation (VBS)",
+    "en": "Disable Core Isolation"
+  },
+  "name": "disable-core-isolation",
+  "category": [
+    "Performance",
+    "Gaming"
+  ],
+  "restart": true,
+  "description": {
+    "vi": "Tắt tính năng bảo mật ảo hóa để tăng hiệu năng game.",
+    "en": "Disables VBS to improve gaming performance."
+  },
+  "deepDescription": {
+    "vi": "Tạo sẵn đường dẫn registry Hypervisor-Enforced Code Integrity dưới DeviceGuard nếu chưa có, và tắt HVCI bằng cách đặt Enabled thành 0 ở registry toàn hệ thống.",
+    "en": "Disables VBS to improve gaming performance."
+  }
+}

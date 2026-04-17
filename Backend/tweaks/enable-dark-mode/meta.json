@@ -1,0 +1,19 @@
+{
+  "title": {
+    "vi": "Bật chế độ tối",
+    "en": "Enable Dark Mode"
+  },
+  "name": "enable-dark-mode",
+  "category": [
+    "General",
+    "Appearance"
+  ],
+  "description": {
+    "vi": "Bắt buộc hệ thống và ứng dụng sử dụng chế độ tối.",
+    "en": "Forces system and apps to use Dark Mode."
+  },
+  "deepDescription": {
+    "vi": "Bật dark mode cho giao diện hệ thống và ứng dụng bằng cách đặt giá trị theme về 0 rồi khởi động lại Explorer để áp dụng; hoạt động cả trên Windows chưa kích hoạt nơi mục Personalization bị khóa.",
+    "en": "Forces system and apps to use Dark Mode."
+  }
+}

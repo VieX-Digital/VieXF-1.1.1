@@ -1,0 +1,16 @@
+{
+  "name": "set-powershell7-default",
+  "title": {
+    "vi": "Dùng PowerShell 7 mặc định",
+    "en": "Set PowerShell 7 Default"
+  },
+  "description": {
+    "vi": "Đặt PowerShell 7 (nếu có) làm mặc định.",
+    "en": "Sets PS7 as the default terminal shell."
+  },
+  "modal": "Tinh chỉnh này sẽ đổi profile mặc định Windows Terminal từ Windows PowerShell 5 sang PowerShell 7. PowerShell 7 sẽ được cài tự động nếu chưa có.",
+  "category": [
+    "General"
+  ],
+  "deep-description": "Tinh chỉnh này sửa **Windows Terminal settings.json** để PowerShell 7 trở thành profile mặc định thay cho Windows PowerShell 5. Nếu PowerShell 7 chưa được cài, nó sẽ được cài tự động qua `winget`. Bạn có thể hoàn tác bất cứ lúc nào để quay lại PowerShell 5."
+}

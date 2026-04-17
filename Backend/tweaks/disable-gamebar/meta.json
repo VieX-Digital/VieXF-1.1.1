@@ -1,0 +1,21 @@
+{
+  "title": {
+    "vi": "Tắt Xbox Game Bar",
+    "en": "Disable Game Bar"
+  },
+  "name": "disable-gamebar",
+  "warning": "Không bật nếu bạn dùng CPU X3D. Đọc tài liệu để biết thêm.",
+  "description": {
+    "vi": "Tắt tính năng Xbox Game Bar overlay.",
+    "en": "Disables Xbox Game Bar overlay."
+  },
+  "docs_warning": "Không bật nếu bạn dùng CPU X3D (ví dụ AMD Ryzen 7 9800X3D) vì Game Bar phân bổ core 3D V-Cache cho game. Tắt Game Bar để tránh điều này.",
+  "modal": "Không bật nếu bạn dùng CPU X3D (ví dụ AMD Ryzen 7 9800X3D) vì Game Bar phân bổ core 3D V-Cache cho game. Tắt Game Bar để tránh điều này.",
+  "deepDescription": {
+    "vi": "Thử gỡ Xbox Gaming Overlay bằng Remove-AppxPackage, dự phòng qua winget, nhằm loại bỏ dịch vụ và overlay Xbox chạy nền gây tốn CPU, RAM, GPU, giúp tăng hiệu năng và giảm gián đoạn trong game.",
+    "en": "Disables Xbox Game Bar overlay."
+  },
+  "category": [
+    "Performance"
+  ]
+}

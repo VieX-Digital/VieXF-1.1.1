@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Menu chuột phải cũ",
+    "en": "Classic Context Menu"
+  },
+  "name": "revert-context-menu",
+  "category": [
+    "General",
+    "Appearance"
+  ],
+  "recommended": true,
+  "description": {
+    "vi": "Khôi phục menu chuột phải kiểu Windows 10.",
+    "en": "Restores the Windows 10 style context menu."
+  },
+  "deepDescription": {
+    "vi": "Tạo khóa InprocServer32 trống dưới CLSID cụ thể để tắt menu chuột phải kiểu mới của Windows 11, khôi phục menu cổ điển và cải thiện độ phản hồi trong File Explorer.",
+    "en": "Restores the Windows 10 style context menu."
+  }
+}

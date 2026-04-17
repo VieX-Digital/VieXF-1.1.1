@@ -1,0 +1,23 @@
+{
+  "title": {
+    "vi": "VieXF Pro — Aggressive stack",
+    "en": "VieXF Pro — Aggressive stack"
+  },
+  "name": "vie-amx",
+  "tier": "pro",
+  "description": {
+    "vi": "Chạy toàn bộ Ultra Debloat trước; Pro thêm lớp service/registry mạnh + backup C:\\VieXF.",
+    "en": "Runs full Ultra Debloat first; Pro adds aggressive services/registry layer + C:\\VieXF backup."
+  },
+  "deepDescription": {
+    "vi": "Luôn áp dụng cùng nội dung tweak Ultra Debloat (an toàn hơn). Với bản Pro, thêm profile OriginalAggressive: tắt nhiều dịch vụ (có thể ảnh hưởng Wi‑Fi, in, Windows Update). Chỉ bật khi chấp nhận rủi ro.",
+    "en": "Always applies the same Ultra Debloat stack first. With Pro, adds the OriginalAggressive profile (may affect Wi‑Fi, printing, updates). Enable only if you accept the risk."
+  },
+  "recommended": false,
+  "top": false,
+  "category": [
+    "Remember",
+    "Performance",
+    "Gaming"
+  ]
+}

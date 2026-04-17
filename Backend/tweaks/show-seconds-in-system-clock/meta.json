@@ -1,0 +1,18 @@
+{
+  "name": "show-seconds-in-taskbar-clock",
+  "title": {
+    "vi": "Hiện giây đồng hồ",
+    "en": "Show Seconds in Clock"
+  },
+  "description": {
+    "vi": "Hiển thị thêm số giây ở đồng hồ hệ thống.",
+    "en": "Adds seconds to the system tray clock."
+  },
+  "deep-description": "Bật hiển thị giây trên đồng hồ taskbar bằng cách đặt khóa registry `ShowSecondsInSystemClock`.\n\n**Cần khởi động lại Explorer.**",
+  "reversible": true,
+  "restart": true,
+  "category": [
+    "Appearance",
+    "General"
+  ]
+}

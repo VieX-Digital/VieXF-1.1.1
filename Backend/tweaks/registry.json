@@ -1,0 +1,804 @@
+{
+  "version": "2026-04-16T14:40:43.178Z",
+  "tweaks": [
+    {
+      "id": "align-taskbar-left",
+      "title": {
+        "vi": "Căn thanh taskbar sang trái",
+        "en": "Align Taskbar Left"
+      },
+      "description": {
+        "vi": "Căn thanh taskbar về phía bên trái màn hình.",
+        "en": "Aligns the taskbar to the left side."
+      },
+      "category": [
+        "General",
+        "Appearance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/align-taskbar-left",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/align-taskbar-left/meta.json"
+    },
+    {
+      "id": "detailed-bsod",
+      "title": {
+        "vi": "Màn hình xanh chi tiết",
+        "en": "Detailed BSOD"
+      },
+      "description": {
+        "vi": "Hiển thị thêm thông tin chi tiết khi gặp lỗi màn hình xanh.",
+        "en": "Shows more details on BSOD screens."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/detailed-bsod",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/detailed-bsod/meta.json"
+    },
+    {
+      "id": "disable-background-ms-store-apps",
+      "title": {
+        "vi": "Tắt ứng dụng Store chạy ngầm",
+        "en": "Disable Background Store Apps"
+      },
+      "description": {
+        "vi": "Ngăn các ứng dụng Microsoft Store chạy ngầm.",
+        "en": "Prevents Store apps from running in background."
+      },
+      "category": [
+        "Performance",
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-background-ms-store-apps",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-background-ms-store-apps/meta.json"
+    },
+    {
+      "id": "disable-copilot",
+      "title": {
+        "vi": "Tắt Windows Copilot",
+        "en": "Disable Copilot"
+      },
+      "description": {
+        "vi": "Vô hiệu hóa tính năng AI Copilot trên thanh taskbar.",
+        "en": "Disables the AI Copilot feature."
+      },
+      "category": [
+        "Performance",
+        "Privacy"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-copilot",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-copilot/meta.json"
+    },
+    {
+      "id": "disable-core-isolation",
+      "title": {
+        "vi": "Tắt Core Isolation (VBS)",
+        "en": "Disable Core Isolation"
+      },
+      "description": {
+        "vi": "Tắt tính năng bảo mật ảo hóa để tăng hiệu năng game.",
+        "en": "Disables VBS to improve gaming performance."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-core-isolation",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-core-isolation/meta.json"
+    },
+    {
+      "id": "disable-defender-rtp",
+      "title": {
+        "vi": "Tắt bảo vệ thời gian thực",
+        "en": "Disable Defender RTP"
+      },
+      "description": {
+        "vi": "Tắt tính năng bảo vệ thời gian thực của Windows Defender.",
+        "en": "Disables Windows Defender Real-time Protection."
+      },
+      "category": [
+        "Performance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-defender-rtp",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-defender-rtp/meta.json"
+    },
+    {
+      "id": "disable-dynamic-ticking",
+      "title": {
+        "vi": "Tắt Dynamic Ticking",
+        "en": "Disable Dynamic Ticking"
+      },
+      "description": {
+        "vi": "Tắt tính năng dynamic ticking để ổn định độ trễ.",
+        "en": "Disables dynamic ticking for stable latency."
+      },
+      "category": [
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-dynamic-ticking",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-dynamic-ticking/meta.json"
+    },
+    {
+      "id": "disable-fast-startup",
+      "title": {
+        "vi": "Tắt khởi động nhanh",
+        "en": "Disable Fast Startup"
+      },
+      "description": {
+        "vi": "Tắt Fast Startup để sửa lỗi và giải phóng dung lượng.",
+        "en": "Disables Fast Startup to free up hibernation file."
+      },
+      "category": [
+        "Performance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-fast-startup",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-fast-startup/meta.json"
+    },
+    {
+      "id": "disable-gamebar",
+      "title": {
+        "vi": "Tắt Xbox Game Bar",
+        "en": "Disable Game Bar"
+      },
+      "description": {
+        "vi": "Tắt tính năng Xbox Game Bar overlay.",
+        "en": "Disables Xbox Game Bar overlay."
+      },
+      "category": [
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-gamebar",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-gamebar/meta.json"
+    },
+    {
+      "id": "disable-hibernation",
+      "title": {
+        "vi": "Tắt chế độ ngủ đông",
+        "en": "Disable Hibernation"
+      },
+      "description": {
+        "vi": "Tắt chế độ ngủ đông và xóa file hiberfil.sys.",
+        "en": "Disables hibernation and deletes hiberfil.sys."
+      },
+      "category": [
+        "Performance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-hibernation",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-hibernation/meta.json"
+    },
+    {
+      "id": "disable-location-tracking",
+      "title": {
+        "vi": "Tắt định vị",
+        "en": "Disable Location Tracking"
+      },
+      "description": {
+        "vi": "Tắt tính năng theo dõi vị trí toàn hệ thống.",
+        "en": "Disables system-wide location tracking."
+      },
+      "category": [
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-location-tracking",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-location-tracking/meta.json"
+    },
+    {
+      "id": "disable-lockscreen-tips",
+      "title": {
+        "vi": "Tắt gợi ý màn hình khóa",
+        "en": "Disable Lockscreen Tips"
+      },
+      "description": {
+        "vi": "Xóa bỏ các gợi ý và mẹo vặt trên màn hình khóa.",
+        "en": "Removes fun facts and tips from lockscreen."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-lockscreen-tips",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-lockscreen-tips/meta.json"
+    },
+    {
+      "id": "disable-mouse-acceleration",
+      "title": {
+        "vi": "Tắt gia tốc chuột",
+        "en": "Disable Mouse Acceleration"
+      },
+      "description": {
+        "vi": "Tắt tính năng 'Enhance pointer precision' để chuột chính xác hơn.",
+        "en": "Disables 'Enhance pointer precision' for 1:1 aim."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-mouse-acceleration",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-mouse-acceleration/meta.json"
+    },
+    {
+      "id": "disable-wifi-sense",
+      "title": {
+        "vi": "Tắt Wi-Fi Sense",
+        "en": "Disable Wi-Fi Sense"
+      },
+      "description": {
+        "vi": "Ngăn chặn chia sẻ thông tin đăng nhập Wi-Fi.",
+        "en": "Prevents sharing Wi-Fi credentials."
+      },
+      "category": [
+        "Privacy",
+        "Network",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-wifi-sense",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-wifi-sense/meta.json"
+    },
+    {
+      "id": "enable-dark-mode",
+      "title": {
+        "vi": "Bật chế độ tối",
+        "en": "Enable Dark Mode"
+      },
+      "description": {
+        "vi": "Bắt buộc hệ thống và ứng dụng sử dụng chế độ tối.",
+        "en": "Forces system and apps to use Dark Mode."
+      },
+      "category": [
+        "General",
+        "Appearance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-dark-mode",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-dark-mode/meta.json"
+    },
+    {
+      "id": "enable-end-task-right-click",
+      "title": {
+        "vi": "Bật End Task ở Taskbar",
+        "en": "Enable Right-Click End Task"
+      },
+      "description": {
+        "vi": "Thêm tùy chọn 'End Task' vào menu chuột phải thanh taskbar.",
+        "en": "Adds 'End Task' option to Taskbar context menu."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-end-task-right-click",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-end-task-right-click/meta.json"
+    },
+    {
+      "id": "enable-game-mode",
+      "title": {
+        "vi": "Bật Game Mode",
+        "en": "Enable Game Mode"
+      },
+      "description": {
+        "vi": "Đảm bảo chế độ Game Mode được bật.",
+        "en": "Ensures Windows Game Mode is ON."
+      },
+      "category": [
+        "General",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-game-mode",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-game-mode/meta.json"
+    },
+    {
+      "id": "enable-hags",
+      "title": {
+        "vi": "Bật HAGS",
+        "en": "Enable HAGS"
+      },
+      "description": {
+        "vi": "Bật tính năng lập lịch GPU bằng phần cứng.",
+        "en": "Enables Hardware Accelerated GPU Scheduling."
+      },
+      "category": [
+        "Performance",
+        "Gaming",
+        "GPU"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-hags",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-hags/meta.json"
+    },
+    {
+      "id": "enable-optimization-for-windowed-games",
+      "title": {
+        "vi": "Tối ưu game cửa sổ",
+        "en": "Optimize Windowed Games"
+      },
+      "description": {
+        "vi": "Bật các tối ưu hóa cho game chạy ở chế độ cửa sổ.",
+        "en": "Enables optimizations for windowed games."
+      },
+      "category": [
+        "General",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-optimization-for-windowed-games",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-optimization-for-windowed-games/meta.json"
+    },
+    {
+      "id": "laptop-productivity-work",
+      "title": {
+        "vi": "Tối ưu hóa Laptop (Văn phòng)",
+        "en": "Laptop Productivity Optimization"
+      },
+      "description": {
+        "vi": "Tối ưu hóa pin và nhiệt độ cho tác vụ văn phòng. Giữ lại in ấn, update.",
+        "en": "Optimizes battery and thermals for office tasks. Keeps printing and updates enabled."
+      },
+      "category": [
+        "Productivity",
+        "Battery"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/laptop-productivity-work",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/laptop-productivity-work/meta.json"
+    },
+    {
+      "id": "menu-show-delay-zero",
+      "title": {
+        "vi": "Menu hiện tức thì",
+        "en": "Zero Menu Delay"
+      },
+      "description": {
+        "vi": "Giảm độ trễ hiển thị menu xuống 0ms.",
+        "en": "Reduces menu show delay to 0ms."
+      },
+      "category": [
+        "Performance",
+        "Appearance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/menu-show-delay-zero",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/menu-show-delay-zero/meta.json"
+    },
+    {
+      "id": "optimize-cpu-process",
+      "title": {
+        "vi": "Giảm tải CPU Process",
+        "en": "Reduce CPU Process Load"
+      },
+      "description": {
+        "vi": "Tắt SysMain, tối ưu registry để giảm tải CPU từ tiến trình nền, ưu tiên xử lý và tắt Power Throttling.",
+        "en": "Disables SysMain, optimizes registry to reduce background process CPU load, enhances processor scheduling, and disables Power Throttling."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-cpu-process",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-cpu-process/meta.json"
+    },
+    {
+      "id": "optimize-dscs",
+      "title": {
+        "vi": "Tối ưu Discord và giảm RAM",
+        "en": "Optimize Discord and reduce RAM"
+      },
+      "description": {
+        "vi": "Tối ưu hóa Discord và giảm RAM.",
+        "en": "Optimizes Discord and reduce RAM."
+      },
+      "category": [
+        "Network",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "updatedversion": "3.0.0",
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-dscs",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-dscs/meta.json"
+    },
+    {
+      "id": "optimize-network-settings",
+      "title": {
+        "vi": "Tối ưu mạng",
+        "en": "Optimize Network"
+      },
+      "description": {
+        "vi": "Tối ưu hóa các thiết lập TCP/IP cho chơi game.",
+        "en": "Optimizes TCP/IP settings for gaming."
+      },
+      "category": [
+        "Network",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "updatedversion": "3.0.0",
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-network-settings",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-network-settings/meta.json"
+    },
+    {
+      "id": "optimize-nvidia-settings",
+      "title": {
+        "vi": "Tối ưu cài đặt NVIDIA",
+        "en": "Optimize NVIDIA Settings"
+      },
+      "description": {
+        "vi": "Áp dụng các cài đặt NVIDIA được khuyến nghị để tối ưu hiệu suất chơi game và giảm độ trễ.",
+        "en": "Applies recommended NVIDIA settings for optimal gaming performance and reduced latency."
+      },
+      "category": [
+        "Performance",
+        "GPU",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": false,
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-nvidia-settings",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-nvidia-settings/meta.json"
+    },
+    {
+      "id": "pc-productivity-work",
+      "title": {
+        "vi": "Tối ưu hóa PC (Văn phòng)",
+        "en": "PC Workstation Optimization"
+      },
+      "description": {
+        "vi": "Hiệu năng ổn định cho máy bàn. Tắt tiết kiệm điện không cần thiết.",
+        "en": "Stable performance for desktops. Disables unnecessary power saving."
+      },
+      "category": [
+        "Productivity",
+        "Performance"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/pc-productivity-work",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/pc-productivity-work/meta.json"
+    },
+    {
+      "id": "remove-gaming-apps",
+      "title": {
+        "vi": "Gỡ ứng dụng game rác",
+        "en": "Remove Gaming Bloat"
+      },
+      "description": {
+        "vi": "Gỡ bỏ các ứng dụng dùng thử Xbox không cần thiết.",
+        "en": "Removes Xbox trial apps and overlays."
+      },
+      "category": [
+        "Performance",
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": false,
+      "docsurl": "https://docs.getvie.net/tweaks/remove-gaming-apps",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/remove-gaming-apps/meta.json"
+    },
+    {
+      "id": "remove-onedrive",
+      "title": {
+        "vi": "Gỡ OneDrive",
+        "en": "Remove OneDrive"
+      },
+      "description": {
+        "vi": "Gỡ bỏ hoàn toàn OneDrive khỏi hệ thống.",
+        "en": "Uninstalls OneDrive completely."
+      },
+      "category": [
+        "Performance",
+        "General",
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/remove-onedrive",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/remove-onedrive/meta.json"
+    },
+    {
+      "id": "revert-context-menu",
+      "title": {
+        "vi": "Menu chuột phải cũ",
+        "en": "Classic Context Menu"
+      },
+      "description": {
+        "vi": "Khôi phục menu chuột phải kiểu Windows 10.",
+        "en": "Restores the Windows 10 style context menu."
+      },
+      "category": [
+        "General",
+        "Appearance"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/revert-context-menu",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/revert-context-menu/meta.json"
+    },
+    {
+      "id": "run-disk-cleanup",
+      "title": {
+        "vi": "Dọn dẹp ổ đĩa",
+        "en": "Run Disk Cleanup"
+      },
+      "description": {
+        "vi": "Chạy công cụ dọn dẹp ổ đĩa của Windows.",
+        "en": "Runs native Disk Cleanup utility."
+      },
+      "category": [
+        "General",
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/run-disk-cleanup",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/run-disk-cleanup/meta.json"
+    },
+    {
+      "id": "set-powershell7-default",
+      "title": {
+        "vi": "Dùng PowerShell 7 mặc định",
+        "en": "Set PowerShell 7 Default"
+      },
+      "description": {
+        "vi": "Đặt PowerShell 7 (nếu có) làm mặc định.",
+        "en": "Sets PS7 as the default terminal shell."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-powershell7-default",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-powershell7-default/meta.json"
+    },
+    {
+      "id": "set-services-to-manual",
+      "title": {
+        "vi": "Chuyển Services sang Manual",
+        "en": "Set Services to Manual"
+      },
+      "description": {
+        "vi": "Chuyển các dịch vụ không cần thiết sang khởi động thủ công.",
+        "en": "Sets unnecessary services to Manual start."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-services-to-manual",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-services-to-manual/meta.json"
+    },
+    {
+      "id": "set-time-utc",
+      "title": {
+        "vi": "Đặt giờ UTC",
+        "en": "Set Time to UTC"
+      },
+      "description": {
+        "vi": "Đặt đồng hồ phần cứng sang UTC (tốt cho dual boot).",
+        "en": "Sets hardware clock to UTC (for dual boot)."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-time-utc",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-time-utc/meta.json"
+    },
+    {
+      "id": "set-win32-priority-separation",
+      "title": {
+        "vi": "Tối ưu ưu tiên CPU",
+        "en": "Optimize CPU Priority"
+      },
+      "description": {
+        "vi": "Điều chỉnh Win32PrioritySeparation để tăng độ phản hồi.",
+        "en": "Adjusts Win32PrioritySeparation for responsiveness."
+      },
+      "category": [
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-win32-priority-separation",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-win32-priority-separation/meta.json"
+    },
+    {
+      "id": "show-seconds-in-taskbar-clock",
+      "title": {
+        "vi": "Hiện giây đồng hồ",
+        "en": "Show Seconds in Clock"
+      },
+      "description": {
+        "vi": "Hiển thị thêm số giây ở đồng hồ hệ thống.",
+        "en": "Adds seconds to the system tray clock."
+      },
+      "category": [
+        "Appearance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/show-seconds-in-system-clock",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/show-seconds-in-system-clock/meta.json"
+    },
+    {
+      "id": "ultimate-performance-plan",
+      "title": {
+        "vi": "Gói nguồn Ultimate",
+        "en": "Ultimate Performance Plan"
+      },
+      "description": {
+        "vi": "Kích hoạt gói nguồn Ultimate Performance.",
+        "en": "Enables Ultimate Performance power plan."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": true,
+      "top": true,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/ultimate-performance-plan",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/ultimate-performance-plan/meta.json"
+    },
+    {
+      "id": "ultra-debloat",
+      "title": {
+        "vi": "Ultra Debloat (một chạm)",
+        "en": "Ultra Debloat (one-click)"
+      },
+      "description": {
+        "vi": "Gói tối ưu miễn phí: gỡ bloatware, tác vụ nền, dịch vụ an toàn, nguồn, BCD, độ trễ mạng & multimedia.",
+        "en": "Free bundle: remove bloat apps & tasks, tune safe services, power, BCD, network latency & multimedia scheduling."
+      },
+      "category": [
+        "Remember",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": true,
+      "top": true,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/ultra-debloat",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/ultra-debloat/meta.json"
+    },
+    {
+      "id": "vie-amx",
+      "title": {
+        "vi": "VieXF Pro — Aggressive stack",
+        "en": "VieXF Pro — Aggressive stack"
+      },
+      "description": {
+        "vi": "Chạy toàn bộ Ultra Debloat trước; Pro thêm lớp service/registry mạnh + backup C:\\VieXF.",
+        "en": "Runs full Ultra Debloat first; Pro adds aggressive services/registry layer + C:\\VieXF backup."
+      },
+      "category": [
+        "Remember",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "pro",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/vie-amx",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/vie-amx/meta.json"
+    }
+  ]
+}

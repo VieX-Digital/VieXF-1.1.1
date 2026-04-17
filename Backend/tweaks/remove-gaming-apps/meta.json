@@ -1,0 +1,23 @@
+{
+  "title": {
+    "vi": "Gỡ ứng dụng game rác",
+    "en": "Remove Gaming Bloat"
+  },
+  "name": "remove-gaming-apps",
+  "description": {
+    "vi": "Gỡ bỏ các ứng dụng dùng thử Xbox không cần thiết.",
+    "en": "Removes Xbox trial apps and overlays."
+  },
+  "reversible": false,
+  "modal": "Bạn có thể cài lại các ứng dụng này trong Microsoft Store. Tìm: 'Xbox Game Bar' và 'Xbox App'.",
+  "category": [
+    "Performance",
+    "Privacy"
+  ],
+  "links": [
+    {
+      "name": "Cài lại Xbox App",
+      "url": "https://apps.microsoft.com/detail/9mv0b5hzvk9z"
+    }
+  ]
+}

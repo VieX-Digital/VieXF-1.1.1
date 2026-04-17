@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Tắt Wi-Fi Sense",
+    "en": "Disable Wi-Fi Sense"
+  },
+  "name": "disable-wifi-sense",
+  "category": [
+    "Privacy",
+    "Network",
+    "General"
+  ],
+  "description": {
+    "vi": "Ngăn chặn chia sẻ thông tin đăng nhập Wi-Fi.",
+    "en": "Prevents sharing Wi-Fi credentials."
+  },
+  "deepDescription": {
+    "vi": "Tắt các tính năng Wi-Fi Sense bằng cách đặt giá trị chính sách về 0, ngăn tự động kết nối hotspot mở và chặn báo cáo hotspot theo vị trí, tăng riêng tư và giảm hoạt động nền không mong muốn.",
+    "en": "Prevents sharing Wi-Fi credentials."
+  }
+}

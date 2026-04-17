@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Chuyển Services sang Manual",
+    "en": "Set Services to Manual"
+  },
+  "name": "set-services-to-manual",
+  "category": [
+    "Performance",
+    "Gaming"
+  ],
+  "recommended": true,
+  "description": {
+    "vi": "Chuyển các dịch vụ không cần thiết sang khởi động thủ công.",
+    "en": "Sets unnecessary services to Manual start."
+  },
+  "deepDescription": {
+    "vi": "Chỉnh kiểu khởi động của các dịch vụ đã chọn bằng Set-Service để tắt hoặc trì hoãn tiến trình không thiết yếu, giảm thời gian boot, CPU, RAM và hoạt động nền nhằm cải thiện hiệu năng tổng thể.",
+    "en": "Sets unnecessary services to Manual start."
+  }
+}

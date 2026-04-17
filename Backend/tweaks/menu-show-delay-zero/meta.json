@@ -1,0 +1,19 @@
+{
+  "name": "menu-show-delay-zero",
+  "title": {
+    "vi": "Menu hiện tức thì",
+    "en": "Zero Menu Delay"
+  },
+  "deepDescription": {
+    "vi": "Giảm thời gian trễ mở menu xuống 0ms để UI phản hồi nhanh hơn bằng cách chỉnh khóa registry 'MenuShowDelay'.",
+    "en": "Reduces menu show delay to 0ms."
+  },
+  "description": {
+    "vi": "Giảm độ trễ hiển thị menu xuống 0ms.",
+    "en": "Reduces menu show delay to 0ms."
+  },
+  "category": [
+    "Performance",
+    "Appearance"
+  ]
+}

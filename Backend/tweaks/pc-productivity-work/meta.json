@@ -1,0 +1,20 @@
+{
+    "title": {
+        "vi": "Tối ưu hóa PC (Văn phòng)",
+        "en": "PC Workstation Optimization"
+    },
+    "name": "pc-productivity-work",
+    "description": {
+        "vi": "Hiệu năng ổn định cho máy bàn. Tắt tiết kiệm điện không cần thiết.",
+        "en": "Stable performance for desktops. Disables unnecessary power saving."
+    },
+    "deepDescription": {
+        "vi": "Chế độ này tối ưu hóa hiệu năng cho công việc nặng trên máy bàn, giảm độ trễ hệ thống mà không hy sinh tính ổn định.",
+        "en": "This mode optimizes performance for heavy workloads on desktops, reducing system latency without sacrificing stability."
+    },
+    "recommended": true,
+    "category": [
+        "Productivity",
+        "Performance"
+    ]
+}

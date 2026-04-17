@@ -1,0 +1,19 @@
+{
+  "title": {
+    "vi": "Bật End Task ở Taskbar",
+    "en": "Enable Right-Click End Task"
+  },
+  "name": "enable-end-task-right-click",
+  "category": [
+    "General"
+  ],
+  "recommended": true,
+  "description": {
+    "vi": "Thêm tùy chọn 'End Task' vào menu chuột phải thanh taskbar.",
+    "en": "Adds 'End Task' option to Taskbar context menu."
+  },
+  "deepDescription": {
+    "vi": "Bật tùy chọn \"End Task\" trong menu chuột phải taskbar Windows 11 bằng cách đặt TaskbarEndTask = 1, cho phép đóng app treo trực tiếp từ taskbar không cần mở Task Manager.",
+    "en": "Adds 'End Task' option to Taskbar context menu."
+  }
+}

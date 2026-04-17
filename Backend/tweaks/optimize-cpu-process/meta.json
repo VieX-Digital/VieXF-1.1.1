@@ -1,0 +1,20 @@
+{
+  "name": "optimize-cpu-process",
+  "title": {
+    "vi": "Giảm tải CPU Process",
+    "en": "Reduce CPU Process Load"
+  },
+  "description": {
+    "vi": "Tắt SysMain, tối ưu registry để giảm tải CPU từ tiến trình nền, ưu tiên xử lý và tắt Power Throttling.",
+    "en": "Disables SysMain, optimizes registry to reduce background process CPU load, enhances processor scheduling, and disables Power Throttling."
+  },
+  "deepDescription": {
+    "vi": "Tắt dịch vụ SysMain gây tốn CPU/ổ cứng trên máy có SSD; đặt NtfsDisableLastAccessUpdate và DisablePagingExecutive để giảm I/O và giữ kernel trong RAM. Đồng thời, tăng cường ưu tiên xử lý cho các chương trình nền và tắt Power Throttling để đảm bảo CPU luôn hoạt động ở hiệu suất tối đa.",
+    "en": "Disables SysMain service that wastes CPU/disk on SSD systems; sets NtfsDisableLastAccessUpdate and DisablePagingExecutive to reduce I/O overhead and keep kernel in RAM. Additionally, it enhances processor scheduling for background programs and disables Power Throttling to ensure the CPU operates at maximum performance."
+  },
+  "category": [
+    "Performance",
+    "Gaming"
+  ],
+  "restart": true
+}

@@ -1,0 +1,19 @@
+{
+  "title": {
+    "vi": "Dọn dẹp ổ đĩa",
+    "en": "Run Disk Cleanup"
+  },
+  "name": "run-disk-cleanup",
+  "category": [
+    "General",
+    "Performance"
+  ],
+  "description": {
+    "vi": "Chạy công cụ dọn dẹp ổ đĩa của Windows.",
+    "en": "Runs native Disk Cleanup utility."
+  },
+  "deepDescription": {
+    "vi": "Chạy Disk Cleanup ở chế độ silent low-disk và xóa vĩnh viễn file update Windows cũ bằng DISM để giải phóng dung lượng và giảm rác hệ thống.",
+    "en": "Runs native Disk Cleanup utility."
+  }
+}

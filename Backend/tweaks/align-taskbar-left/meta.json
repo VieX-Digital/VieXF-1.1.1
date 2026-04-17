@@ -1,0 +1,19 @@
+{
+  "name": "align-taskbar-left",
+  "title": {
+    "vi": "Căn thanh taskbar sang trái",
+    "en": "Align Taskbar Left"
+  },
+  "deepDescription": {
+    "vi": "Buộc thanh taskbar Windows căn trái bằng cách chỉnh registry, đặt giá trị 'TaskbarAl' thành 0.",
+    "en": "Aligns the taskbar to the left side."
+  },
+  "description": {
+    "vi": "Căn thanh taskbar về phía bên trái màn hình.",
+    "en": "Aligns the taskbar to the left side."
+  },
+  "category": [
+    "General",
+    "Appearance"
+  ]
+}

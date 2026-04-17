@@ -1,0 +1,19 @@
+{
+  "title": {
+    "vi": "Tắt Dynamic Ticking",
+    "en": "Disable Dynamic Ticking"
+  },
+  "name": "disable-dynamic-ticking",
+  "category": [
+    "Performance"
+  ],
+  "warning": "Có thể tăng mức tiêu thụ điện.",
+  "description": {
+    "vi": "Tắt tính năng dynamic ticking để ổn định độ trễ.",
+    "en": "Disables dynamic ticking for stable latency."
+  },
+  "deepDescription": {
+    "vi": "Tắt Dynamic Ticking của Windows bằng cách đặt `disabledynamictick` thành `yes` với `bcdedit`, ngăn hệ thống dừng timer để giảm độ trễ nhập liệu và tăng độ mượt.",
+    "en": "Disables dynamic ticking for stable latency."
+  }
+}

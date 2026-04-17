@@ -1,0 +1,20 @@
+{
+  "title": {
+    "vi": "Tắt Windows Copilot",
+    "en": "Disable Copilot"
+  },
+  "name": "disable-copilot",
+  "category": [
+    "Performance",
+    "Privacy"
+  ],
+  "recommended": true,
+  "description": {
+    "vi": "Vô hiệu hóa tính năng AI Copilot trên thanh taskbar.",
+    "en": "Disables the AI Copilot feature."
+  },
+  "deepDescription": {
+    "vi": "Tìm và gỡ mọi gói AppX liên quan Microsoft Copilot cho tất cả người dùng bằng cách lọc tên gói chứa 'Microsoft.Copilot'.",
+    "en": "Disables the AI Copilot feature."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "title": {
+    "vi": "Đặt giờ UTC",
+    "en": "Set Time to UTC"
+  },
+  "name": "set-time-utc",
+  "category": [
+    "General"
+  ],
+  "description": {
+    "vi": "Đặt đồng hồ phần cứng sang UTC (tốt cho dual boot).",
+    "en": "Sets hardware clock to UTC (for dual boot)."
+  },
+  "deepDescription": {
+    "vi": "Chuyển hệ thống sang múi giờ UTC.",
+    "en": "Sets hardware clock to UTC (for dual boot)."
+  }
+}

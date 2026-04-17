@@ -1,0 +1,19 @@
+{
+  "title": {
+    "vi": "Tắt bảo vệ thời gian thực",
+    "en": "Disable Defender RTP"
+  },
+  "name": "disable-defender-rtp",
+  "category": [
+    "Performance",
+    "General"
+  ],
+  "description": {
+    "vi": "Tắt tính năng bảo vệ thời gian thực của Windows Defender.",
+    "en": "Disables Windows Defender Real-time Protection."
+  },
+  "deepDescription": {
+    "vi": "Đặt chính sách DisableRealtimeMonitoring thành true, yêu cầu Windows Security ngừng quét tập tin và tiến trình theo thời gian thực để giảm tải và cải thiện hiệu năng.",
+    "en": "Disables Windows Defender Real-time Protection."
+  }
+}

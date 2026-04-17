@@ -1,0 +1,956 @@
+{
+  "version": "2026-04-16T14:40:43.178Z",
+  "tweaks": [
+    {
+      "id": "align-taskbar-left",
+      "title": {
+        "vi": "Căn thanh taskbar sang trái",
+        "en": "Align Taskbar Left"
+      },
+      "description": {
+        "vi": "Căn thanh taskbar về phía bên trái màn hình.",
+        "en": "Aligns the taskbar to the left side."
+      },
+      "category": [
+        "General",
+        "Appearance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/align-taskbar-left",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/align-taskbar-left/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" -Name \"TaskbarAl\" -Type DWord -Value 0\n",
+        "unapply": "Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" -Name \"TaskbarAl\" -Type DWord -Value 1\n"
+      }
+    },
+    {
+      "id": "detailed-bsod",
+      "title": {
+        "vi": "Màn hình xanh chi tiết",
+        "en": "Detailed BSOD"
+      },
+      "description": {
+        "vi": "Hiển thị thêm thông tin chi tiết khi gặp lỗi màn hình xanh.",
+        "en": "Shows more details on BSOD screens."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/detailed-bsod",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/detailed-bsod/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKLM:\\System\\CurrentControlSet\\Control\\CrashControl\" -Name \"Value\" -Type DWord -Value 1\n",
+        "unapply": "Set-ItemProperty -Path \"HKLM:\\System\\CurrentControlSet\\Control\\CrashControl\" -Name \"Value\" -Type DWord -Value 0\n"
+      }
+    },
+    {
+      "id": "disable-background-ms-store-apps",
+      "title": {
+        "vi": "Tắt ứng dụng Store chạy ngầm",
+        "en": "Disable Background Store Apps"
+      },
+      "description": {
+        "vi": "Ngăn các ứng dụng Microsoft Store chạy ngầm.",
+        "en": "Prevents Store apps from running in background."
+      },
+      "category": [
+        "Performance",
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-background-ms-store-apps",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-background-ms-store-apps/meta.json",
+      "scripts": {
+        "apply": "$path = \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications\"\n$name = \"GlobalUserDisabled\"\n$newValue = 1\n  \n# Ensure the key exists\nIf (-Not (Test-Path $path)) {\n  New-Item -Path $path -Force | Out-Null\n}\n  \n# Set the value\nSet-ItemProperty -Path $path -Name $name -Type DWord -Value $newValue\n  \nWrite-Host \"$name set to $newValue (Background Access Disabled)\"",
+        "unapply": " $path = \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications\"\n  $name = \"GlobalUserDisabled\"\n  $originalValue = 0\n  \n  # Ensure the key exists\n  If (-Not (Test-Path $path)) {\n      New-Item -Path $path -Force | Out-Null\n  }\n  \n  # Revert the value\n  Set-ItemProperty -Path $path -Name $name -Type DWord -Value $originalValue\n  \n  Write-Host \"$name reverted to $originalValue (Background Access Restored)\" -ForegroundColor Yellow"
+      }
+    },
+    {
+      "id": "disable-copilot",
+      "title": {
+        "vi": "Tắt Windows Copilot",
+        "en": "Disable Copilot"
+      },
+      "description": {
+        "vi": "Vô hiệu hóa tính năng AI Copilot trên thanh taskbar.",
+        "en": "Disables the AI Copilot feature."
+      },
+      "category": [
+        "Performance",
+        "Privacy"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-copilot",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-copilot/meta.json",
+      "scripts": {
+        "apply": "Get-AppxPackage -AllUsers | Where-Object {$_.Name -Like '*Microsoft.Copilot*'} | Remove-AppxPackage -ErrorAction Continue",
+        "unapply": "winget install 9NHT9RB2F4HD --source msstore --accept-source-agreements --accept-package-agreements"
+      }
+    },
+    {
+      "id": "disable-core-isolation",
+      "title": {
+        "vi": "Tắt Core Isolation (VBS)",
+        "en": "Disable Core Isolation"
+      },
+      "description": {
+        "vi": "Tắt tính năng bảo mật ảo hóa để tăng hiệu năng game.",
+        "en": "Disables VBS to improve gaming performance."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-core-isolation",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-core-isolation/meta.json",
+      "scripts": {
+        "apply": "New-Item -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity\" -Force | Out-Null\n\nSet-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity\" `\n    -Name \"Enabled\" -Value 0 -Type DWord\n",
+        "unapply": "New-Item -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity\" -Force | Out-Null\n\nSet-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\\Scenarios\\HypervisorEnforcedCodeIntegrity\" `\n    -Name \"Enabled\" -Value 1 -Type DWord\n"
+      }
+    },
+    {
+      "id": "disable-defender-rtp",
+      "title": {
+        "vi": "Tắt bảo vệ thời gian thực",
+        "en": "Disable Defender RTP"
+      },
+      "description": {
+        "vi": "Tắt tính năng bảo vệ thời gian thực của Windows Defender.",
+        "en": "Disables Windows Defender Real-time Protection."
+      },
+      "category": [
+        "Performance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-defender-rtp",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-defender-rtp/meta.json",
+      "scripts": {
+        "apply": "Set-MpPreference -DisableRealtimeMonitoring $true",
+        "unapply": "Set-MpPreference -DisableRealtimeMonitoring $false"
+      }
+    },
+    {
+      "id": "disable-dynamic-ticking",
+      "title": {
+        "vi": "Tắt Dynamic Ticking",
+        "en": "Disable Dynamic Ticking"
+      },
+      "description": {
+        "vi": "Tắt tính năng dynamic ticking để ổn định độ trễ.",
+        "en": "Disables dynamic ticking for stable latency."
+      },
+      "category": [
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-dynamic-ticking",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-dynamic-ticking/meta.json",
+      "scripts": {
+        "apply": "try {\n    bcdedit /set disabledynamictick yes\n    Write-Host \"Dynamic Ticking disabled successfully\"\n  } catch {\n    Write-Host \"Failed to apply Dynamic Ticking tweak\"\n  }",
+        "unapply": "try {\n    bcdedit /set disabledynamictick no\n    Write-Host \"Dynamic Ticking settings restored\"\n  } catch {\n    Write-Host \"Failed to revert Dynamic Ticking tweak\"\n  }"
+      }
+    },
+    {
+      "id": "disable-fast-startup",
+      "title": {
+        "vi": "Tắt khởi động nhanh",
+        "en": "Disable Fast Startup"
+      },
+      "description": {
+        "vi": "Tắt Fast Startup để sửa lỗi và giải phóng dung lượng.",
+        "en": "Disables Fast Startup to free up hibernation file."
+      },
+      "category": [
+        "Performance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-fast-startup",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-fast-startup/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path 'HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Power' -Name HiberbootEnabled -Value 0",
+        "unapply": "Set-ItemProperty -Path 'HKLM:\\\\SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Power' -Name HiberbootEnabled -Value 1"
+      }
+    },
+    {
+      "id": "disable-gamebar",
+      "title": {
+        "vi": "Tắt Xbox Game Bar",
+        "en": "Disable Game Bar"
+      },
+      "description": {
+        "vi": "Tắt tính năng Xbox Game Bar overlay.",
+        "en": "Disables Xbox Game Bar overlay."
+      },
+      "category": [
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-gamebar",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-gamebar/meta.json",
+      "scripts": {
+        "apply": "try {\n    winget uninstall 9nzkpstsnw4p --silent --accept-source-agreements \n        Get-AppxPackage Microsoft.XboxGamingOverlay | Remove-AppxPackage -ErrorAction Stop\n      \n        Write-Output 'Successfully removed Xbox Gaming Overlay via AppxPackage'\n    }\n    catch {\n        Write-Output 'AppxPackage removal failed, trying to remove via winget'\n        try {\n            winget uninstall 9nzkpstsnw4p --silent --accept-source-agreements \n            Write-Output 'Successfully removed Xbox Gaming Overlay via winget'\n        }\n        catch {\n            Write-Output 'Winget uninstall failed'\n        }\n    }",
+        "unapply": "winget install 9NZKPSTSNW4P --source msstore --accept-source-agreements --accept-package-agreements"
+      }
+    },
+    {
+      "id": "disable-hibernation",
+      "title": {
+        "vi": "Tắt chế độ ngủ đông",
+        "en": "Disable Hibernation"
+      },
+      "description": {
+        "vi": "Tắt chế độ ngủ đông và xóa file hiberfil.sys.",
+        "en": "Disables hibernation and deletes hiberfil.sys."
+      },
+      "category": [
+        "Performance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-hibernation",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-hibernation/meta.json",
+      "scripts": {
+        "apply": "powercfg.exe /hibernate off",
+        "unapply": "powercfg.exe /hibernate on"
+      }
+    },
+    {
+      "id": "disable-location-tracking",
+      "title": {
+        "vi": "Tắt định vị",
+        "en": "Disable Location Tracking"
+      },
+      "description": {
+        "vi": "Tắt tính năng theo dõi vị trí toàn hệ thống.",
+        "en": "Disables system-wide location tracking."
+      },
+      "category": [
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-location-tracking",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-location-tracking/meta.json",
+      "scripts": {
+        "apply": "  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection\" -Name \"Allow\" -Value \"Deny\" -Type String -Force\n  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location\" -Name \"SensorPermissionState\" -Value 0 -Type DWord -Force\n  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Diagnostics\\DiagTrack\" -Name \"Status\" -Value 0 -Type DWord -Force\n  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\" -Name \"AutoUpdateEnabled\" -Value 0 -Type DWord -Force",
+        "unapply": "  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection\" -Name \"Allow\" -Value \"Allow\" -Type String -Force\n  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location\" -Name \"SensorPermissionState\" -Value 1 -Type DWord -Force\n  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Diagnostics\\DiagTrack\" -Name \"Status\" -Value 1 -Type DWord -Force\n  Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\" -Name \"AutoUpdateEnabled\" -Value 1 -Type DWord -Force"
+      }
+    },
+    {
+      "id": "disable-lockscreen-tips",
+      "title": {
+        "vi": "Tắt gợi ý màn hình khóa",
+        "en": "Disable Lockscreen Tips"
+      },
+      "description": {
+        "vi": "Xóa bỏ các gợi ý và mẹo vặt trên màn hình khóa.",
+        "en": "Removes fun facts and tips from lockscreen."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-lockscreen-tips",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-lockscreen-tips/meta.json",
+      "scripts": {
+        "apply": "# Disable fun facts, tips, and more on the lock screen\nSet-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" -Name \"RotatingLockScreenOverlayEnabled\" -Value 0 -Type DWord\nSet-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" -Name \"SubscribedContent-338387Enabled\" -Value 0 -Type DWord\n",
+        "unapply": "# Enable fun facts, tips, and more on the lock screen\nSet-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" -Name \"RotatingLockScreenOverlayEnabled\" -Value 1 -Type DWord\nSet-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" -Name \"SubscribedContent-338387Enabled\" -Value 1 -Type DWord\n"
+      }
+    },
+    {
+      "id": "disable-mouse-acceleration",
+      "title": {
+        "vi": "Tắt gia tốc chuột",
+        "en": "Disable Mouse Acceleration"
+      },
+      "description": {
+        "vi": "Tắt tính năng 'Enhance pointer precision' để chuột chính xác hơn.",
+        "en": "Disables 'Enhance pointer precision' for 1:1 aim."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-mouse-acceleration",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-mouse-acceleration/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKCU:\\Control Panel\\Mouse\" -Name \"MouseSpeed\" -Value \"0\"\nSet-ItemProperty -Path \"HKCU:\\Control Panel\\Mouse\" -Name \"MouseThreshold1\" -Value \"0\"\nSet-ItemProperty -Path \"HKCU:\\Control Panel\\Mouse\" -Name \"MouseThreshold2\" -Value \"0\"\n",
+        "unapply": "Set-ItemProperty -Path \"HKCU:\\Control Panel\\Mouse\" -Name \"MouseSpeed\" -Value \"1\"\nSet-ItemProperty -Path \"HKCU:\\Control Panel\\Mouse\" -Name \"MouseThreshold1\" -Value \"6\"\nSet-ItemProperty -Path \"HKCU:\\Control Panel\\Mouse\" -Name \"MouseThreshold2\" -Value \"10\"\n"
+      }
+    },
+    {
+      "id": "disable-wifi-sense",
+      "title": {
+        "vi": "Tắt Wi-Fi Sense",
+        "en": "Disable Wi-Fi Sense"
+      },
+      "description": {
+        "vi": "Ngăn chặn chia sẻ thông tin đăng nhập Wi-Fi.",
+        "en": "Prevents sharing Wi-Fi credentials."
+      },
+      "category": [
+        "Privacy",
+        "Network",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/disable-wifi-sense",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/disable-wifi-sense/meta.json",
+      "scripts": {
+        "apply": "  Set-ItemProperty -Path \"HKLM:\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowWiFiHotSpotReporting\" -Name \"Value\" -Type DWord -Value 0\n  Set-ItemProperty -Path \"HKLM:\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowAutoConnectToWiFiSenseHotspots\" -Name \"Value\" -Type DWord -Value 0",
+        "unapply": "Set-ItemProperty -Path \"HKLM:\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowWiFiHotSpotReporting\" -Name \"Value\" -Type DWord -Value 1\nSet-ItemProperty -Path \"HKLM:\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowAutoConnectToWiFiSenseHotspots\" -Name \"Value\" -Type DWord -Value 1"
+      }
+    },
+    {
+      "id": "enable-dark-mode",
+      "title": {
+        "vi": "Bật chế độ tối",
+        "en": "Enable Dark Mode"
+      },
+      "description": {
+        "vi": "Bắt buộc hệ thống và ứng dụng sử dụng chế độ tối.",
+        "en": "Forces system and apps to use Dark Mode."
+      },
+      "category": [
+        "General",
+        "Appearance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-dark-mode",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-dark-mode/meta.json",
+      "scripts": {
+        "apply": "$Path = \"HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\"\nSet-ItemProperty -Path $Path -Name AppsUseLightTheme -Value 0\nSet-ItemProperty -Path $Path -Name SystemUsesLightTheme -Value 0\nStop-Process -Name explorer -Force\nStart-Process explorer.exe\n",
+        "unapply": "$Path = \"HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\"\nSet-ItemProperty -Path $Path -Name AppsUseLightTheme -Value 1\nSet-ItemProperty -Path $Path -Name SystemUsesLightTheme -Value 1\nStop-Process -Name explorer -Force\nStart-Process explorer.exe\n"
+      }
+    },
+    {
+      "id": "enable-end-task-right-click",
+      "title": {
+        "vi": "Bật End Task ở Taskbar",
+        "en": "Enable Right-Click End Task"
+      },
+      "description": {
+        "vi": "Thêm tùy chọn 'End Task' vào menu chuột phải thanh taskbar.",
+        "en": "Adds 'End Task' option to Taskbar context menu."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-end-task-right-click",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-end-task-right-click/meta.json",
+      "scripts": {
+        "apply": "$regPath = \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings\"\n$valueName = \"TaskbarEndTask\"\n\nif (-not (Test-Path $regPath)) {\n    New-Item -Path $regPath -Force | Out-Null\n}\n\nSet-ItemProperty -Path $regPath -Name $valueName -Type DWord -Value 1",
+        "unapply": "$regPath = \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings\"\n$valueName = \"TaskbarEndTask\"\n\nif (-not (Test-Path $regPath)) {\n    New-Item -Path $regPath -Force | Out-Null\n}\n\nSet-ItemProperty -Path $regPath -Name $valueName -Type DWord -Value 0"
+      }
+    },
+    {
+      "id": "enable-game-mode",
+      "title": {
+        "vi": "Bật Game Mode",
+        "en": "Enable Game Mode"
+      },
+      "description": {
+        "vi": "Đảm bảo chế độ Game Mode được bật.",
+        "en": "Ensures Windows Game Mode is ON."
+      },
+      "category": [
+        "General",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-game-mode",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-game-mode/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\GameBar\" -Name \"AllowAutoGameMode\" -Value 1\nSet-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\GameBar\" -Name \"AutoGameModeEnabled\" -Value 1\n\nWrite-Output \"Game Mode is now ENABLED.\"\n",
+        "unapply": "Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\GameBar\" -Name \"AllowAutoGameMode\" -Value 0\nSet-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\GameBar\" -Name \"AutoGameModeEnabled\" -Value 0\n\nWrite-Output \"Game Mode is now DISABLED.\"\n"
+      }
+    },
+    {
+      "id": "enable-hags",
+      "title": {
+        "vi": "Bật HAGS",
+        "en": "Enable HAGS"
+      },
+      "description": {
+        "vi": "Bật tính năng lập lịch GPU bằng phần cứng.",
+        "en": "Enables Hardware Accelerated GPU Scheduling."
+      },
+      "category": [
+        "Performance",
+        "Gaming",
+        "GPU"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-hags",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-hags/meta.json",
+      "scripts": {
+        "apply": "$regPath = \"HKLM:\\System\\CurrentControlSet\\Control\\GraphicsDrivers\"\n$keyName = \"HwSchMode\"\n$value = 2\n\nIf (-not (Test-Path $regPath)) {\n    New-Item -Path $regPath -Force | Out-Null\n}\n\nSet-ItemProperty -Path $regPath -Name $keyName -Value $value -Type DWord\n\nWrite-Host \"Hardware-Accelerated GPU Scheduling enabled. A restart may be required.\"\n",
+        "unapply": "$regPath = \"HKLM:\\System\\CurrentControlSet\\Control\\GraphicsDrivers\"\n$keyName = \"HwSchMode\"\n$value = 1\n\nIf (Test-Path $regPath) {\n    Set-ItemProperty -Path $regPath -Name $keyName -Value $value -Type DWord\n    Write-Host \"Hardware-Accelerated GPU Scheduling disabled. A restart may be required.\"\n}\nelse {\n    Write-Host \"Registry path not found.\"\n}\n"
+      }
+    },
+    {
+      "id": "enable-optimization-for-windowed-games",
+      "title": {
+        "vi": "Tối ưu game cửa sổ",
+        "en": "Optimize Windowed Games"
+      },
+      "description": {
+        "vi": "Bật các tối ưu hóa cho game chạy ở chế độ cửa sổ.",
+        "en": "Enables optimizations for windowed games."
+      },
+      "category": [
+        "General",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/enable-optimization-for-windowed-games",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/enable-optimization-for-windowed-games/meta.json",
+      "scripts": {
+        "apply": "\n$regPath = \"HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences\"\n$keyName = \"DirectXUserGlobalSettings\"\n$value = \"SwapEffectUpgradeEnable=1;\"\n\nIf (-not (Test-Path $regPath)) {\n    New-Item -Path $regPath -Force | Out-Null\n}\n\nSet-ItemProperty -Path $regPath -Name $keyName -Value $value\n\nWrite-Host \"DirectX game optimization applied.\"\n",
+        "unapply": "$regPath = \"HKCU:\\Software\\Microsoft\\DirectX\\UserGpuPreferences\"\n$keyName = \"DirectXUserGlobalSettings\"\n\nIf (Test-Path \"$regPath\\$keyName\") {\n    Remove-ItemProperty -Path $regPath -Name $keyName -ErrorAction SilentlyContinue\n    Write-Host \"DirectX game optimization removed.\"\n}\nelse {\n    Write-Host \"Registry key does not exist, nothing to remove.\"\n}\n"
+      }
+    },
+    {
+      "id": "laptop-productivity-work",
+      "title": {
+        "vi": "Tối ưu hóa Laptop (Văn phòng)",
+        "en": "Laptop Productivity Optimization"
+      },
+      "description": {
+        "vi": "Tối ưu hóa pin và nhiệt độ cho tác vụ văn phòng. Giữ lại in ấn, update.",
+        "en": "Optimizes battery and thermals for office tasks. Keeps printing and updates enabled."
+      },
+      "category": [
+        "Productivity",
+        "Battery"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/laptop-productivity-work",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/laptop-productivity-work/meta.json",
+      "scripts": {
+        "apply": "<#\n.SYNOPSIS\n    Applies safe productivity optimizations for Laptops.\n    Focus: Battery life, thermal management, stability.\n    Excludes: Heavy debloat, disabling critical services (Print/Update/Defender).\n#>\n\nSet-StrictMode -Version Latest\n$ErrorActionPreference = 'Stop'\n\n#region Logging / Elevation\nfunction Test-IsAdmin {\n    $id = [Security.Principal.WindowsIdentity]::GetCurrent()\n    $p = New-Object Security.Principal.WindowsPrincipal($id)\n    return $p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)\n}\n\nfunction Write-Log {\n    param(\n        [Parameter(Mandatory)] [string] $Message,\n        [ValidateSet('INFO', 'WARN', 'ERROR')] [string] $Level = 'INFO'\n    )\n    $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff'\n    $line = \"[$ts][$Level] $Message\"\n    $logRoot = Join-Path $env:SystemDrive 'VieX Logs'\n    if (-not (Test-Path $logRoot)) { New-Item -Path $logRoot -ItemType Directory -Force | Out-Null }\n    $LogFile = Join-Path $logRoot (\"LaptopProductivity-\" + (Get-Date -Format 'yyyyMMdd') + \".log\")\n    $line | Out-File -FilePath $LogFile -Append -Encoding UTF8\n    Write-Host $line\n}\n\nif (-not (Test-IsAdmin)) {\n    Write-Host \"[ERROR] Please run this script as Administrator.\" -ForegroundColor Red\n    exit 1\n}\n#endregion\n\n#region Helpers\nfunction Disable-ScheduledTaskSafe {\n    param([Parameter(Mandatory)][string]$TaskName)\n    try {\n        $t = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop\n        if ($t.State -ne 'Disabled') {\n            Disable-ScheduledTask -InputObject $t | Out-Null\n            Write-Log \"Disabled scheduled task: $TaskName\"\n        }\n    }\n    catch {\n        Write-Log \"Task not found/error: $TaskName\" 'WARN'\n    }\n}\n\nfunction Invoke-RegExe {\n    param(\n        [Parameter(Mandatory)] [ValidateSet('add', 'delete')] [string] $Action,\n        [Parameter(Mandatory)] [string] $Key,\n        [Parameter(Mandatory)] [string] $Rest\n    )\n    try {\n        $regArgs = @($Action, $Key) + ($Rest -split ' ')\n        & reg.exe $Action $Key $Rest.Split(' ') | Out-Null\n        Write-Log \"Registry ${Action}: $Key\"\n    }\n    catch {\n        Write-Log \"Registry failed: $Key\" 'WARN'\n    }\n}\n#endregion\n\ntry {\n    Write-Log \"Starting Laptop Productivity Optimization...\"\n\n    # 1. Restore Point\n    Write-Log \"Creating Restore Point...\"\n    try {\n        Checkpoint-Computer -Description 'VieX Laptop Productivity' -RestorePointType 'MODIFY_SETTINGS' -ErrorAction SilentlyContinue\n    }\n    catch {\n        Write-Log \"Could not create restore point (might be disabled).\" 'WARN'\n    }\n\n    # 2. Power Plan: Balanced (Standard)\n    # We enforce Balanced to ensure CPU scales down properly on battery\n    Write-Log \"Setting Power Plan to Balanced...\"\n    & powercfg /setactive scheme_balanced\n\n    # 3. Disable Game Bar & Xbox (Not needed for work)\n    Write-Log \"Disabling Game Bar & Xbox features...\"\n    # Registry: HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR\" /v \"AppCaptureEnabled\" /t REG_DWORD /d 0 /f | Out-Null\n    reg add \"HKCU\\System\\GameConfigStore\" /v \"GameDVR_Enabled\" /t REG_DWORD /d 0 /f | Out-Null\n    \n    # safe services disable\n    $xboxServices = @(\"XblAuthManager\", \"XblGameSave\", \"XboxNetApiSvc\", \"XboxGipSvc\")\n    foreach ($svc in $xboxServices) {\n        if (Get-Service $svc -ErrorAction SilentlyContinue) {\n            Set-Service -Name $svc -StartupType Disabled -ErrorAction SilentlyContinue\n            if ((Get-Service $svc).Status -eq 'Running') { Stop-Service $svc -Force -ErrorAction SilentlyContinue }\n            Write-Log \"Disabled service: $svc\"\n        }\n    }\n\n    # 4. Safe Debloat (Consumer Junk Only)\n    # Removing: Solitaire, Tips, Feedback Hub, Skype, BingWeather, MixedReality\n    # KEEPING: Safe/Productivity apps (Calculator, Photos, StickyNotes, Alarms, SnipSketch)\n    Write-Log \"Removing non-essential consumer apps...\"\n    $bloat = @(\n        \"*Microsoft.MicrosoftSolitaireCollection*\",\n        \"*Microsoft.Getstarted*\",\n        \"*Microsoft.WindowsFeedbackHub*\",\n        \"*Microsoft.SkypeApp*\",\n        \"*Microsoft.BingWeather*\",\n        \"*Microsoft.BingNews*\",\n        \"*Microsoft.ZuneMusic*\",\n        \"*Microsoft.ZuneVideo*\",\n        \"*Microsoft.MixedReality.Portal*\",\n        \"*Microsoft.XboxApp*\",\n        \"*Microsoft.YourPhone*\"\n    )\n    foreach ($pattern in $bloat) {\n        Get-AppxPackage -Name $pattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue\n        Write-Log \"Removed AppX: $pattern\"\n    }\n\n    # 5. Productivity / Privacy Tweaks\n    # Disable \"Get tips, tricks, and suggestions as you use Windows\"\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" /v \"SubscribedContent-338389Enabled\" /t REG_DWORD /d 0 /f | Out-Null\n    \n    # Disable \"Suggested apps in Start Menu\"\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" /v \"SystemPaneSuggestionsEnabled\" /t REG_DWORD /d 0 /f | Out-Null\n\n    # Enable Hibernation (Important for Laptops)\n    Write-Log \"Enabling Hibernation...\"\n    & powercfg /hibernate on\n\n    # 6. PDF / Print / Update\n    # Ensuring these are ENABLED (just in case)\n    Write-Log \"Ensuring Print Spooler is enabled...\"\n    Set-Service -Name \"Spooler\" -StartupType Automatic -ErrorAction SilentlyContinue\n    Start-Service \"Spooler\" -ErrorAction SilentlyContinue\n\n    Write-Log \"Optimization Complete. Restart recommended.\"\n}\ncatch {\n    Write-Log \"FATAL ERROR: $($_.Exception.Message)\" 'ERROR'\n    throw\n}\n",
+        "unapply": "<#\n.SYNOPSIS\n    Reverts Laptop Productivity optimizations.\n#>\n\nSet-StrictMode -Version Latest\n$ErrorActionPreference = 'Stop'\n\nfunction Test-IsAdmin {\n    $id = [Security.Principal.WindowsIdentity]::GetCurrent()\n    $p = New-Object Security.Principal.WindowsPrincipal($id)\n    return $p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)\n}\n\nif (-not (Test-IsAdmin)) {\n    Write-Host \"[ERROR] Please run this script as Administrator.\" -ForegroundColor Red\n    exit 1\n}\n\ntry {\n    Write-Host \"Reverting Laptop Productivity Tweaks...\"\n\n    # Re-enable Game Bar (Default behavior)\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR\" /v \"AppCaptureEnabled\" /t REG_DWORD /d 1 /f | Out-Null\n    reg add \"HKCU\\System\\GameConfigStore\" /v \"GameDVR_Enabled\" /t REG_DWORD /d 1 /f | Out-Null\n\n    # Re-enable Xbox Services (Set to Manual usually)\n    $xboxServices = @(\"XblAuthManager\", \"XblGameSave\", \"XboxNetApiSvc\", \"XboxGipSvc\")\n    foreach ($svc in $xboxServices) {\n        if (Get-Service $svc -ErrorAction SilentlyContinue) {\n            Set-Service -Name $svc -StartupType Manual -ErrorAction SilentlyContinue\n            Write-Host \"Restored service: $svc (Manual)\"\n        }\n    }\n\n    # Re-enable Suggestions\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" /v \"SubscribedContent-338389Enabled\" /t REG_DWORD /d 1 /f | Out-Null\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager\" /v \"SystemPaneSuggestionsEnabled\" /t REG_DWORD /d 1 /f | Out-Null\n\n    Write-Host \"Revert complete. Note: Removed AppX packages cannot be easily restored without reinstalling from Store.\"\n    Write-Host \"Please restart your computer.\"\n}\ncatch {\n    Write-Host \"Error: $($_.Exception.Message)\" -ForegroundColor Red\n}\n"
+      }
+    },
+    {
+      "id": "menu-show-delay-zero",
+      "title": {
+        "vi": "Menu hiện tức thì",
+        "en": "Zero Menu Delay"
+      },
+      "description": {
+        "vi": "Giảm độ trễ hiển thị menu xuống 0ms.",
+        "en": "Reduces menu show delay to 0ms."
+      },
+      "category": [
+        "Performance",
+        "Appearance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/menu-show-delay-zero",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/menu-show-delay-zero/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKCU:\\Control Panel\\Desktop\" -Name \"MenuShowDelay\" -Type String -Value \"0\"\n",
+        "unapply": "Set-ItemProperty -Path \"HKCU:\\Control Panel\\Desktop\" -Name \"MenuShowDelay\" -Type String -Value \"400\"\n"
+      }
+    },
+    {
+      "id": "optimize-cpu-process",
+      "title": {
+        "vi": "Giảm tải CPU Process",
+        "en": "Reduce CPU Process Load"
+      },
+      "description": {
+        "vi": "Tắt SysMain, tối ưu registry để giảm tải CPU từ tiến trình nền, ưu tiên xử lý và tắt Power Throttling.",
+        "en": "Disables SysMain, optimizes registry to reduce background process CPU load, enhances processor scheduling, and disables Power Throttling."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-cpu-process",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-cpu-process/meta.json",
+      "scripts": {
+        "apply": "Write-Host \"Applying CPU process optimizations...\"\n\n$ErrorActionPreference = 'SilentlyContinue'\n\n# 1. Disable SysMain (Superfetch) - reduces CPU/disk from background prefetching (especially on SSD)\ntry {\n    Set-Service -Name \"SysMain\" -StartupType Disabled -ErrorAction Stop\n    Stop-Service -Name \"SysMain\" -Force -ErrorAction SilentlyContinue\n    Write-Host \"SysMain (Superfetch) disabled.\"\n} catch {\n    Write-Warning \"SysMain not found or could not be disabled: $_\"\n}\n\n# 2. Registry: Memory Management - reduce I/O and keep kernel in RAM\n$memPath = \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\"\nif (-not (Test-Path $memPath)) {\n    New-Item -Path $memPath -Force | Out-Null\n}\n\nSet-ItemProperty -Path $memPath -Name \"NtfsDisableLastAccessUpdate\" -Type DWord -Value 1 -ErrorAction SilentlyContinue\nSet-ItemProperty -Path $memPath -Name \"DisablePagingExecutive\" -Type DWord -Value 1 -ErrorAction SilentlyContinue\n\n# 3. Registry: Processor Scheduling - prioritize foreground programs more aggressively\n$priorityPath = \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl\"\nif (-not (Test-Path $priorityPath)) {\n    New-Item -Path $priorityPath -Force | Out-Null\n}\n# Value 26 (hex 1a) gives foreground apps a 6x boost and longer quantum. Default is 2.\nSet-ItemProperty -Path $priorityPath -Name \"Win32PrioritySeparation\" -Type DWord -Value 26 -ErrorAction SilentlyContinue\n\n# 4. Registry: Disable Power Throttling - ensure background processes get full CPU power\n$powerThrottlingPath = \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling\"\nif (-not (Test-Path $powerThrottlingPath)) {\n    New-Item -Path $powerThrottlingPath -Force | Out-Null\n}\nSet-ItemProperty -Path $powerThrottlingPath -Name \"PowerThrottlingOff\" -Type DWord -Value 1 -ErrorAction SilentlyContinue\n\nWrite-Host \"Registry tweaks applied.\"\nWrite-Host \"CPU process optimizations applied successfully.\"",
+        "unapply": "Write-Host \"Reverting CPU process optimizations...\"\n\n$ErrorActionPreference = 'SilentlyContinue'\n\n# 1. Re-enable SysMain (Superfetch)\ntry {\n    Set-Service -Name \"SysMain\" -StartupType Automatic -ErrorAction Stop\n    Start-Service -Name \"SysMain\" -ErrorAction SilentlyContinue\n    Write-Host \"SysMain (Superfetch) re-enabled.\"\n} catch {\n    Write-Warning \"SysMain could not be re-enabled: $_\"\n}\n\n# 2. Registry: restore defaults\n$memPath = \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\"\nif (Test-Path $memPath) {\n    Set-ItemProperty -Path $memPath -Name \"NtfsDisableLastAccessUpdate\" -Type DWord -Value 0 -ErrorAction SilentlyContinue\n    Set-ItemProperty -Path $memPath -Name \"DisablePagingExecutive\" -Type DWord -Value 0 -ErrorAction SilentlyContinue\n}\n\n# 3. Registry: Processor Scheduling - revert to default\n$priorityPath = \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl\"\nif (Test-Path $priorityPath) {\n    Set-ItemProperty -Path $priorityPath -Name \"Win32PrioritySeparation\" -Type DWord -Value 2 -ErrorAction SilentlyContinue\n}\n\n# 4. Registry: Re-enable Power Throttling - remove the key\n$powerThrottlingPath = \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling\"\nif (Test-Path $powerThrottlingPath) {\n    Remove-ItemProperty -Path $powerThrottlingPath -Name \"PowerThrottlingOff\" -ErrorAction SilentlyContinue\n}\n\nWrite-Host \"CPU process optimizations reverted to defaults.\""
+      }
+    },
+    {
+      "id": "optimize-dscs",
+      "title": {
+        "vi": "Tối ưu Discord và giảm RAM",
+        "en": "Optimize Discord and reduce RAM"
+      },
+      "description": {
+        "vi": "Tối ưu hóa Discord và giảm RAM.",
+        "en": "Optimizes Discord and reduce RAM."
+      },
+      "category": [
+        "Network",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "updatedversion": "3.0.0",
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-dscs",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-dscs/meta.json",
+      "scripts": {
+        "apply": "# [CmdletBinding(SupportsShouldProcess = $true)]\nparam(\n    [switch]$ForceKillDiscord = $false\n)\n\n$ErrorActionPreference = 'Stop'\nSet-StrictMode -Version Latest\n\n$Brand = 'VieXF'\n$LogFile = Join-Path $env:SystemDrive \"$Brand-OptimizeDiscord.log\"\n$TrimmerName = \"VieXF_DiscordRAMTrimmer\"\n$TrimmerPath = Join-Path $PSScriptRoot \"VieXF-DiscordTrimmer.ps1\"\n\nfunction Write-Log {\n    param(\n        [Parameter(Mandatory)] [string]$Message,\n        [ValidateSet('INFO', 'WARN', 'ERROR', 'OK')] [string]$Level = 'INFO'\n    )\n    $line = \"[{0}] [{1}] {2}\" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Level, $Message\n    Add-Content -Path $LogFile -Value $line -Encoding UTF8\n    switch ($Level) {\n        'INFO' { Write-Host $line -ForegroundColor Cyan }\n        'WARN' { Write-Host $line -ForegroundColor Yellow }\n        'ERROR' { Write-Host $line -ForegroundColor Red }\n        'OK' { Write-Host $line -ForegroundColor Green }\n    }\n}\n\nfunction Assert-Admin {\n    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()\n    $principal = New-Object Security.Principal.WindowsPrincipal($identity)\n    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {\n        throw 'Hãy chạy PowerShell bằng quyền Administrator.'\n    }\n}\n\nfunction Clean-DiscordData {\n    Write-Log \"Đang dọn dẹp Cache và Log của Discord...\" 'INFO'\n    \n    $discordPath = Join-Path $env:APPDATA \"Discord\"\n    $localDiscordPath = Join-Path $env:LOCALAPPDATA \"Discord\"\n    \n    $cacheFolders = @(\"Cache\", \"Code Cache\", \"GPUCache\")\n    \n    # Check if Discord is running\n    $procs = Get-Process -Name \"Discord\" -ErrorAction SilentlyContinue\n    if ($procs) {\n        if ($ForceKillDiscord) {\n            Write-Log \"Đang đóng Discord để dọn dẹp...\" 'WARN'\n            $procs | Stop-Process -Force\n            Start-Sleep -Seconds 2\n        } else {\n            Write-Log \"Discord đang chạy, bỏ qua bước dọn dẹp Cache để tránh lỗi file-in-use. Hãy đóng Discord và chạy lại với -ForceKillDiscord nếu muốn dọn dẹp sâu.\" 'WARN'\n            return\n        }\n    }\n\n    foreach ($folder in $cacheFolders) {\n        $path = Join-Path $discordPath $folder\n        if (Test-Path $path) {\n            try {\n                Remove-Item -Path \"$path\\*\" -Recurse -Force -ErrorAction SilentlyContinue\n                Write-Log \"Đã dọn dẹp: $folder\" 'OK'\n            } catch {\n                Write-Log \"Không thể dọn hoàn toàn: $folder\" 'WARN'\n            }\n        }\n    }\n\n    # Clean crashpad and logs in LocalAppData\n    if (Test-Path $localDiscordPath) {\n        Get-ChildItem -Path $localDiscordPath -Filter \"*.log\" -Recurse | Remove-Item -Force -ErrorAction SilentlyContinue\n        Write-Log \"Đã dọn dẹp log Discord.\" 'OK'\n    }\n}\n\nfunction Install-TrimmerTask {\n    Write-Log \"Đang cấu hình Scheduled Task để giảm RAM Discord định kỳ...\" 'INFO'\n    \n    # Remove old task if exists\n    $null = & schtasks /delete /tn $TrimmerName /f 2>$null\n    \n    # Define task: Run every 5 minutes\n    # Argument: -WindowStyle Hidden -ExecutionPolicy Bypass -File \"...\"\n    $actionScript = \"powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File `\"$TrimmerPath`\"\"\n    \n    # Create Task\n    # /SC MINUTE /MO 5 -> Sc=Minute, Mo=5 (every 5 mins)\n    $null = & schtasks /create /tn $TrimmerName /tr \"$actionScript\" /sc minute /mo 5 /rl highest /f 2>&1\n    \n    if ($LASTEXITCODE -eq 0) {\n        Write-Log \"Đã cài đặt Scheduled Task: $TrimmerName (Chạy mỗi 5 phút)\" 'OK'\n    } else {\n        Write-Log \"Lỗi khi cài đặt Scheduled Task.\" 'ERROR'\n    }\n}\n\ntry {\n    Assert-Admin\n    Clean-DiscordData\n    Install-TrimmerTask\n    \n    # Run once immediately\n    Write-Log \"Đang thực hiện giảm RAM ngay lập tức...\" 'INFO'\n    & \"$TrimmerPath\"\n    \n    Write-Log \"Hoàn tất tối ưu Discord!\" 'OK'\n} catch {\n    Write-Log $_.Exception.Message 'ERROR'\n    exit 1\n}\n",
+        "unapply": "# Unapply Discord Optimization\nparam()\n\n$ErrorActionPreference = 'Stop'\nSet-StrictMode -Version Latest\n\n$Brand = 'VieXF'\n$TrimmerName = \"VieXF_DiscordRAMTrimmer\"\n$LogFile = Join-Path $env:SystemDrive \"$Brand-OptimizeDiscord.log\"\n\nfunction Write-Log {\n    param(\n        [Parameter(Mandatory)] [string]$Message,\n        [ValidateSet('INFO', 'WARN', 'ERROR', 'OK')] [string]$Level = 'INFO'\n    )\n    $line = \"[{0}] [{1}] {2}\" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Level, $Message\n    Add-Content -Path $LogFile -Value $line -Encoding UTF8\n    switch ($Level) {\n        'INFO' { Write-Host $line -ForegroundColor Cyan }\n        'WARN' { Write-Host $line -ForegroundColor Yellow }\n        'ERROR' { Write-Host $line -ForegroundColor Red }\n        'OK' { Write-Host $line -ForegroundColor Green }\n    }\n}\n\nfunction Assert-Admin {\n    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()\n    $principal = New-Object Security.Principal.WindowsPrincipal($identity)\n    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {\n        throw 'Hãy chạy PowerShell bằng quyền Administrator.'\n    }\n}\n\ntry {\n    Assert-Admin\n    Write-Log \"Đang gỡ bỏ Scheduled Task giảm RAM Discord...\" 'INFO'\n    \n    $null = & schtasks /delete /tn $TrimmerName /f 2>$null\n    \n    if ($LASTEXITCODE -eq 0) {\n        Write-Log \"Đã gỡ bỏ: $TrimmerName\" 'OK'\n    } else {\n        Write-Log \"Không tìm thấy hoặc không thể xóa Scheduled Task: $TrimmerName\" 'WARN'\n    }\n    \n    Write-Log \"Hoàn tất hoàn tác cấu hình tối ưu Discord!\" 'OK'\n} catch {\n    Write-Log $_.Exception.Message 'ERROR'\n    exit 1\n}\n"
+      }
+    },
+    {
+      "id": "optimize-network-settings",
+      "title": {
+        "vi": "Tối ưu mạng",
+        "en": "Optimize Network"
+      },
+      "description": {
+        "vi": "Tối ưu hóa các thiết lập TCP/IP cho chơi game.",
+        "en": "Optimizes TCP/IP settings for gaming."
+      },
+      "category": [
+        "Network",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "updatedversion": "3.0.0",
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-network-settings",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-network-settings/meta.json",
+      "scripts": {
+        "apply": "Write-Host \"Applying network tweaks...\"\n\n# TCP/IP tweaks - applies in order, continues even if one fails\n$ErrorActionPreference = 'SilentlyContinue'\n\nnetsh int tcp set heuristics disabled\nnetsh int tcp set supplemental template=internet congestionprovider=ctcp\nnetsh int tcp set global rss=enabled\nnetsh int tcp set global ecncapability=enabled\nnetsh int tcp set global timestamps=disabled\nnetsh int tcp set global fastopen=enabled\nnetsh int tcp set global fastopenfallback=enabled\nnetsh int tcp set supplemental template=custom icw=10\n\n# MTU: only apply to interfaces that exist (names vary: \"Ethernet 2\", \"Wi-Fi\", locale-specific)\n$interfaces = (Get-NetIPInterface -AddressFamily IPv4 -ErrorAction SilentlyContinue).InterfaceAlias\nforeach ($name in @('Wi-Fi', 'Ethernet')) {\n    if ($interfaces -contains $name) {\n        netsh interface ipv4 set subinterface \"`\"$name`\"\" mtu=1500 store=persistent\n    }\n}\n\nWrite-Host \"Network tweaks applied successfully.\"\n",
+        "unapply": "Write-Host \"Reverting network tweaks to defaults...\"\n\n$ErrorActionPreference = 'SilentlyContinue'\n\nnetsh int tcp set heuristics enabled\nnetsh int tcp set supplemental template=internet congestionprovider=default\nnetsh int tcp set global rss=default\nnetsh int tcp set global ecncapability=default\nnetsh int tcp set global timestamps=default\nnetsh int tcp set global fastopen=default\nnetsh int tcp set global fastopenfallback=default\nnetsh int tcp set supplemental template=custom icw=4\n\n# MTU: only apply to interfaces that exist\n$interfaces = (Get-NetIPInterface -AddressFamily IPv4 -ErrorAction SilentlyContinue).InterfaceAlias\nforeach ($name in @('Wi-Fi', 'Ethernet')) {\n    if ($interfaces -contains $name) {\n        netsh interface ipv4 set subinterface \"`\"$name`\"\" mtu=1500 store=persistent\n    }\n}\n\nWrite-Host \"Network tweaks reverted to defaults.\"\n"
+      }
+    },
+    {
+      "id": "optimize-nvidia-settings",
+      "title": {
+        "vi": "Tối ưu cài đặt NVIDIA",
+        "en": "Optimize NVIDIA Settings"
+      },
+      "description": {
+        "vi": "Áp dụng các cài đặt NVIDIA được khuyến nghị để tối ưu hiệu suất chơi game và giảm độ trễ.",
+        "en": "Applies recommended NVIDIA settings for optimal gaming performance and reduced latency."
+      },
+      "category": [
+        "Performance",
+        "GPU",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": false,
+      "docsurl": "https://docs.getvie.net/tweaks/optimize-nvidia-settings",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/optimize-nvidia-settings/meta.json",
+      "scripts": {
+        "apply": "Write-Host \"Applying NVIDIA optimization settings...\"\n\n$ErrorActionPreference = 'SilentlyContinue'\n\n# Function to check for NVIDIA GPU presence\nfunction Test-NvidiaGpuPresence {\n    $nvidiaGpu = Get-PnpDevice -Class Display -Status OK | Where-Object { $_.FriendlyName -like \"*NVIDIA*\" }\n    if ($nvidiaGpu) {\n        return $true\n    } else {\n        return $false\n    }\n}\n\nif (-not (Test-NvidiaGpuPresence)) {\n    Write-Host \"Bạn không có card đồ họa Nvidia\"\n    exit 1\n}\n\n# Function to set NVIDIA registry keys\nfunction Set-NvidiaRegistryKey {\n    param (\n        [string]$Path,\n        [string]$Name,\n        [string]$Value,\n        [string]$Type = \"DWord\"\n    )\n    $fullPath = 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Video\\'\n    Get-ChildItem -Path $fullPath -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.PSIsContainer -and $_.Name -match \"0000$\" } | ForEach-Object {\n        $driverPath = Join-Path $_.PSPath \"0000\"\n        if (-not (Test-Path $driverPath)) {\n            New-Item -Path $driverPath -Force | Out-Null\n        }\n        Set-ItemProperty -Path $driverPath -Name $Name -Value $Value -Type $Type -ErrorAction SilentlyContinue\n        Write-Host \"  Set $($Name) to $($Value) in $($driverPath)\"\n    }\n}\n\n# 1. Power Management Mode: Prefer Maximum Performance (Value: 1)\nSet-NvidiaRegistryKey -Name \"PowerMizerEnable\" -Value \"1\"\nSet-NvidiaRegistryKey -Name \"PowerMizerDefault\" -Value \"1\"\nSet-NvidiaRegistryKey -Name \"PowerMizerLevel\" -Value \"1\"\nSet-NvidiaRegistryKey -Name \"PowerMizerLevelAC\" -Value \"1\"\nSet-NvidiaRegistryKey -Name \"PowerMizerLevelDC\" -Value \"1\"\n\n# 2. Texture Filtering Quality: High Performance (Value: 20)\nSet-NvidiaRegistryKey -Name \"TextureFilterQuality\" -Value \"20\"\n\n# 3. Low Latency Mode: Ultra (Value: 3)\nSet-NvidiaRegistryKey -Name \"LowLatencyMode\" -Value \"3\"\n\n# 4. Shader Cache: On (Value: 1)\nSet-NvidiaRegistryKey -Name \"ShaderCache\" -Value \"1\"\n\n# 5. Threaded Optimization: On (Value: 1)\nSet-NvidiaRegistryKey -Name \"ThreadedOptimization\" -Value \"1\"\n\n# 6. Vertical Sync (V-Sync): Off (Value: 0)\nSet-NvidiaRegistryKey -Name \"VSync\" -Value \"0\"\n\nWrite-Host \"NVIDIA optimization settings applied successfully.\"",
+        "unapply": null
+      }
+    },
+    {
+      "id": "pc-productivity-work",
+      "title": {
+        "vi": "Tối ưu hóa PC (Văn phòng)",
+        "en": "PC Workstation Optimization"
+      },
+      "description": {
+        "vi": "Hiệu năng ổn định cho máy bàn. Tắt tiết kiệm điện không cần thiết.",
+        "en": "Stable performance for desktops. Disables unnecessary power saving."
+      },
+      "category": [
+        "Productivity",
+        "Performance"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/pc-productivity-work",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/pc-productivity-work/meta.json",
+      "scripts": {
+        "apply": "<#\n.SYNOPSIS\n    Applies safe productivity optimizations for Desktop PCs.\n    Focus: Performance, Responsiveness, Stability.\n    Excludes: Dangerous tweaks, removing critical services.\n#>\n\nSet-StrictMode -Version Latest\n$ErrorActionPreference = 'Stop'\n\n#region Logging / Elevation\nfunction Test-IsAdmin {\n    $id = [Security.Principal.WindowsIdentity]::GetCurrent()\n    $p = New-Object Security.Principal.WindowsPrincipal($id)\n    return $p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)\n}\n\nfunction Write-Log {\n    param(\n        [Parameter(Mandatory)] [string] $Message,\n        [ValidateSet('INFO', 'WARN', 'ERROR')] [string] $Level = 'INFO'\n    )\n    $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff'\n    $line = \"[$ts][$Level] $Message\"\n    $logRoot = Join-Path $env:SystemDrive 'VieX Logs'\n    if (-not (Test-Path $logRoot)) { New-Item -Path $logRoot -ItemType Directory -Force | Out-Null }\n    $LogFile = Join-Path $logRoot (\"PCProductivity-\" + (Get-Date -Format 'yyyyMMdd') + \".log\")\n    $line | Out-File -FilePath $LogFile -Append -Encoding UTF8\n    Write-Host $line\n}\n\nif (-not (Test-IsAdmin)) {\n    Write-Host \"[ERROR] Please run this script as Administrator.\" -ForegroundColor Red\n    exit 1\n}\n#endregion\n\n#region Helpers\nfunction Disable-ScheduledTaskSafe {\n    param([Parameter(Mandatory)][string]$TaskName)\n    try {\n        $t = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop\n        if ($t.State -ne 'Disabled') {\n            Disable-ScheduledTask -InputObject $t | Out-Null\n            Write-Log \"Disabled scheduled task: $TaskName\"\n        }\n    }\n    catch {\n        Write-Log \"Task not found/error: $TaskName\" 'WARN'\n    }\n}\n#endregion\n\ntry {\n    Write-Log \"Starting PC Productivity Optimization...\"\n\n    # 1. Restore Point\n    Write-Log \"Creating Restore Point...\"\n    try {\n        Checkpoint-Computer -Description 'VieX PC Productivity' -RestorePointType 'MODIFY_SETTINGS' -ErrorAction SilentlyContinue\n    }\n    catch {\n        Write-Log \"Could not create restore point (might be disabled).\" 'WARN'\n    }\n\n    # 2. Power Plan: High Performance\n    Write-Log \"Setting Power Plan to High Performance...\"\n    # High Performance GUID\n    & powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c \n\n    # 3. Disable Power Saving features (USB, PCI)\n    Write-Log \"Disabling USB Selective Suspend & PCI Link State Power Management...\"\n    # AC Setting Index: 0x00000000 (Disable) for USB\n    & powercfg /SETACVALUEINDEX SCHEME_CURRENT 2a737441-1930-4402-8d77-b2beb10e8616 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0\n    # AC Setting Index for PCI Express: 0 (Off)\n    & powercfg /SETACVALUEINDEX SCHEME_CURRENT 501a4d13-42af-401f-99d3-3b1658ea20b3 ee12f906-d277-404b-b6da-e5fa1a576df5 0\n    & powercfg /setactive scheme_current\n\n    # 4. Disable Xbox / Game Bar (Bloat for work PC)\n    Write-Log \"Disabling Game Bar & Xbox features...\"\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR\" /v \"AppCaptureEnabled\" /t REG_DWORD /d 0 /f | Out-Null\n    reg add \"HKCU\\System\\GameConfigStore\" /v \"GameDVR_Enabled\" /t REG_DWORD /d 0 /f | Out-Null\n\n    $xboxServices = @(\"XblAuthManager\", \"XblGameSave\", \"XboxNetApiSvc\", \"XboxGipSvc\")\n    foreach ($svc in $xboxServices) {\n        if (Get-Service $svc -ErrorAction SilentlyContinue) {\n            Set-Service -Name $svc -StartupType Disabled -ErrorAction SilentlyContinue\n            if ((Get-Service $svc).Status -eq 'Running') { Stop-Service $svc -Force -ErrorAction SilentlyContinue }\n            Write-Log \"Disabled service: $svc\"\n        }\n    }\n\n    # 5. Safe Debloat (Consumer Junk)\n    Write-Log \"Removing non-essential consumer apps...\"\n    $bloat = @(\n        \"*Microsoft.MicrosoftSolitaireCollection*\",\n        \"*Microsoft.Getstarted*\",\n        \"*Microsoft.WindowsFeedbackHub*\",\n        \"*Microsoft.SkypeApp*\",\n        \"*Microsoft.BingWeather*\",\n        \"*Microsoft.BingNews*\",\n        \"*Microsoft.ZuneMusic*\",\n        \"*Microsoft.ZuneVideo*\",\n        \"*Microsoft.MixedReality.Portal*\",\n        \"*Microsoft.XboxApp*\",\n        \"*Microsoft.YourPhone*\", \n        \"*Microsoft.People*\",\n        \"*Microsoft.WindowsMaps*\"\n    )\n    foreach ($pattern in $bloat) {\n        Get-AppxPackage -Name $pattern -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue\n        Write-Log \"Removed AppX: $pattern\"\n    }\n\n    # 6. Privacy / Telemetry (Safe)\n    Write-Log \"Applying Safe Privacy Tweaks...\"\n    reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\" /v \"AllowTelemetry\" /t REG_DWORD /d 1 /f | Out-Null # 1 = Basic/Security only\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo\" /v \"Enabled\" /t REG_DWORD /d 0 /f | Out-Null\n\n    # 7. Disable Hibernate (Desktop generally doesn't need it, saves space)\n    Write-Log \"Disabling Hibernation (Free up C: space)...\"\n    & powercfg /hibernate off\n\n    Write-Log \"PC Productivity Optimization Complete. Restart recommended.\"\n}\ncatch {\n    Write-Log \"FATAL ERROR: $($_.Exception.Message)\" 'ERROR'\n    throw\n}\n",
+        "unapply": "<#\n.SYNOPSIS\n    Reverts PC Productivity optimizations.\n#>\n\nSet-StrictMode -Version Latest\n$ErrorActionPreference = 'Stop'\n\nfunction Test-IsAdmin {\n    $id = [Security.Principal.WindowsIdentity]::GetCurrent()\n    $p = New-Object Security.Principal.WindowsPrincipal($id)\n    return $p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)\n}\n\nif (-not (Test-IsAdmin)) {\n    Write-Host \"[ERROR] Please run this script as Administrator.\" -ForegroundColor Red\n    exit 1\n}\n\ntry {\n    Write-Host \"Reverting PC Productivity Tweaks...\"\n\n    # 1. Reset Power Plan to Balanced\n    Write-Host \"Resetting Power Plan to Balanced...\"\n    & powercfg /setactive scheme_balanced\n\n    # 2. Re-enable Game Bar\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR\" /v \"AppCaptureEnabled\" /t REG_DWORD /d 1 /f | Out-Null\n    reg add \"HKCU\\System\\GameConfigStore\" /v \"GameDVR_Enabled\" /t REG_DWORD /d 1 /f | Out-Null\n\n    # 3. Re-enable Xbox Services\n    $xboxServices = @(\"XblAuthManager\", \"XblGameSave\", \"XboxNetApiSvc\", \"XboxGipSvc\")\n    foreach ($svc in $xboxServices) {\n        if (Get-Service $svc -ErrorAction SilentlyContinue) {\n            Set-Service -Name $svc -StartupType Manual -ErrorAction SilentlyContinue\n            Write-Host \"Restored service: $svc (Manual)\"\n        }\n    }\n\n    # 4. Re-enable Hibernate\n    Write-Host \"Re-enabling Hibernation...\"\n    & powercfg /hibernate on\n\n    # 5. Re-enable Telemetry (Default)\n    reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\" /v \"AllowTelemetry\" /t REG_DWORD /d 3 /f | Out-Null # 3 = Full\n    reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo\" /v \"Enabled\" /t REG_DWORD /d 1 /f | Out-Null\n\n    Write-Host \"Revert complete. Note: Removed AppX packages cannot be restored without reinstalling from Store.\"\n    Write-Host \"Please restart your computer.\"\n}\ncatch {\n    Write-Host \"Error: $($_.Exception.Message)\" -ForegroundColor Red\n}\n"
+      }
+    },
+    {
+      "id": "remove-gaming-apps",
+      "title": {
+        "vi": "Gỡ ứng dụng game rác",
+        "en": "Remove Gaming Bloat"
+      },
+      "description": {
+        "vi": "Gỡ bỏ các ứng dụng dùng thử Xbox không cần thiết.",
+        "en": "Removes Xbox trial apps and overlays."
+      },
+      "category": [
+        "Performance",
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": false,
+      "docsurl": "https://docs.getvie.net/tweaks/remove-gaming-apps",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/remove-gaming-apps/meta.json",
+      "scripts": {
+        "apply": "$appsList = 'Microsoft.GamingApp', 'Microsoft.XboxGameOverlay', 'Microsoft.XboxGamingOverlay'\n\nforeach ($app in $appsList) {\n    Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage\n    Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online\n}\n",
+        "unapply": null
+      }
+    },
+    {
+      "id": "remove-onedrive",
+      "title": {
+        "vi": "Gỡ OneDrive",
+        "en": "Remove OneDrive"
+      },
+      "description": {
+        "vi": "Gỡ bỏ hoàn toàn OneDrive khỏi hệ thống.",
+        "en": "Uninstalls OneDrive completely."
+      },
+      "category": [
+        "Performance",
+        "General",
+        "Privacy"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/remove-onedrive",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/remove-onedrive/meta.json",
+      "scripts": {
+        "apply": "$OneDrivePath = $($env:OneDrive)\n        Write-Host \"Removing OneDrive\"\n        $regPath = \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OneDriveSetup.exe\"\n        if (Test-Path $regPath) {\n            $OneDriveUninstallString = Get-ItemPropertyValue \"$regPath\" -Name \"UninstallString\"\n            $OneDriveExe, $OneDriveArgs = $OneDriveUninstallString.Split(\" \")\n            Start-Process -FilePath $OneDriveExe -ArgumentList \"$OneDriveArgs /silent\" -NoNewWindow -Wait\n        } else {\n            Write-Host \"Onedrive dosn't seem to be installed anymore\" -ForegroundColor Red\n            return\n        }\n        # Check if OneDrive got Uninstalled\n        if (-not (Test-Path $regPath)) {\n        Write-Host \"Copy downloaded Files from the OneDrive Folder to Root UserProfile\"\n        Start-Process -FilePath powershell -ArgumentList \"robocopy '$($OneDrivePath)' '$($env:USERPROFILE.TrimEnd())\\' /mov /e /xj\" -NoNewWindow -Wait\n  \n        Write-Host \"Removing OneDrive leftovers\"\n        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue \"$env:localappdata\\Microsoft\\OneDrive\"\n        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue \"$env:localappdata\\OneDrive\"\n        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue \"$env:programdata\\Microsoft OneDrive\"\n        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue \"$env:systemdrive\\OneDriveTemp\"\n        reg delete \"HKEY_CURRENT_USER\\Software\\Microsoft\\OneDrive\" -f\n        # check if directory is empty before removing:\n        If ((Get-ChildItem \"$OneDrivePath\" -Recurse | Measure-Object).Count -eq 0) {\n            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue \"$OneDrivePath\"\n        }\n  \n        Write-Host \"Remove Onedrive from explorer sidebar\"\n        Set-ItemProperty -Path \"HKCR:\\CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6}\" -Name \"System.IsPinnedToNameSpaceTree\" -Value 0\n        Set-ItemProperty -Path \"HKCR:\\Wow6432Node\\CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6}\" -Name \"System.IsPinnedToNameSpaceTree\" -Value 0\n  \n        Write-Host \"Removing run hook for new users\"\n        reg load \"hku\\Default\" \"C:\\Users\\Default\\NTUSER.DAT\"\n        reg delete \"HKEY_USERS\\Default\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\" /v \"OneDriveSetup\" /f\n        reg unload \"hku\\Default\"\n  \n        Write-Host \"Removing startmenu entry\"\n        Remove-Item -Force -ErrorAction SilentlyContinue \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\OneDrive.lnk\"\n  \n        Write-Host \"Removing scheduled task\"\n        Get-ScheduledTask -TaskPath '\\' -TaskName 'OneDrive*' -ea SilentlyContinue | Unregister-ScheduledTask -Confirm:$false\n  \n        # Add Shell folders restoring default locations\n        Write-Host \"Shell Fixing\"\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"AppData\" -Value \"$env:userprofile\\AppData\\Roaming\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Cache\" -Value \"$env:userprofile\\AppData\\Local\\Microsoft\\Windows\\INetCache\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Cookies\" -Value \"$env:userprofile\\AppData\\Local\\Microsoft\\Windows\\INetCookies\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Favorites\" -Value \"$env:userprofile\\Favorites\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"History\" -Value \"$env:userprofile\\AppData\\Local\\Microsoft\\Windows\\History\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Local AppData\" -Value \"$env:userprofile\\AppData\\Local\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"My Music\" -Value \"$env:userprofile\\Music\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"My Video\" -Value \"$env:userprofile\\Videos\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"NetHood\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Network Shortcuts\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"PrintHood\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Printer Shortcuts\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Programs\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Recent\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Recent\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"SendTo\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\SendTo\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Start Menu\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Startup\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Templates\" -Value \"$env:userprofile\\AppData\\Roaming\\Microsoft\\Windows\\Templates\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"{374DE290-123F-4565-9164-39C4925E467B}\" -Value \"$env:userprofile\\Downloads\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Desktop\" -Value \"$env:userprofile\\Desktop\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"My Pictures\" -Value \"$env:userprofile\\Pictures\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"Personal\" -Value \"$env:userprofile\\Documents\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"{F42EE2D3-909F-4907-8871-4C22FC0BF756}\" -Value \"$env:userprofile\\Documents\" -Type ExpandString\n        Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" -Name \"{0DDD015D-B06C-45D5-8C4C-F59713854639}\" -Value \"$env:userprofile\\Pictures\" -Type ExpandString\n        Write-Host \"Restarting explorer\"\n        taskkill.exe /F /IM \"explorer.exe\"\n        Start-Process \"explorer.exe\"\n  \n        Write-Host \"Waiting for explorer to complete loading\"\n        Write-Host \"Please Note - The OneDrive folder at $OneDrivePath may still have items in it. You must manually delete it, but all the files should already be copied to the base user folder.\"\n        Write-Host \"If there are Files missing afterwards, please Login to Onedrive.com and Download them manually\" -ForegroundColor Yellow\n        Start-Sleep 5\n        } else {\n        Write-Host \"Something went Wrong during the Unistallation of OneDrive\" -ForegroundColor Red\n        }",
+        "unapply": "Write-Host \"Install OneDrive\"\nStart-Process -FilePath winget -ArgumentList \"install -e --accept-source-agreements --accept-package-agreements --silent Microsoft.OneDrive \" -NoNewWindow -Wait"
+      }
+    },
+    {
+      "id": "revert-context-menu",
+      "title": {
+        "vi": "Menu chuột phải cũ",
+        "en": "Classic Context Menu"
+      },
+      "description": {
+        "vi": "Khôi phục menu chuột phải kiểu Windows 10.",
+        "en": "Restores the Windows 10 style context menu."
+      },
+      "category": [
+        "General",
+        "Appearance"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/revert-context-menu",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/revert-context-menu/meta.json",
+      "scripts": {
+        "apply": "New-Item -Path \"HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\" -Name \"InprocServer32\" -force -value \"\"\nStop-Process -Name \"explorer\" -Force\nStart-Process \"explorer.exe\"",
+        "unapply": "Remove-Item -Path \"HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\" -Recurse -Confirm:$false -Force\nStop-Process -Name \"explorer\" -Force\nStart-Process \"explorer.exe\""
+      }
+    },
+    {
+      "id": "run-disk-cleanup",
+      "title": {
+        "vi": "Dọn dẹp ổ đĩa",
+        "en": "Run Disk Cleanup"
+      },
+      "description": {
+        "vi": "Chạy công cụ dọn dẹp ổ đĩa của Windows.",
+        "en": "Runs native Disk Cleanup utility."
+      },
+      "category": [
+        "General",
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/run-disk-cleanup",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/run-disk-cleanup/meta.json",
+      "scripts": {
+        "apply": "cleanmgr.exe /d C: /VERYLOWDISK\nDism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase",
+        "unapply": null
+      }
+    },
+    {
+      "id": "set-powershell7-default",
+      "title": {
+        "vi": "Dùng PowerShell 7 mặc định",
+        "en": "Set PowerShell 7 Default"
+      },
+      "description": {
+        "vi": "Đặt PowerShell 7 (nếu có) làm mặc định.",
+        "en": "Sets PS7 as the default terminal shell."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-powershell7-default",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-powershell7-default/meta.json",
+      "scripts": {
+        "apply": "if (Test-Path -Path \"$env:ProgramFiles\\PowerShell\\7\") {\n    Write-Host \"PowerShell 7 is already installed.\"\n} else {\n    Write-Host \"Installing PowerShell 7...\"\n    winget install --id Microsoft.PowerShell --silent\n}\n\n$targetTerminalName = \"PowerShell\"\n\nif (-not (Get-Command \"wt\" -ErrorAction SilentlyContinue)) {\n    Write-Host \"Windows Terminal not installed. Exiting...\"\n    exit\n}\n\n$settingsPath = \"$env:LOCALAPPDATA\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\\settings.json\"\nif (-not (Test-Path -Path $settingsPath)) {\n    Write-Host \"Windows Terminal settings.json not found.\"\n    exit\n}\n\n$settingsContent = Get-Content -Path $settingsPath | ConvertFrom-Json\n$ps7Profile = $settingsContent.profiles.list | Where-Object { $_.name -eq $targetTerminalName }\n\nif ($ps7Profile) {\n    $settingsContent.defaultProfile = $ps7Profile.guid\n    $settingsContent | ConvertTo-Json -Depth 100 | Set-Content -Path $settingsPath\n    Write-Host \"Default profile set to PowerShell 7\"\n} else {\n    Write-Host \"No PowerShell 7 profile found.\"\n}\n",
+        "unapply": "$targetTerminalName = \"Windows PowerShell\"\n\nif (-not (Get-Command \"wt\" -ErrorAction SilentlyContinue)) {\n    Write-Host \"Windows Terminal not installed. Exiting...\"\n    exit\n}\n\n$settingsPath = \"$env:LOCALAPPDATA\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\\settings.json\"\nif (-not (Test-Path -Path $settingsPath)) {\n    Write-Host \"Windows Terminal settings.json not found.\"\n    exit\n}\n\n$settingsContent = Get-Content -Path $settingsPath | ConvertFrom-Json\n$ps5Profile = $settingsContent.profiles.list | Where-Object { $_.name -eq $targetTerminalName }\n\nif ($ps5Profile) {\n    $settingsContent.defaultProfile = $ps5Profile.guid\n    $settingsContent | ConvertTo-Json -Depth 100 | Set-Content -Path $settingsPath\n    Write-Host \"Default profile reverted to PowerShell 5\"\n} else {\n    Write-Host \"No Windows PowerShell profile found.\"\n}\n"
+      }
+    },
+    {
+      "id": "set-services-to-manual",
+      "title": {
+        "vi": "Chuyển Services sang Manual",
+        "en": "Set Services to Manual"
+      },
+      "description": {
+        "vi": "Chuyển các dịch vụ không cần thiết sang khởi động thủ công.",
+        "en": "Sets unnecessary services to Manual start."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": true,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-services-to-manual",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-services-to-manual/meta.json",
+      "scripts": {
+        "apply": "      $services = @(\n      @{ Name = \"AJRouter\"; StartupType = \"Disabled\" },\n      @{ Name = \"ALG\"; StartupType = \"Manual\" },\n      @{ Name = \"AppIDSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"AppMgmt\"; StartupType = \"Manual\" },\n      @{ Name = \"AppReadiness\"; StartupType = \"Manual\" },\n      @{ Name = \"AppVClient\"; StartupType = \"Disabled\" },\n      @{ Name = \"AppXSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"Appinfo\"; StartupType = \"Manual\" },\n      @{ Name = \"AssignedAccessManagerSvc\"; StartupType = \"Disabled\" },\n      @{ Name = \"AudioEndpointBuilder\"; StartupType = \"Automatic\" },\n      @{ Name = \"AudioSrv\"; StartupType = \"Automatic\" },\n      @{ Name = \"Audiosrv\"; StartupType = \"Automatic\" },\n      @{ Name = \"AxInstSV\"; StartupType = \"Manual\" },\n      @{ Name = \"BDESVC\"; StartupType = \"Manual\" },\n      @{ Name = \"BFE\"; StartupType = \"Automatic\" },\n      @{ Name = \"BITS\"; StartupType = \"AutomaticDelayedStart\" },\n      @{ Name = \"BTAGService\"; StartupType = \"Manual\" },\n      @{ Name = \"BcastDVRUserService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"BluetoothUserService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"BrokerInfrastructure\"; StartupType = \"Automatic\" },\n      @{ Name = \"Browser\"; StartupType = \"Manual\" },\n      @{ Name = \"BthAvctpSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"BthHFSrv\"; StartupType = \"Automatic\" },\n      @{ Name = \"CDPSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"CDPUserSvc_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"COMSysApp\"; StartupType = \"Manual\" },\n      @{ Name = \"CaptureService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"CertPropSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"ClipSVC\"; StartupType = \"Manual\" },\n      @{ Name = \"ConsentUxUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"CoreMessagingRegistrar\"; StartupType = \"Automatic\" },\n      @{ Name = \"CredentialEnrollmentManagerUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"CryptSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"CscService\"; StartupType = \"Manual\" },\n      @{ Name = \"DPS\"; StartupType = \"Automatic\" },\n      @{ Name = \"DcomLaunch\"; StartupType = \"Automatic\" },\n      @{ Name = \"DcpSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"DevQueryBroker\"; StartupType = \"Manual\" },\n      @{ Name = \"DeviceAssociationBrokerSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"DeviceAssociationService\"; StartupType = \"Manual\" },\n      @{ Name = \"DeviceInstall\"; StartupType = \"Manual\" },\n      @{ Name = \"DevicePickerUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"DevicesFlowUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"Dhcp\"; StartupType = \"Automatic\" },\n      @{ Name = \"DiagTrack\"; StartupType = \"Disabled\" },\n      @{ Name = \"DialogBlockingService\"; StartupType = \"Disabled\" },\n      @{ Name = \"DispBrokerDesktopSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"DisplayEnhancementService\"; StartupType = \"Manual\" },\n      @{ Name = \"DmEnrollmentSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"Dnscache\"; StartupType = \"Automatic\" },\n      @{ Name = \"DoSvc\"; StartupType = \"AutomaticDelayedStart\" },\n      @{ Name = \"DsSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"DsmSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"DusmSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"EFS\"; StartupType = \"Manual\" },\n      @{ Name = \"EapHost\"; StartupType = \"Manual\" },\n      @{ Name = \"EntAppSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"EventLog\"; StartupType = \"Automatic\" },\n      @{ Name = \"EventSystem\"; StartupType = \"Automatic\" },\n      @{ Name = \"FDResPub\"; StartupType = \"Manual\" },\n      @{ Name = \"Fax\"; StartupType = \"Manual\" },\n      @{ Name = \"FontCache\"; StartupType = \"Automatic\" },\n      @{ Name = \"FrameServer\"; StartupType = \"Manual\" },\n      @{ Name = \"FrameServerMonitor\"; StartupType = \"Manual\" },\n      @{ Name = \"GraphicsPerfSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"HomeGroupListener\"; StartupType = \"Manual\" },\n      @{ Name = \"HomeGroupProvider\"; StartupType = \"Manual\" },\n      @{ Name = \"HvHost\"; StartupType = \"Manual\" },\n      @{ Name = \"IEEtwCollectorService\"; StartupType = \"Manual\" },\n      @{ Name = \"IKEEXT\"; StartupType = \"Manual\" },\n      @{ Name = \"InstallService\"; StartupType = \"Manual\" },\n      @{ Name = \"InventorySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"IpxlatCfgSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"KeyIso\"; StartupType = \"Automatic\" },\n      @{ Name = \"KtmRm\"; StartupType = \"Manual\" },\n      @{ Name = \"LSM\"; StartupType = \"Automatic\" },\n      @{ Name = \"LanmanServer\"; StartupType = \"Automatic\" },\n      @{ Name = \"LanmanWorkstation\"; StartupType = \"Automatic\" },\n      @{ Name = \"LicenseManager\"; StartupType = \"Manual\" },\n      @{ Name = \"LxpSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"MSDTC\"; StartupType = \"Manual\" },\n      @{ Name = \"MSiSCSI\"; StartupType = \"Manual\" },\n      @{ Name = \"MapsBroker\"; StartupType = \"AutomaticDelayedStart\" },\n      @{ Name = \"McpManagementService\"; StartupType = \"Manual\" },\n      @{ Name = \"MessagingService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"MicrosoftEdgeElevationService\"; StartupType = \"Manual\" },\n      @{ Name = \"MixedRealityOpenXRSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"MpsSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"MsKeyboardFilter\"; StartupType = \"Manual\" },\n      @{ Name = \"NPSMSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"NaturalAuthentication\"; StartupType = \"Manual\" },\n      @{ Name = \"NcaSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NcbService\"; StartupType = \"Manual\" },\n      @{ Name = \"NcdAutoSetup\"; StartupType = \"Manual\" },\n      @{ Name = \"NetSetupSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NetTcpPortSharing\"; StartupType = \"Disabled\" },\n      @{ Name = \"Netlogon\"; StartupType = \"Automatic\" },\n      @{ Name = \"Netman\"; StartupType = \"Manual\" },\n      @{ Name = \"NgcCtnrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NgcSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NlaSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"OneSyncSvc_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"P9RdrService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"PNRPAutoReg\"; StartupType = \"Manual\" },\n      @{ Name = \"PNRPsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"PcaSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"PeerDistSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"PenService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"PerfHost\"; StartupType = \"Manual\" },\n      @{ Name = \"PhoneSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"PimIndexMaintenanceSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"PlugPlay\"; StartupType = \"Manual\" },\n      @{ Name = \"PolicyAgent\"; StartupType = \"Manual\" },\n      @{ Name = \"Power\"; StartupType = \"Automatic\" },\n      @{ Name = \"PrintNotify\"; StartupType = \"Manual\" },\n      @{ Name = \"PrintWorkflowUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"ProfSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"PushToInstall\"; StartupType = \"Manual\" },\n      @{ Name = \"QWAVE\"; StartupType = \"Manual\" },\n      @{ Name = \"RasAuto\"; StartupType = \"Manual\" },\n      @{ Name = \"RasMan\"; StartupType = \"Manual\" },\n      @{ Name = \"RemoteAccess\"; StartupType = \"Disabled\" },\n      @{ Name = \"RemoteRegistry\"; StartupType = \"Disabled\" },\n      @{ Name = \"RetailDemo\"; StartupType = \"Manual\" },\n      @{ Name = \"RmSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"RpcEptMapper\"; StartupType = \"Automatic\" },\n      @{ Name = \"RpcLocator\"; StartupType = \"Manual\" },\n      @{ Name = \"RpcSs\"; StartupType = \"Automatic\" },\n      @{ Name = \"SCPolicySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"SCardSvr\"; StartupType = \"Manual\" },\n      @{ Name = \"SDRSVC\"; StartupType = \"Manual\" },\n      @{ Name = \"SEMgrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"SENS\"; StartupType = \"Automatic\" },\n      @{ Name = \"SNMPTRAP\"; StartupType = \"Manual\" },\n      @{ Name = \"SNMPTrap\"; StartupType = \"Manual\" },\n      @{ Name = \"SSDPSRV\"; StartupType = \"Manual\" },\n      @{ Name = \"SamSs\"; StartupType = \"Automatic\" },\n      @{ Name = \"ScDeviceEnum\"; StartupType = \"Manual\" },\n      @{ Name = \"Schedule\"; StartupType = \"Automatic\" },\n      @{ Name = \"SecurityHealthService\"; StartupType = \"Manual\" },\n      @{ Name = \"Sense\"; StartupType = \"Manual\" },\n      @{ Name = \"SensorDataService\"; StartupType = \"Manual\" },\n      @{ Name = \"SensorService\"; StartupType = \"Manual\" },\n      @{ Name = \"SensrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"SessionEnv\"; StartupType = \"Manual\" },\n      @{ Name = \"SgrmBroker\"; StartupType = \"Automatic\" },\n      @{ Name = \"SharedAccess\"; StartupType = \"Manual\" },\n      @{ Name = \"SharedRealitySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"ShellHWDetection\"; StartupType = \"Automatic\" },\n      @{ Name = \"SmsRouter\"; StartupType = \"Manual\" },\n      @{ Name = \"Spooler\"; StartupType = \"Automatic\" },\n      @{ Name = \"SstpSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"StateRepository\"; StartupType = \"Manual\" },\n      @{ Name = \"StiSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"StorSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"SysMain\"; StartupType = \"Automatic\" },\n      @{ Name = \"SystemEventsBroker\"; StartupType = \"Automatic\" },\n      @{ Name = \"TabletInputService\"; StartupType = \"Manual\" },\n      @{ Name = \"TapiSrv\"; StartupType = \"Manual\" },\n      @{ Name = \"TermService\"; StartupType = \"Automatic\" },\n      @{ Name = \"TextInputManagementService\"; StartupType = \"Manual\" },\n      @{ Name = \"Themes\"; StartupType = \"Automatic\" },\n      @{ Name = \"TieringEngineService\"; StartupType = \"Manual\" },\n      @{ Name = \"TimeBroker\"; StartupType = \"Manual\" },\n      @{ Name = \"TimeBrokerSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"TokenBroker\"; StartupType = \"Manual\" },\n      @{ Name = \"TrkWks\"; StartupType = \"Automatic\" },\n      @{ Name = \"TroubleshootingSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"TrustedInstaller\"; StartupType = \"Manual\" },\n      @{ Name = \"UI0Detect\"; StartupType = \"Manual\" },\n      @{ Name = \"UdkUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"UevAgentService\"; StartupType = \"Disabled\" },\n      @{ Name = \"UmRdpService\"; StartupType = \"Manual\" },\n      @{ Name = \"UnistoreSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"UserDataSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"UserManager\"; StartupType = \"Automatic\" },\n      @{ Name = \"UsoSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"VGAuthService\"; StartupType = \"Automatic\" },\n      @{ Name = \"VMTools\"; StartupType = \"Automatic\" },\n      @{ Name = \"VSS\"; StartupType = \"Manual\" },\n      @{ Name = \"VacSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"VaultSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"W32Time\"; StartupType = \"Manual\" },\n      @{ Name = \"WEPHOSTSVC\"; StartupType = \"Manual\" },\n      @{ Name = \"WFDSConMgrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WMPNetworkSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WManSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WPDBusEnum\"; StartupType = \"Manual\" },\n      @{ Name = \"WSService\"; StartupType = \"Manual\" },\n      @{ Name = \"WSearch\"; StartupType = \"AutomaticDelayedStart\" },\n      @{ Name = \"WaaSMedicSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WalletService\"; StartupType = \"Manual\" },\n      @{ Name = \"WarpJITSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WbioSrvc\"; StartupType = \"Manual\" },\n      @{ Name = \"Wcmsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"WcsPlugInService\"; StartupType = \"Manual\" },\n      @{ Name = \"WdNisSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WdiServiceHost\"; StartupType = \"Manual\" },\n      @{ Name = \"WdiSystemHost\"; StartupType = \"Manual\" },\n      @{ Name = \"WebClient\"; StartupType = \"Manual\" },\n      @{ Name = \"Wecsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WerSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WiaRpc\"; StartupType = \"Manual\" },\n      @{ Name = \"WinDefend\"; StartupType = \"Automatic\" },\n      @{ Name = \"WinHttpAutoProxySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WinRM\"; StartupType = \"Manual\" },\n      @{ Name = \"Winmgmt\"; StartupType = \"Automatic\" },\n      @{ Name = \"WlanSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"WpcMonSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WpnService\"; StartupType = \"Manual\" },\n      @{ Name = \"WpnUserService_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"XblAuthManager\"; StartupType = \"Manual\" },\n      @{ Name = \"XblGameSave\"; StartupType = \"Manual\" },\n      @{ Name = \"XboxGipSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"XboxNetApiSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"autotimesvc\"; StartupType = \"Manual\" },\n      @{ Name = \"bthserv\"; StartupType = \"Manual\" },\n      @{ Name = \"camsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"cbdhsvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"cloudidsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"dcsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"defragsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"diagnosticshub.standardcollector.service\"; StartupType = \"Manual\" },\n      @{ Name = \"diagsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"dmwappushservice\"; StartupType = \"Manual\" },\n      @{ Name = \"dot3svc\"; StartupType = \"Manual\" },\n      @{ Name = \"edgeupdate\"; StartupType = \"Manual\" },\n      @{ Name = \"edgeupdatem\"; StartupType = \"Manual\" },\n      @{ Name = \"embeddedmode\"; StartupType = \"Manual\" },\n      @{ Name = \"fdPHost\"; StartupType = \"Manual\" },\n      @{ Name = \"fhsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"gpsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"hidserv\"; StartupType = \"Manual\" },\n      @{ Name = \"icssvc\"; StartupType = \"Manual\" },\n      @{ Name = \"iphlpsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"lfsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"lltdsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"lmhosts\"; StartupType = \"Manual\" },\n      @{ Name = \"mpssvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"msiserver\"; StartupType = \"Manual\" },\n      @{ Name = \"netprofm\"; StartupType = \"Manual\" },\n      @{ Name = \"nsi\"; StartupType = \"Automatic\" },\n      @{ Name = \"p2pimsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"p2psvc\"; StartupType = \"Manual\" },\n      @{ Name = \"perceptionsimulation\"; StartupType = \"Manual\" },\n      @{ Name = \"pla\"; StartupType = \"Manual\" },\n      @{ Name = \"seclogon\"; StartupType = \"Manual\" },\n      @{ Name = \"shpamsvc\"; StartupType = \"Disabled\" },\n      @{ Name = \"smphost\"; StartupType = \"Manual\" },\n      @{ Name = \"spectrum\"; StartupType = \"Manual\" },\n      @{ Name = \"sppsvc\"; StartupType = \"AutomaticDelayedStart\" },\n      @{ Name = \"ssh-agent\"; StartupType = \"Disabled\" },\n      @{ Name = \"svsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"swprv\"; StartupType = \"Manual\" },\n      @{ Name = \"tiledatamodelsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"tzautoupdate\"; StartupType = \"Disabled\" },\n      @{ Name = \"uhssvc\"; StartupType = \"Disabled\" },\n      @{ Name = \"upnphost\"; StartupType = \"Manual\" },\n      @{ Name = \"vds\"; StartupType = \"Manual\" },\n      @{ Name = \"vm3dservice\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicguestinterface\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicheartbeat\"; StartupType = \"Manual\" },\n      @{ Name = \"vmickvpexchange\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicrdv\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicshutdown\"; StartupType = \"Manual\" },\n      @{ Name = \"vmictimesync\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicvmsession\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicvss\"; StartupType = \"Manual\" },\n      @{ Name = \"vmvss\"; StartupType = \"Manual\" },\n      @{ Name = \"wbengine\"; StartupType = \"Manual\" },\n      @{ Name = \"wcncsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"webthreatdefsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"webthreatdefusersvc_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"wercplsupport\"; StartupType = \"Manual\" },\n      @{ Name = \"wisvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wlidsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wlpasvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wmiApSrv\"; StartupType = \"Manual\" },\n      @{ Name = \"workfolderssvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wscsvc\"; StartupType = \"AutomaticDelayedStart\" },\n      @{ Name = \"wuauserv\"; StartupType = \"Manual\" },\n      @{ Name = \"wudfsvc\"; StartupType = \"Manual\" }\n  )\n\n  foreach ($svc in $services) {\n    try {\n        Set-Service -Name $svc.Name -StartupType $svc.StartupType -ErrorAction Stop\n        Write-Output \"Set $($svc.Name) to $($svc.StartupType)\"\n    } catch {\n        Write-Warning \"Failed to set $($svc.Name): $_\"\n    }\n}",
+        "unapply": "$services = @(\n      @{ Name = \"AJRouter\"; StartupType = \"Manual\" },\n      @{ Name = \"ALG\"; StartupType = \"Manual\" },\n      @{ Name = \"AppIDSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"AppMgmt\"; StartupType = \"Manual\" },\n      @{ Name = \"AppReadiness\"; StartupType = \"Manual\" },\n      @{ Name = \"AppVClient\"; StartupType = \"Disabled\" },\n      @{ Name = \"AppXSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"Appinfo\"; StartupType = \"Manual\" },\n      @{ Name = \"AssignedAccessManagerSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"AudioEndpointBuilder\"; StartupType = \"Automatic\" },\n      @{ Name = \"AudioSrv\"; StartupType = \"Automatic\" },\n      @{ Name = \"Audiosrv\"; StartupType = \"Automatic\" },\n      @{ Name = \"AxInstSV\"; StartupType = \"Manual\" },\n      @{ Name = \"BDESVC\"; StartupType = \"Manual\" },\n      @{ Name = \"BFE\"; StartupType = \"Automatic\" },\n      @{ Name = \"BITS\"; StartupType = \"Automatic\" },\n      @{ Name = \"BTAGService\"; StartupType = \"Manual\" },\n      @{ Name = \"BcastDVRUserService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"BluetoothUserService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"BrokerInfrastructure\"; StartupType = \"Automatic\" },\n      @{ Name = \"Browser\"; StartupType = \"Manual\" },\n      @{ Name = \"BthAvctpSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"BthHFSrv\"; StartupType = \"Automatic\" },\n      @{ Name = \"CDPSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"CDPUserSvc_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"COMSysApp\"; StartupType = \"Manual\" },\n      @{ Name = \"CaptureService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"CertPropSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"ClipSVC\"; StartupType = \"Manual\" },\n      @{ Name = \"ConsentUxUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"CoreMessagingRegistrar\"; StartupType = \"Automatic\" },\n      @{ Name = \"CredentialEnrollmentManagerUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"CryptSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"CscService\"; StartupType = \"Manual\" },\n      @{ Name = \"DPS\"; StartupType = \"Automatic\" },\n      @{ Name = \"DcomLaunch\"; StartupType = \"Automatic\" },\n      @{ Name = \"DcpSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"DevQueryBroker\"; StartupType = \"Manual\" },\n      @{ Name = \"DeviceAssociationBrokerSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"DeviceAssociationService\"; StartupType = \"Manual\" },\n      @{ Name = \"DeviceInstall\"; StartupType = \"Manual\" },\n      @{ Name = \"DevicePickerUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"DevicesFlowUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"Dhcp\"; StartupType = \"Automatic\" },\n      @{ Name = \"DiagTrack\"; StartupType = \"Automatic\" },\n      @{ Name = \"DialogBlockingService\"; StartupType = \"Disabled\" },\n      @{ Name = \"DispBrokerDesktopSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"DisplayEnhancementService\"; StartupType = \"Manual\" },\n      @{ Name = \"DmEnrollmentSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"Dnscache\"; StartupType = \"Automatic\" },\n      @{ Name = \"DoSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"DsSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"DsmSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"DusmSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"EFS\"; StartupType = \"Manual\" },\n      @{ Name = \"EapHost\"; StartupType = \"Manual\" },\n      @{ Name = \"EntAppSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"EventLog\"; StartupType = \"Automatic\" },\n      @{ Name = \"EventSystem\"; StartupType = \"Automatic\" },\n      @{ Name = \"FDResPub\"; StartupType = \"Manual\" },\n      @{ Name = \"Fax\"; StartupType = \"Manual\" },\n      @{ Name = \"FontCache\"; StartupType = \"Automatic\" },\n      @{ Name = \"FrameServer\"; StartupType = \"Manual\" },\n      @{ Name = \"FrameServerMonitor\"; StartupType = \"Manual\" },\n      @{ Name = \"GraphicsPerfSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"HomeGroupListener\"; StartupType = \"Manual\" },\n      @{ Name = \"HomeGroupProvider\"; StartupType = \"Manual\" },\n      @{ Name = \"HvHost\"; StartupType = \"Manual\" },\n      @{ Name = \"IEEtwCollectorService\"; StartupType = \"Manual\" },\n      @{ Name = \"IKEEXT\"; StartupType = \"Manual\" },\n      @{ Name = \"InstallService\"; StartupType = \"Manual\" },\n      @{ Name = \"InventorySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"IpxlatCfgSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"KeyIso\"; StartupType = \"Automatic\" },\n      @{ Name = \"KtmRm\"; StartupType = \"Manual\" },\n      @{ Name = \"LSM\"; StartupType = \"Automatic\" },\n      @{ Name = \"LanmanServer\"; StartupType = \"Automatic\" },\n      @{ Name = \"LanmanWorkstation\"; StartupType = \"Automatic\" },\n      @{ Name = \"LicenseManager\"; StartupType = \"Manual\" },\n      @{ Name = \"LxpSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"MSDTC\"; StartupType = \"Manual\" },\n      @{ Name = \"MSiSCSI\"; StartupType = \"Manual\" },\n      @{ Name = \"MapsBroker\"; StartupType = \"Automatic\" },\n      @{ Name = \"McpManagementService\"; StartupType = \"Manual\" },\n      @{ Name = \"MessagingService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"MicrosoftEdgeElevationService\"; StartupType = \"Manual\" },\n      @{ Name = \"MixedRealityOpenXRSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"MpsSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"MsKeyboardFilter\"; StartupType = \"Disabled\" },\n      @{ Name = \"NPSMSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"NaturalAuthentication\"; StartupType = \"Manual\" },\n      @{ Name = \"NcaSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NcbService\"; StartupType = \"Manual\" },\n      @{ Name = \"NcdAutoSetup\"; StartupType = \"Manual\" },\n      @{ Name = \"NetSetupSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NetTcpPortSharing\"; StartupType = \"Disabled\" },\n      @{ Name = \"Netlogon\"; StartupType = \"Automatic\" },\n      @{ Name = \"Netman\"; StartupType = \"Manual\" },\n      @{ Name = \"NgcCtnrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NgcSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"NlaSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"OneSyncSvc_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"P9RdrService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"PNRPAutoReg\"; StartupType = \"Manual\" },\n      @{ Name = \"PNRPsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"PcaSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"PeerDistSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"PenService_*\"; StartupType = \"Manual\" },\n      @{ Name = \"PerfHost\"; StartupType = \"Manual\" },\n      @{ Name = \"PhoneSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"PimIndexMaintenanceSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"PlugPlay\"; StartupType = \"Manual\" },\n      @{ Name = \"PolicyAgent\"; StartupType = \"Manual\" },\n      @{ Name = \"Power\"; StartupType = \"Automatic\" },\n      @{ Name = \"PrintNotify\"; StartupType = \"Manual\" },\n      @{ Name = \"PrintWorkflowUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"ProfSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"PushToInstall\"; StartupType = \"Manual\" },\n      @{ Name = \"QWAVE\"; StartupType = \"Manual\" },\n      @{ Name = \"RasAuto\"; StartupType = \"Manual\" },\n      @{ Name = \"RasMan\"; StartupType = \"Manual\" },\n      @{ Name = \"RemoteAccess\"; StartupType = \"Disabled\" },\n      @{ Name = \"RemoteRegistry\"; StartupType = \"Disabled\" },\n      @{ Name = \"RetailDemo\"; StartupType = \"Manual\" },\n      @{ Name = \"RmSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"RpcEptMapper\"; StartupType = \"Automatic\" },\n      @{ Name = \"RpcLocator\"; StartupType = \"Manual\" },\n      @{ Name = \"RpcSs\"; StartupType = \"Automatic\" },\n      @{ Name = \"SCPolicySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"SCardSvr\"; StartupType = \"Manual\" },\n      @{ Name = \"SDRSVC\"; StartupType = \"Manual\" },\n      @{ Name = \"SEMgrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"SENS\"; StartupType = \"Automatic\" },\n      @{ Name = \"SNMPTRAP\"; StartupType = \"Manual\" },\n      @{ Name = \"SNMPTrap\"; StartupType = \"Manual\" },\n      @{ Name = \"SSDPSRV\"; StartupType = \"Manual\" },\n      @{ Name = \"SamSs\"; StartupType = \"Automatic\" },\n      @{ Name = \"ScDeviceEnum\"; StartupType = \"Manual\" },\n      @{ Name = \"Schedule\"; StartupType = \"Automatic\" },\n      @{ Name = \"SecurityHealthService\"; StartupType = \"Manual\" },\n      @{ Name = \"Sense\"; StartupType = \"Manual\" },\n      @{ Name = \"SensorDataService\"; StartupType = \"Manual\" },\n      @{ Name = \"SensorService\"; StartupType = \"Manual\" },\n      @{ Name = \"SensrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"SessionEnv\"; StartupType = \"Manual\" },\n      @{ Name = \"SgrmBroker\"; StartupType = \"Automatic\" },\n      @{ Name = \"SharedAccess\"; StartupType = \"Manual\" },\n      @{ Name = \"SharedRealitySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"ShellHWDetection\"; StartupType = \"Automatic\" },\n      @{ Name = \"SmsRouter\"; StartupType = \"Manual\" },\n      @{ Name = \"Spooler\"; StartupType = \"Automatic\" },\n      @{ Name = \"SstpSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"StateRepository\"; StartupType = \"Automatic\" },\n      @{ Name = \"StiSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"StorSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"SysMain\"; StartupType = \"Automatic\" },\n      @{ Name = \"SystemEventsBroker\"; StartupType = \"Automatic\" },\n      @{ Name = \"TabletInputService\"; StartupType = \"Manual\" },\n      @{ Name = \"TapiSrv\"; StartupType = \"Manual\" },\n      @{ Name = \"TermService\"; StartupType = \"Automatic\" },\n      @{ Name = \"TextInputManagementService\"; StartupType = \"Automatic\" },\n      @{ Name = \"Themes\"; StartupType = \"Automatic\" },\n      @{ Name = \"TieringEngineService\"; StartupType = \"Manual\" },\n      @{ Name = \"TimeBroker\"; StartupType = \"Manual\" },\n      @{ Name = \"TimeBrokerSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"TokenBroker\"; StartupType = \"Manual\" },\n      @{ Name = \"TrkWks\"; StartupType = \"Automatic\" },\n      @{ Name = \"TroubleshootingSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"TrustedInstaller\"; StartupType = \"Manual\" },\n      @{ Name = \"UI0Detect\"; StartupType = \"Manual\" },\n      @{ Name = \"UdkUserSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"UevAgentService\"; StartupType = \"Disabled\" },\n      @{ Name = \"UmRdpService\"; StartupType = \"Manual\" },\n      @{ Name = \"UnistoreSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"UserDataSvc_*\"; StartupType = \"Manual\" },\n      @{ Name = \"UserManager\"; StartupType = \"Automatic\" },\n      @{ Name = \"UsoSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"VGAuthService\"; StartupType = \"Automatic\" },\n      @{ Name = \"VMTools\"; StartupType = \"Automatic\" },\n      @{ Name = \"VSS\"; StartupType = \"Manual\" },\n      @{ Name = \"VacSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"VaultSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"W32Time\"; StartupType = \"Manual\" },\n      @{ Name = \"WEPHOSTSVC\"; StartupType = \"Manual\" },\n      @{ Name = \"WFDSConMgrSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WMPNetworkSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WManSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WPDBusEnum\"; StartupType = \"Manual\" },\n      @{ Name = \"WSService\"; StartupType = \"Manual\" },\n      @{ Name = \"WSearch\"; StartupType = \"Automatic\" },\n      @{ Name = \"WaaSMedicSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WalletService\"; StartupType = \"Manual\" },\n      @{ Name = \"WarpJITSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WbioSrvc\"; StartupType = \"Manual\" },\n      @{ Name = \"Wcmsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"WcsPlugInService\"; StartupType = \"Manual\" },\n      @{ Name = \"WdNisSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WdiServiceHost\"; StartupType = \"Manual\" },\n      @{ Name = \"WdiSystemHost\"; StartupType = \"Manual\" },\n      @{ Name = \"WebClient\"; StartupType = \"Manual\" },\n      @{ Name = \"Wecsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WerSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WiaRpc\"; StartupType = \"Manual\" },\n      @{ Name = \"WinDefend\"; StartupType = \"Automatic\" },\n      @{ Name = \"WinHttpAutoProxySvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WinRM\"; StartupType = \"Manual\" },\n      @{ Name = \"Winmgmt\"; StartupType = \"Automatic\" },\n      @{ Name = \"WlanSvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"WpcMonSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"WpnService\"; StartupType = \"Automatic\" },\n      @{ Name = \"WpnUserService_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"XblAuthManager\"; StartupType = \"Manual\" },\n      @{ Name = \"XblGameSave\"; StartupType = \"Manual\" },\n      @{ Name = \"XboxGipSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"XboxNetApiSvc\"; StartupType = \"Manual\" },\n      @{ Name = \"autotimesvc\"; StartupType = \"Manual\" },\n      @{ Name = \"bthserv\"; StartupType = \"Manual\" },\n      @{ Name = \"camsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"cbdhsvc_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"cloudidsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"dcsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"defragsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"diagnosticshub.standardcollector.service\"; StartupType = \"Manual\" },\n      @{ Name = \"diagsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"dmwappushservice\"; StartupType = \"Manual\" },\n      @{ Name = \"dot3svc\"; StartupType = \"Manual\" },\n      @{ Name = \"edgeupdate\"; StartupType = \"Automatic\" },\n      @{ Name = \"edgeupdatem\"; StartupType = \"Manual\" },\n      @{ Name = \"embeddedmode\"; StartupType = \"Manual\" },\n      @{ Name = \"fdPHost\"; StartupType = \"Manual\" },\n      @{ Name = \"fhsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"gpsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"hidserv\"; StartupType = \"Manual\" },\n      @{ Name = \"icssvc\"; StartupType = \"Manual\" },\n      @{ Name = \"iphlpsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"lfsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"lltdsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"lmhosts\"; StartupType = \"Manual\" },\n      @{ Name = \"mpssvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"msiserver\"; StartupType = \"Manual\" },\n      @{ Name = \"netprofm\"; StartupType = \"Manual\" },\n      @{ Name = \"nsi\"; StartupType = \"Automatic\" },\n      @{ Name = \"p2pimsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"p2psvc\"; StartupType = \"Manual\" },\n      @{ Name = \"perceptionsimulation\"; StartupType = \"Manual\" },\n      @{ Name = \"pla\"; StartupType = \"Manual\" },\n      @{ Name = \"seclogon\"; StartupType = \"Manual\" },\n      @{ Name = \"shpamsvc\"; StartupType = \"Disabled\" },\n      @{ Name = \"smphost\"; StartupType = \"Manual\" },\n      @{ Name = \"spectrum\"; StartupType = \"Manual\" },\n      @{ Name = \"sppsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"ssh-agent\"; StartupType = \"Disabled\" },\n      @{ Name = \"svsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"swprv\"; StartupType = \"Manual\" },\n      @{ Name = \"tiledatamodelsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"tzautoupdate\"; StartupType = \"Disabled\" },\n      @{ Name = \"uhssvc\"; StartupType = \"Disabled\" },\n      @{ Name = \"upnphost\"; StartupType = \"Manual\" },\n      @{ Name = \"vds\"; StartupType = \"Manual\" },\n      @{ Name = \"vm3dservice\"; StartupType = \"Automatic\" },\n      @{ Name = \"vmicguestinterface\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicheartbeat\"; StartupType = \"Manual\" },\n      @{ Name = \"vmickvpexchange\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicrdv\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicshutdown\"; StartupType = \"Manual\" },\n      @{ Name = \"vmictimesync\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicvmsession\"; StartupType = \"Manual\" },\n      @{ Name = \"vmicvss\"; StartupType = \"Manual\" },\n      @{ Name = \"vmvss\"; StartupType = \"Manual\" },\n      @{ Name = \"wbengine\"; StartupType = \"Manual\" },\n      @{ Name = \"wcncsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"webthreatdefsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"webthreatdefusersvc_*\"; StartupType = \"Automatic\" },\n      @{ Name = \"wercplsupport\"; StartupType = \"Manual\" },\n      @{ Name = \"wisvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wlidsvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wlpasvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wmiApSrv\"; StartupType = \"Manual\" },\n      @{ Name = \"workfolderssvc\"; StartupType = \"Manual\" },\n      @{ Name = \"wscsvc\"; StartupType = \"Automatic\" },\n      @{ Name = \"wuauserv\"; StartupType = \"Manual\" },\n      @{ Name = \"wudfsvc\"; StartupType = \"Manual\" }\n  )\n  \n  foreach ($svc in $services) {\n      try {\n          Set-Service -Name $svc.Name -StartupType $svc.StartupType -ErrorAction Stop\n          Write-Output \"Set $($svc.Name) to $($svc.StartupType)\"\n      } catch {\n          Write-Warning \"Failed to set $($svc.Name): $_\"\n      }\n  }\n     "
+      }
+    },
+    {
+      "id": "set-time-utc",
+      "title": {
+        "vi": "Đặt giờ UTC",
+        "en": "Set Time to UTC"
+      },
+      "description": {
+        "vi": "Đặt đồng hồ phần cứng sang UTC (tốt cho dual boot).",
+        "en": "Sets hardware clock to UTC (for dual boot)."
+      },
+      "category": [
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-time-utc",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-time-utc/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\TimeZoneInformation\" -Name \"RealTimeIsUniversal\" -Value 1 -Type DWord -Force",
+        "unapply": "Set-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\TimeZoneInformation\" -Name \"RealTimeIsUniversal\" -Value 0 -Type DWord -Force"
+      }
+    },
+    {
+      "id": "set-win32-priority-separation",
+      "title": {
+        "vi": "Tối ưu ưu tiên CPU",
+        "en": "Optimize CPU Priority"
+      },
+      "description": {
+        "vi": "Điều chỉnh Win32PrioritySeparation để tăng độ phản hồi.",
+        "en": "Adjusts Win32PrioritySeparation for responsiveness."
+      },
+      "category": [
+        "Performance"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/set-win32-priority-separation",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/set-win32-priority-separation/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl\" -Name \"Win32PrioritySeparation\" -Type DWord -Value 36\n",
+        "unapply": "Set-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl\" -Name \"Win32PrioritySeparation\" -Type DWord -Value 2\n"
+      }
+    },
+    {
+      "id": "show-seconds-in-taskbar-clock",
+      "title": {
+        "vi": "Hiện giây đồng hồ",
+        "en": "Show Seconds in Clock"
+      },
+      "description": {
+        "vi": "Hiển thị thêm số giây ở đồng hồ hệ thống.",
+        "en": "Adds seconds to the system tray clock."
+      },
+      "category": [
+        "Appearance",
+        "General"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/show-seconds-in-system-clock",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/show-seconds-in-system-clock/meta.json",
+      "scripts": {
+        "apply": "Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" -Name \"ShowSecondsInSystemClock\" -Type DWord -Value 1\n\n# Restart Explorer to apply changes\nStop-Process -Name explorer -Force\nStart-Process explorer\n",
+        "unapply": "Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" -Name \"ShowSecondsInSystemClock\" -Type DWord -Value 0\n\n# Restart Explorer to apply changes\nStop-Process -Name explorer -Force\nStart-Process explorer\n"
+      }
+    },
+    {
+      "id": "ultimate-performance-plan",
+      "title": {
+        "vi": "Gói nguồn Ultimate",
+        "en": "Ultimate Performance Plan"
+      },
+      "description": {
+        "vi": "Kích hoạt gói nguồn Ultimate Performance.",
+        "en": "Enables Ultimate Performance power plan."
+      },
+      "category": [
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": true,
+      "top": true,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/ultimate-performance-plan",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/ultimate-performance-plan/meta.json",
+      "scripts": {
+        "apply": "$ultimatePlan = powercfg -l | Select-String \"Ultimate Performance\"\n  \n  if (-not $ultimatePlan) {\n      Write-Host \"Ultimate Performance plan not found. Creating...\" \n      powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61\n  } else {\n      Write-Host \"Ultimate Performance plan already exists.\" \n  }\n  \n  # Get the GUID of the Ultimate Performance plan\n  $ultimatePlanGUID = (powercfg -l | Select-String \"Ultimate Performance\").ToString().Split()[3]\n  \n  # Set it as the active plan\n  powercfg -setactive $ultimatePlanGUID\n  \n  Write-Host \"Ultimate Performance power plan is now active.\" ",
+        "unapply": "$balancedGUID = \"381b4222-f694-41f0-9685-ff5bb260df2e\"\n  \n  # check if the Balanced plan exists\n  $balancedExists = powercfg -l | Select-String $balancedGUID\n  \n  if ($balancedExists) {\n      powercfg -setactive $balancedGUID\n      Write-Host \"Balanced power plan is now active.\" \n  } else {\n      Write-Host \"Balanced power plan not found. Creating a new Balanced plan...\" \n      powercfg -duplicatescheme $balancedGUID\n      powercfg -setactive $balancedGUID\n      Write-Host \"Balanced power plan created and activated.\" \n  }"
+      }
+    },
+    {
+      "id": "ultra-debloat",
+      "title": {
+        "vi": "Ultra Debloat (một chạm)",
+        "en": "Ultra Debloat (one-click)"
+      },
+      "description": {
+        "vi": "Gói tối ưu miễn phí: gỡ bloatware, tác vụ nền, dịch vụ an toàn, nguồn, BCD, độ trễ mạng & multimedia.",
+        "en": "Free bundle: remove bloat apps & tasks, tune safe services, power, BCD, network latency & multimedia scheduling."
+      },
+      "category": [
+        "Remember",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": true,
+      "top": true,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/ultra-debloat",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/ultra-debloat/meta.json",
+      "scripts": {
+        "apply": "[CmdletBinding()]\nparam()\n\nSet-StrictMode -Version Latest\n$ErrorActionPreference = 'Stop'\n\n$script:Config = [ordered]@{\n    TweakName = 'VieXF Ultra Debloat'\n    StateVersion = 2\n    SecurityBlockedTerms = @(\n        'Defender',\n        'SecurityHealth',\n        'Firewall',\n        'MpsSvc',\n        'BFE',\n        'SmartScreen',\n        'WindowsUpdate',\n        'wuauserv',\n        'WaaSMedicSvc',\n        'UsoSvc',\n        'EnableLUA',\n        'UAC',\n        'BitLocker',\n        'BDESVC',\n        'CredentialGuard',\n        'LsaCfgFlags',\n        'DeviceGuard',\n        'CoreIsolation',\n        'ELAM',\n        'WdFilter',\n        'WinDefend',\n        'WdNisSvc'\n    )\n    ProtectedServices = @(\n        'WlanSvc',\n        'bthserv',\n        'BthServ',\n        'BTAGService',\n        'BthAvctpSvc',\n        'DeviceAssociationService',\n        'DeviceAssociationBrokerSvc_*',\n        'DevicesFlowUserSvc_*',\n        'DevicePickerUserSvc_*',\n        'DsmSvc',\n        'ShellHWDetection',\n        'ProfSvc',\n        'UserManager',\n        'KeyIso',\n        'VaultSvc',\n        'NgcSvc',\n        'NgcCtnrSvc',\n        'LanmanWorkstation',\n        'Dhcp',\n        'Dnscache',\n        'NlaSvc',\n        'netprofm',\n        'gpsvc',\n        'EventLog',\n        'MpsSvc',\n        'BFE',\n        'CryptSvc',\n        'BrokerInfrastructure',\n        'CoreMessagingRegistrar'\n    )\n    ProtectedAppx = @(\n        'Microsoft.WindowsStore',\n        'Microsoft.DesktopAppInstaller',\n        'Microsoft.StorePurchaseApp',\n        'Microsoft.SecHealthUI',\n        'Microsoft.Windows.ShellExperienceHost',\n        'Microsoft.LockApp',\n        'Microsoft.AAD.BrokerPlugin',\n        'Microsoft.AccountsControl',\n        'Microsoft.UI.Xaml',\n        'Microsoft.VCLibs',\n        'Microsoft.NET.Native',\n        'Microsoft.Windows.StartMenuExperienceHost',\n        'MicrosoftWindows.Client.WebExperience'\n    )\n    AppxRemovalList = @(\n        'Clipchamp.Clipchamp',\n        'Microsoft.549981C3F5F10',\n        'Microsoft.Copilot',\n        'Microsoft.Getstarted',\n        'Microsoft.MicrosoftOfficeHub',\n        'Microsoft.Office.OneNote',\n        'Microsoft.Office.Sway',\n        'MicrosoftTeams',\n        'MSTeams',\n        'Microsoft.SkypeApp',\n        'Microsoft.Todos',\n        'Microsoft.News',\n        'Microsoft.BingWeather',\n        'Microsoft.WindowsFeedbackHub',\n        'Microsoft.WindowsMaps',\n        'Microsoft.WindowsSoundRecorder',\n        'Microsoft.MicrosoftSolitaireCollection',\n        'Microsoft.XboxApp',\n        'Microsoft.XboxGamingOverlay',\n        'Microsoft.XboxIdentityProvider',\n        'Microsoft.XboxSpeechToTextOverlay',\n        'Microsoft.OneDrive',\n        'Microsoft.WindowsCamera',\n        'Microsoft.WindowsAlarms',\n        'Microsoft.ZuneMusic',\n        'Microsoft.ZuneVideo',\n        'microsoft.windowscommunicationsapps',\n        'Amazon.com.Amazon',\n        'AmazonVideo.PrimeVideo',\n        'Disney',\n        'Duolingo-LearnLanguagesforFree',\n        'Facebook',\n        'Instagram',\n        'Netflix',\n        'PandoraMediaInc.Pandora',\n        'Spotify',\n        'TikTok',\n        'Twitter',\n        'TwitterUniversal',\n        'YouTube',\n        'Plex',\n        'king.com.CandyCrushSaga',\n        'king.com.CandyCrushSodaSaga',\n        'king.com.BubbleWitch3Saga',\n        'Microsoft.BingSearch',\n        'Microsoft.BingNews',\n        'Microsoft.StartExperiencesApp',\n        'MicrosoftWindows.CrossDevice'\n    )\n    TaskTargets = @(\n        @{ TaskPath = '\\Microsoft\\Windows\\Application Experience\\'; TaskName = 'Microsoft Compatibility Appraiser' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Application Experience\\'; TaskName = 'ProgramDataUpdater' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Autochk\\'; TaskName = 'Proxy' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Customer Experience Improvement Program\\'; TaskName = 'Consolidator' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Customer Experience Improvement Program\\'; TaskName = 'KernelCeipTask' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Customer Experience Improvement Program\\'; TaskName = 'UsbCeip' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Feedback\\Siuf\\'; TaskName = 'DmClient' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Feedback\\Siuf\\'; TaskName = 'DmClientOnScenarioDownload' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Maps\\'; TaskName = 'MapsToastTask' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Maps\\'; TaskName = 'MapsUpdateTask' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Power Efficiency Diagnostics\\'; TaskName = 'AnalyzeSystem' },\n        @{ TaskPath = '\\Microsoft\\Windows\\PushToInstall\\'; TaskName = 'LoginCheck' },\n        @{ TaskPath = '\\Microsoft\\Windows\\PushToInstall\\'; TaskName = 'Registration' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Shell\\'; TaskName = 'FamilySafetyMonitor' },\n        @{ TaskPath = '\\Microsoft\\Windows\\Shell\\'; TaskName = 'FamilySafetyRefreshTask' }\n    )\n    ServiceTargets = @(\n        @{ Name = 'AarSvc*'; StartupType = 'Disabled' },\n        @{ Name = 'AJRouter'; StartupType = 'Disabled' },\n        @{ Name = 'ALG'; StartupType = 'Disabled' },\n        @{ Name = 'AssignedAccessManagerSvc'; StartupType = 'Disabled' },\n        @{ Name = 'autotimesvc'; StartupType = 'Disabled' },\n        @{ Name = 'AxInstSV'; StartupType = 'Disabled' },\n        @{ Name = 'BcastDVRUserService*'; StartupType = 'Disabled' },\n        @{ Name = 'CaptureService*'; StartupType = 'Disabled' },\n        @{ Name = 'cbdhsvc*'; StartupType = 'Disabled' },\n        @{ Name = 'CDPUserSvc*'; StartupType = 'Disabled' },\n        @{ Name = 'CDPSvc'; StartupType = 'Disabled' },\n        @{ Name = 'CloudBackupRestoreSvc'; StartupType = 'Disabled' },\n        @{ Name = 'cloudidsvc'; StartupType = 'Manual' },\n        @{ Name = 'dcsvc'; StartupType = 'Disabled' },\n        @{ Name = 'diagnosticshub.standardcollector.service'; StartupType = 'Disabled' },\n        @{ Name = 'DiagTrack'; StartupType = 'Disabled' },\n        @{ Name = 'diagsvc'; StartupType = 'Disabled' },\n        @{ Name = 'DisplayEnhancementService'; StartupType = 'Disabled' },\n        @{ Name = 'DmEnrollmentSvc'; StartupType = 'Disabled' },\n        @{ Name = 'MapsBroker'; StartupType = 'Disabled' },\n        @{ Name = 'dot3svc'; StartupType = 'Disabled' },\n        @{ Name = 'fdPHost'; StartupType = 'Disabled' },\n        @{ Name = 'FDResPub'; StartupType = 'Disabled' },\n        @{ Name = 'fhsvc'; StartupType = 'Disabled' },\n        @{ Name = 'FrameServer'; StartupType = 'Disabled' },\n        @{ Name = 'FrameServerMonitor'; StartupType = 'Disabled' },\n        @{ Name = 'GraphicsPerfSvc'; StartupType = 'Disabled' },\n        @{ Name = 'HvHost'; StartupType = 'Disabled' },\n        @{ Name = 'InventorySvc'; StartupType = 'Disabled' },\n        @{ Name = 'IpxlatCfgSvc'; StartupType = 'Disabled' },\n        @{ Name = 'lfsvc'; StartupType = 'Disabled' },\n        @{ Name = 'LxpSvc'; StartupType = 'Disabled' },\n        @{ Name = 'NetTcpPortSharing'; StartupType = 'Disabled' },\n        @{ Name = 'OneSyncSvc*'; StartupType = 'Disabled' },\n        @{ Name = 'PcaSvc'; StartupType = 'Disabled' },\n        @{ Name = 'PeerDistSvc'; StartupType = 'Disabled' },\n        @{ Name = 'PhoneSvc'; StartupType = 'Disabled' },\n        @{ Name = 'PimIndexMaintenanceSvc*'; StartupType = 'Disabled' },\n        @{ Name = 'PNRPAutoReg'; StartupType = 'Disabled' },\n        @{ Name = 'PNRPsvc'; StartupType = 'Disabled' },\n        @{ Name = 'QWAVE'; StartupType = 'Disabled' },\n        @{ Name = 'RemoteRegistry'; StartupType = 'Disabled' },\n        @{ Name = 'RetailDemo'; StartupType = 'Disabled' },\n        @{ Name = 'RpcLocator'; StartupType = 'Disabled' },\n        @{ Name = 'SCardSvr'; StartupType = 'Disabled' },\n        @{ Name = 'ScDeviceEnum'; StartupType = 'Disabled' },\n        @{ Name = 'SDRSVC'; StartupType = 'Disabled' },\n        @{ Name = 'SensorDataService'; StartupType = 'Disabled' },\n        @{ Name = 'SensorService'; StartupType = 'Disabled' },\n        @{ Name = 'SensrSvc'; StartupType = 'Disabled' },\n        @{ Name = 'SEMgrSvc'; StartupType = 'Disabled' },\n        @{ Name = 'SharedRealitySvc'; StartupType = 'Disabled' },\n        @{ Name = 'SmsRouter'; StartupType = 'Disabled' },\n        @{ Name = 'SNMPTrap'; StartupType = 'Disabled' },\n        @{ Name = 'SSDPSRV'; StartupType = 'Disabled' },\n        @{ Name = 'stisvc'; StartupType = 'Disabled' },\n        @{ Name = 'SysMain'; StartupType = 'Disabled' },\n        @{ Name = 'TapiSrv'; StartupType = 'Disabled' },\n        @{ Name = 'TieringEngineService'; StartupType = 'Disabled' },\n        @{ Name = 'TroubleshootingSvc'; StartupType = 'Disabled' },\n        @{ Name = 'tzautoupdate'; StartupType = 'Disabled' },\n        @{ Name = 'UevAgentService'; StartupType = 'Disabled' },\n        @{ Name = 'WalletService'; StartupType = 'Disabled' },\n        @{ Name = 'wbengine'; StartupType = 'Disabled' },\n        @{ Name = 'Wecsvc'; StartupType = 'Disabled' },\n        @{ Name = 'wercplsupport'; StartupType = 'Disabled' },\n        @{ Name = 'WerSvc'; StartupType = 'Disabled' },\n        @{ Name = 'WFDSConMgrSvc'; StartupType = 'Disabled' },\n        @{ Name = 'WiaRpc'; StartupType = 'Disabled' },\n        @{ Name = 'Fax'; StartupType = 'Disabled' },\n        @{ Name = 'WMPNetworkSvc'; StartupType = 'Disabled' },\n        @{ Name = 'workfolderssvc'; StartupType = 'Disabled' },\n        @{ Name = 'WpcMonSvc'; StartupType = 'Disabled' },\n        @{ Name = 'XblAuthManager'; StartupType = 'Disabled' },\n        @{ Name = 'XblGameSave'; StartupType = 'Disabled' },\n        @{ Name = 'XboxNetApiSvc'; StartupType = 'Disabled' },\n        @{ Name = 'dmwappushservice'; StartupType = 'Manual' }\n    )\n    StartupNamePatterns = @(\n        'OneDrive',\n        'Teams',\n        'MSTeams',\n        'Skype',\n        'Xbox',\n        'Copilot',\n        'MicrosoftEdgeAutoLaunch',\n        'MicrosoftEdgeUpdate',\n        'GoogleUpdate',\n        'BraveUpdate',\n        'MozillaMaintenance'\n    )\n    PowerSettings = @(\n        @{ SubGroup = 'SUB_PROCESSOR'; Setting = 'PROCTHROTTLEMIN'; Value = 100 },\n        @{ SubGroup = 'SUB_PROCESSOR'; Setting = 'PROCTHROTTLEMAX'; Value = 100 },\n        @{ SubGroup = 'SUB_PCIEXPRESS'; Setting = 'ASPM'; Value = 0 },\n        @{ SubGroup = 'SUB_USB'; Setting = 'USBSELECTSUSPEND'; Value = 1 },\n        @{ SubGroup = 'SUB_SLEEP'; Setting = 'STANDBYIDLE'; Value = 0 },\n        @{ SubGroup = 'SUB_SLEEP'; Setting = 'HIBERNATEIDLE'; Value = 0 }\n    )\n    UltimateSchemeGuid = 'e9a42b02-d5df-448d-aa00-03f14749eb61'\n    HighPerformanceGuid = '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c'\n}\n\n$script:Context = $null\n$script:State = $null\n$script:Summary = [ordered]@{\n    ServicesChanged = 0\n    TasksChanged = 0\n    StartupEntriesChanged = 0\n    AppsRemoved = 0\n    ProvisionedAppsRemoved = 0\n}\n\nfunction Test-IsAdmin {\n    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()\n    $principal = New-Object Security.Principal.WindowsPrincipal($identity)\n    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)\n}\n\nfunction Write-Log {\n    param(\n        [Parameter(Mandatory)]\n        [string]$Message,\n        [ValidateSet('INFO', 'WARN', 'ERROR', 'OK')]\n        [string]$Level = 'INFO'\n    )\n\n    $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss.fff'\n    $line = \"[{0}] [{1}] {2}\" -f $timestamp, $Level, $Message\n    switch ($Level) {\n        'INFO' { Write-Host $line -ForegroundColor Cyan }\n        'WARN' { Write-Host $line -ForegroundColor Yellow }\n        'ERROR' { Write-Host $line -ForegroundColor Red }\n        'OK' { Write-Host $line -ForegroundColor Green }\n    }\n}\n\nfunction Ensure-Directory {\n    param([Parameter(Mandatory)][string]$Path)\n    if (-not (Test-Path -LiteralPath $Path)) {\n        New-Item -ItemType Directory -Path $Path -Force | Out-Null\n    }\n}\n\nfunction New-DefaultState {\n    return [ordered]@{\n        version = $script:Config.StateVersion\n        active = $true\n        createdAt = (Get-Date).ToString('o')\n        lastRunAt = (Get-Date).ToString('o')\n        machine = $env:COMPUTERNAME\n        restorePoint = [ordered]@{\n            attempted = $false\n            created = $false\n            message = ''\n        }\n        warnings = @()\n        exports = @()\n        metrics = [ordered]@{\n            before = [ordered]@{}\n            after = [ordered]@{}\n        }\n        services = @()\n        tasks = @()\n        startup = [ordered]@{\n            runValues = @()\n            startupApproved = @()\n            startupFolder = @()\n            scheduledTasks = @()\n        }\n        registry = [ordered]@{\n            values = @()\n        }\n        appx = [ordered]@{\n            removed = @()\n            provisionedRemoved = @()\n        }\n        power = [ordered]@{\n            previousActiveScheme = $null\n            appliedScheme = $null\n            createdSchemes = @()\n            settings = @()\n            hibernateEnabled = $null\n        }\n        bcd = [ordered]@{\n            changed = $false\n            beforePath = $null\n            afterPath = $null\n            rollbackCommand = 'bcdedit /deletevalue {current} disabledynamictick'\n            useplatformtickChanged = $false\n            bootMenuPolicyChanged = $false\n        }\n        gpuScaling = [ordered]@{\n            vendor = 'Unknown'\n            changed = $false\n            mode = 'Manual'\n            message = ''\n            registry = @()\n        }\n        summary = [ordered]@{}\n    }\n}\n\nfunction Initialize-Context {\n    $scriptRoot = $PSScriptRoot\n    \n    $userDataPath = Join-Path $env:APPDATA 'vie-xf'\n    $tweakDataPath = Join-Path $userDataPath 'tweak-data\\ultra-debloat'\n    \n    $logRoot = Join-Path $tweakDataPath 'logs'\n    $backupRoot = Join-Path $tweakDataPath 'backups'\n    $registryRoot = Join-Path $backupRoot 'registry'\n    $startupBackupRoot = Join-Path $backupRoot 'startup-folder'\n    Ensure-Directory -Path $logRoot\n    Ensure-Directory -Path $backupRoot\n    Ensure-Directory -Path $registryRoot\n    Ensure-Directory -Path $startupBackupRoot\n\n    $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'\n    $script:Context = [ordered]@{\n        ScriptRoot = $scriptRoot\n        LogRoot = $logRoot\n        BackupRoot = $backupRoot\n        RegistryRoot = $registryRoot\n        StartupBackupRoot = $startupBackupRoot\n        StatePath = Join-Path $backupRoot 'ultra-debloat-state.json'\n        TranscriptPath = Join-Path $logRoot (\"apply-{0}.log\" -f $timestamp)\n        BcdBeforePath = Join-Path $backupRoot 'bcd-before.txt'\n        BcdAfterPath = Join-Path $backupRoot 'bcd-after.txt'\n    }\n\n    $oldBackupRoot = Join-Path $scriptRoot 'backups'\n    $oldStatePath = Join-Path $oldBackupRoot 'ultra-debloat-state.json'\n    if ((Test-Path -LiteralPath $oldStatePath) -and (-not (Test-Path -LiteralPath $script:Context.StatePath))) {\n        try { Copy-Item -LiteralPath $oldStatePath -Destination $script:Context.StatePath -Force } catch { }\n    }\n}\n\nfunction Load-OrCreateState {\n    if ((Test-Path -LiteralPath $script:Context.StatePath) -and ((Get-Item -LiteralPath $script:Context.StatePath).Length -gt 0)) {\n        try {\n            $loaded = Get-Content -LiteralPath $script:Context.StatePath -Raw | ConvertFrom-Json -Depth 12\n            if ($loaded.active -eq $true) {\n                $script:State = $loaded\n                $script:State.lastRunAt = (Get-Date).ToString('o')\n                return\n            }\n        }\n        catch {\n            Write-Log \"Existing state file is unreadable. A new state file will be created.\" 'WARN'\n        }\n    }\n\n    $script:State = New-DefaultState\n}\n\nfunction Save-State {\n    $json = $script:State | ConvertTo-Json -Depth 12\n    Set-Content -LiteralPath $script:Context.StatePath -Value $json -Encoding UTF8\n}\n\nfunction Add-StateWarning {\n    param([Parameter(Mandatory)][string]$Message)\n    if (-not ($script:State.warnings -contains $Message)) {\n        $script:State.warnings += $Message\n        Save-State\n    }\n}\n\nfunction Convert-RegistryPathToNative {\n    param([Parameter(Mandatory)][string]$Path)\n    if ($Path.StartsWith('HKLM:\\')) { return $Path -replace '^HKLM:\\\\', 'HKLM\\' }\n    if ($Path.StartsWith('HKCU:\\')) { return $Path -replace '^HKCU:\\\\', 'HKCU\\' }\n    if ($Path.StartsWith('HKCR:\\')) { return $Path -replace '^HKCR:\\\\', 'HKCR\\' }\n    if ($Path.StartsWith('HKU:\\')) { return $Path -replace '^HKU:\\\\', 'HKU\\' }\n    throw \"Unsupported registry path: $Path\"\n}\n\nfunction Get-SafeFileName {\n    param([Parameter(Mandatory)][string]$Value)\n    return ($Value -replace '[\\\\/:*?\"<>| ]', '_')\n}\n\nfunction Export-RegistryBranchIfNeeded {\n    param([Parameter(Mandatory)][string]$Path)\n    $native = Convert-RegistryPathToNative -Path $Path\n    foreach ($entry in $script:State.exports) {\n        if ($entry.registryPath -eq $native) {\n            return\n        }\n    }\n\n    $destination = Join-Path $script:Context.RegistryRoot ((Get-SafeFileName -Value $native) + '.reg')\n    $exported = $false\n    if (Test-Path -LiteralPath $Path) {\n        & reg.exe export $native $destination /y | Out-Null\n        if ($LASTEXITCODE -eq 0) {\n            $exported = $true\n            Write-Log \"Exported registry branch: $native\" 'OK'\n        }\n        else {\n            Write-Log \"Registry export failed: $native\" 'WARN'\n        }\n    }\n    else {\n        Write-Log \"Registry branch did not exist before change: $native\" 'INFO'\n    }\n\n    $script:State.exports += [pscustomobject]@{\n        registryPath = $native\n        exportPath = $destination\n        exported = $exported\n    }\n    Save-State\n}\n\nfunction Get-RegistryValueSnapshot {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name\n    )\n\n    if (-not (Test-Path -LiteralPath $Path)) {\n        return [ordered]@{\n            existed = $false\n            kind = $null\n            value = $null\n            valueBase64 = $null\n        }\n    }\n\n    $item = Get-Item -LiteralPath $Path\n    try {\n        $value = Get-ItemPropertyValue -LiteralPath $Path -Name $Name -ErrorAction Stop\n        $kind = $item.GetValueKind($Name).ToString()\n        $base64 = $null\n        if ($value -is [byte[]]) {\n            $base64 = [Convert]::ToBase64String($value)\n            $value = $null\n        }\n\n        return [ordered]@{\n            existed = $true\n            kind = $kind\n            value = $value\n            valueBase64 = $base64\n        }\n    }\n    catch {\n        return [ordered]@{\n            existed = $false\n            kind = $null\n            value = $null\n            valueBase64 = $null\n        }\n    }\n}\n\nfunction Get-RegistryStateRecord {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name\n    )\n\n    foreach ($record in $script:State.registry.values) {\n        if ($record.path -eq $Path -and $record.name -eq $Name) {\n            return $record\n        }\n    }\n\n    return $null\n}\n\nfunction Assert-SafeRegistryPath {\n    param([Parameter(Mandatory)][string]$Path)\n    foreach ($term in $script:Config.SecurityBlockedTerms) {\n        if ($Path -like \"*$term*\") {\n            throw \"Blocked registry mutation due to protected security term [$term]: $Path\"\n        }\n    }\n}\n\nfunction Ensure-RegistryValueBackedUp {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name\n    )\n\n    $existing = Get-RegistryStateRecord -Path $Path -Name $Name\n    if ($null -ne $existing) {\n        return $existing\n    }\n\n    Assert-SafeRegistryPath -Path $Path\n    Export-RegistryBranchIfNeeded -Path $Path\n    $snapshot = Get-RegistryValueSnapshot -Path $Path -Name $Name\n    $record = [pscustomobject]@{\n        path = $Path\n        name = $Name\n        existed = $snapshot.existed\n        kind = $snapshot.kind\n        value = $snapshot.value\n        valueBase64 = $snapshot.valueBase64\n    }\n    $script:State.registry.values += $record\n    Save-State\n    return $record\n}\n\nfunction Ensure-RegistryPath {\n    param([Parameter(Mandatory)][string]$Path)\n    if (-not (Test-Path -LiteralPath $Path)) {\n        New-Item -Path $Path -Force | Out-Null\n    }\n}\n\nfunction Test-ValuesEqual {\n    param(\n        [Parameter(Mandatory)]$Current,\n        [Parameter(Mandatory)]$Desired\n    )\n\n    if ($Current -is [byte[]] -and $Desired -is [byte[]]) {\n        if ($Current.Length -ne $Desired.Length) { return $false }\n        for ($i = 0; $i -lt $Current.Length; $i++) {\n            if ($Current[$i] -ne $Desired[$i]) { return $false }\n        }\n        return $true\n    }\n\n    return \"$Current\" -eq \"$Desired\"\n}\n\nfunction Set-RegistryValueTracked {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name,\n        [Parameter(Mandatory)]$Value,\n        [Parameter(Mandatory)][ValidateSet('String', 'ExpandString', 'Binary', 'DWord', 'QWord', 'MultiString')][string]$Type\n    )\n\n    $null = Ensure-RegistryValueBackedUp -Path $Path -Name $Name\n    Ensure-RegistryPath -Path $Path\n    $snapshot = Get-RegistryValueSnapshot -Path $Path -Name $Name\n    $currentValue = if ($snapshot.valueBase64) { [Convert]::FromBase64String($snapshot.valueBase64) } else { $snapshot.value }\n    if ($snapshot.existed -and (Test-ValuesEqual -Current $currentValue -Desired $Value)) {\n        return $false\n    }\n\n    New-ItemProperty -Path $Path -Name $Name -PropertyType $Type -Value $Value -Force | Out-Null\n    Write-Log \"Registry set: $Path :: $Name\" 'OK'\n    return $true\n}\n\nfunction Test-NameMatchesPattern {\n    param(\n        [Parameter(Mandatory)][string]$Name,\n        [Parameter(Mandatory)][string[]]$Patterns\n    )\n    foreach ($pattern in $Patterns) {\n        if ($Name -like $pattern) {\n            return $true\n        }\n    }\n    return $false\n}\n\nfunction Normalize-ServiceStartMode {\n    param([Parameter(Mandatory)]$Service)\n    switch ($Service.StartMode) {\n        'Auto' { return 'Automatic' }\n        'Manual' { return 'Manual' }\n        'Disabled' { return 'Disabled' }\n        default { return 'Manual' }\n    }\n}\n\nfunction Get-ServiceRecord {\n    param([Parameter(Mandatory)][string]$Name)\n    foreach ($record in $script:State.services) {\n        if ($record.name -eq $Name) { return $record }\n    }\n    return $null\n}\n\nfunction Assert-SafeServiceChange {\n    param(\n        [Parameter(Mandatory)][string]$Name,\n        [Parameter(Mandatory)][string]$TargetStartupType\n    )\n\n    if (Test-NameMatchesPattern -Name $Name -Patterns $script:Config.ProtectedServices) {\n        throw \"Refusing to change protected service [$Name].\"\n    }\n\n    foreach ($term in $script:Config.SecurityBlockedTerms) {\n        if ($Name -like \"*$term*\") {\n            throw \"Refusing to change security-sensitive service [$Name].\"\n        }\n    }\n\n    if ($TargetStartupType -notin @('Disabled', 'Manual', 'Automatic')) {\n        throw \"Unsupported startup type: $TargetStartupType\"\n    }\n}\n\nfunction Set-ServiceStartupMode {\n    param(\n        [Parameter(Mandatory)][string]$Name,\n        [Parameter(Mandatory)][ValidateSet('Automatic', 'Manual', 'Disabled')][string]$StartupType\n    )\n\n    $startArg = switch ($StartupType) {\n        'Automatic' { 'auto' }\n        'Manual' { 'demand' }\n        'Disabled' { 'disabled' }\n    }\n\n    & sc.exe config $Name start= $startArg | Out-Null\n    if ($LASTEXITCODE -ne 0) {\n        throw \"sc.exe config failed for service [$Name]\"\n    }\n\n    if ($StartupType -ne 'Automatic') {\n        try {\n            $serviceReg = \"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\$Name\"\n            if (Test-Path -LiteralPath $serviceReg) {\n                New-ItemProperty -Path $serviceReg -Name 'DelayedAutostart' -PropertyType DWord -Value 0 -Force | Out-Null\n            }\n        }\n        catch {\n            Write-Log \"Unable to clear DelayedAutostart for ${Name}: $($_.Exception.Message)\" 'WARN'\n        }\n    }\n}\n\nfunction Set-ServiceTracked {\n    param(\n        [Parameter(Mandatory)][string]$Name,\n        [Parameter(Mandatory)][ValidateSet('Automatic', 'Manual', 'Disabled')][string]$TargetStartupType\n    )\n\n    Assert-SafeServiceChange -Name $Name -TargetStartupType $TargetStartupType\n    $service = Get-CimInstance -ClassName Win32_Service -Filter (\"Name='{0}'\" -f $Name) -ErrorAction SilentlyContinue\n    if ($null -eq $service) {\n        Write-Log \"Service not found, skipping: $Name\" 'WARN'\n        return\n    }\n\n    $currentType = Normalize-ServiceStartMode -Service $service\n    if ($currentType -eq $TargetStartupType) {\n        return\n    }\n\n    $record = Get-ServiceRecord -Name $Name\n    if ($null -eq $record) {\n        $script:State.services += [pscustomobject]@{\n            name = $Name\n            originalStartupType = $currentType\n            originalDelayedAutoStart = [bool]$service.DelayedAutoStart\n        }\n        Save-State\n    }\n\n    Set-ServiceStartupMode -Name $Name -StartupType $TargetStartupType\n    if ($TargetStartupType -in @('Disabled', 'Manual')) {\n        try {\n            $svc = Get-Service -Name $Name -ErrorAction Stop\n            if ($svc.Status -eq 'Running') {\n                Stop-Service -Name $Name -Force -ErrorAction Stop\n            }\n        }\n        catch {\n            Write-Log \"Unable to stop service $Name immediately: $($_.Exception.Message)\" 'WARN'\n        }\n    }\n\n    $script:Summary.ServicesChanged++\n    Write-Log \"Service updated: $Name -> $TargetStartupType\" 'OK'\n}\n\nfunction Resolve-ServiceNames {\n    param([Parameter(Mandatory)][string]$Pattern)\n\n    $services = Get-CimInstance -ClassName Win32_Service -ErrorAction SilentlyContinue\n    if ($null -eq $services) {\n        return @()\n    }\n\n    $resolved = @()\n    if ($Pattern -match '[\\*\\?]') {\n        $resolved = @($services | Where-Object { $_.Name -like $Pattern } | Select-Object -ExpandProperty Name)\n    }\n    else {\n        $resolved = @($services | Where-Object { $_.Name -eq $Pattern } | Select-Object -ExpandProperty Name)\n        if ($resolved.Count -eq 0) {\n            $resolved = @($services | Where-Object { $_.Name -like (\"{0}_*\" -f $Pattern) } | Select-Object -ExpandProperty Name)\n        }\n    }\n\n    return @($resolved | Sort-Object -Unique)\n}\n\nfunction Get-TaskRecord {\n    param(\n        [Parameter(Mandatory)][string]$Bucket,\n        [Parameter(Mandatory)][string]$TaskPath,\n        [Parameter(Mandatory)][string]$TaskName\n    )\n\n    $collection = if ($Bucket -eq 'tasks') { $script:State.tasks } else { $script:State.startup.scheduledTasks }\n    foreach ($record in $collection) {\n        if ($record.taskPath -eq $TaskPath -and $record.taskName -eq $TaskName) {\n            return $record\n        }\n    }\n    return $null\n}\n\nfunction Disable-ScheduledTaskTracked {\n    param(\n        [Parameter(Mandatory)][string]$TaskPath,\n        [Parameter(Mandatory)][string]$TaskName,\n        [Parameter(Mandatory)][string]$Bucket\n    )\n\n    $task = Get-ScheduledTask -TaskPath $TaskPath -TaskName $TaskName -ErrorAction SilentlyContinue\n    if ($null -eq $task) {\n        Write-Log \"Scheduled task not present: $TaskPath$TaskName\" 'INFO'\n        return\n    }\n\n    if ($task.Settings.Enabled -eq $false) {\n        return\n    }\n\n    $record = Get-TaskRecord -Bucket $Bucket -TaskPath $TaskPath -TaskName $TaskName\n    if ($null -eq $record) {\n        $newRecord = [pscustomobject]@{\n            taskPath = $TaskPath\n            taskName = $TaskName\n            originallyEnabled = $true\n        }\n        if ($Bucket -eq 'tasks') {\n            $script:State.tasks += $newRecord\n        }\n        else {\n            $script:State.startup.scheduledTasks += $newRecord\n        }\n        Save-State\n    }\n\n    Disable-ScheduledTask -InputObject $task | Out-Null\n    if ($Bucket -eq 'tasks') {\n        $script:Summary.TasksChanged++\n    }\n    else {\n        $script:Summary.StartupEntriesChanged++\n    }\n    Write-Log \"Disabled scheduled task: $TaskPath$TaskName\" 'OK'\n}\n\nfunction Get-StartupRunRecord {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name\n    )\n    foreach ($record in $script:State.startup.runValues) {\n        if ($record.path -eq $Path -and $record.name -eq $Name) {\n            return $record\n        }\n    }\n    return $null\n}\n\nfunction Disable-StartupRunValue {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name\n    )\n\n    if (-not (Test-Path -LiteralPath $Path)) {\n        return\n    }\n\n    $snapshot = Get-RegistryValueSnapshot -Path $Path -Name $Name\n    if (-not $snapshot.existed) {\n        return\n    }\n\n    $record = Get-StartupRunRecord -Path $Path -Name $Name\n    if ($null -eq $record) {\n        Export-RegistryBranchIfNeeded -Path $Path\n        $script:State.startup.runValues += [pscustomobject]@{\n            path = $Path\n            name = $Name\n            kind = $snapshot.kind\n            value = $snapshot.value\n        }\n        Save-State\n    }\n\n    Remove-ItemProperty -LiteralPath $Path -Name $Name -Force\n    $script:Summary.StartupEntriesChanged++\n    Write-Log \"Disabled Run startup entry: $Path :: $Name\" 'OK'\n}\n\nfunction Get-StartupApprovedRecord {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name\n    )\n    foreach ($record in $script:State.startup.startupApproved) {\n        if ($record.path -eq $Path -and $record.name -eq $Name) {\n            return $record\n        }\n    }\n    return $null\n}\n\nfunction Disable-StartupApprovedValue {\n    param(\n        [Parameter(Mandatory)][string]$Path,\n        [Parameter(Mandatory)][string]$Name\n    )\n\n    if (-not (Test-Path -LiteralPath $Path)) {\n        return\n    }\n\n    $snapshot = Get-RegistryValueSnapshot -Path $Path -Name $Name\n    if (-not $snapshot.existed) {\n        return\n    }\n\n    $bytes = [Convert]::FromBase64String($snapshot.valueBase64)\n    if ($bytes.Length -gt 0 -and $bytes[0] -eq 3) {\n        return\n    }\n\n    $record = Get-StartupApprovedRecord -Path $Path -Name $Name\n    if ($null -eq $record) {\n        Export-RegistryBranchIfNeeded -Path $Path\n        $script:State.startup.startupApproved += [pscustomobject]@{\n            path = $Path\n            name = $Name\n            valueBase64 = $snapshot.valueBase64\n        }\n        Save-State\n    }\n\n    if ($bytes.Length -eq 0) {\n        $bytes = [byte[]](3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)\n    }\n    else {\n        $bytes[0] = 3\n    }\n\n    New-ItemProperty -Path $Path -Name $Name -PropertyType Binary -Value $bytes -Force | Out-Null\n    $script:Summary.StartupEntriesChanged++\n    Write-Log \"Disabled StartupApproved entry: $Path :: $Name\" 'OK'\n}\n\nfunction Get-StartupFolderRecord {\n    param([Parameter(Mandatory)][string]$Path)\n    foreach ($record in $script:State.startup.startupFolder) {\n        if ($record.originalPath -eq $Path) {\n            return $record\n        }\n    }\n    return $null\n}\n\nfunction Disable-StartupFolderItem {\n    param([Parameter(Mandatory)][string]$Path)\n\n    if (-not (Test-Path -LiteralPath $Path)) {\n        return\n    }\n\n    $record = Get-StartupFolderRecord -Path $Path\n    if ($null -ne $record) {\n        return\n    }\n\n    $leafBase = [System.IO.Path]::GetFileNameWithoutExtension($Path)\n    $extension = [System.IO.Path]::GetExtension($Path)\n    $destination = Join-Path $script:Context.StartupBackupRoot ((Get-SafeFileName -Value $leafBase) + '-' + [guid]::NewGuid().Guid + $extension)\n    Move-Item -LiteralPath $Path -Destination $destination -Force\n    $script:State.startup.startupFolder += [pscustomobject]@{\n        originalPath = $Path\n        backupPath = $destination\n    }\n    Save-State\n    $script:Summary.StartupEntriesChanged++\n    Write-Log \"Moved startup folder item out of autorun: $Path\" 'OK'\n}\n\nfunction Test-StartupNameTarget {\n    param([Parameter(Mandatory)][string]$Name)\n    foreach ($pattern in $script:Config.StartupNamePatterns) {\n        if ($Name -like \"*$pattern*\") {\n            return $true\n        }\n    }\n    return $false\n}\n\nfunction Get-PowerSettingRecord {\n    param(\n        [Parameter(Mandatory)][string]$SubGroup,\n        [Parameter(Mandatory)][string]$Setting\n    )\n    foreach ($record in $script:State.power.settings) {\n        if ($record.subGroup -eq $SubGroup -and $record.setting -eq $Setting) {\n            return $record\n        }\n    }\n    return $null\n}\n\nfunction Get-ActivePowerSchemeGuid {\n    $output = powercfg /getactivescheme\n    foreach ($line in $output) {\n        if ($line -match '([A-Fa-f0-9-]{36})') {\n            return $matches[1]\n        }\n    }\n    throw 'Unable to determine the active power scheme.'\n}\n\nfunction Get-PowerSettingAcValue {\n    param(\n        [Parameter(Mandatory)][string]$SchemeGuid,\n        [Parameter(Mandatory)][string]$SubGroup,\n        [Parameter(Mandatory)][string]$Setting\n    )\n\n    $output = powercfg /q $SchemeGuid $SubGroup $Setting\n    foreach ($line in $output) {\n        if ($line -match 'Current AC Power Setting Index:\\s+0x([0-9a-fA-F]+)') {\n            return [int](\"0x{0}\" -f $matches[1])\n        }\n    }\n    throw \"Unable to read power setting $SubGroup/$Setting.\"\n}\n\nfunction Ensure-PowerSettingBackedUp {\n    param(\n        [Parameter(Mandatory)][string]$SchemeGuid,\n        [Parameter(Mandatory)][string]$SubGroup,\n        [Parameter(Mandatory)][string]$Setting\n    )\n\n    $existing = Get-PowerSettingRecord -SubGroup $SubGroup -Setting $Setting\n    if ($null -ne $existing) {\n        return $existing\n    }\n\n    $currentValue = Get-PowerSettingAcValue -SchemeGuid $SchemeGuid -SubGroup $SubGroup -Setting $Setting\n    $record = [pscustomobject]@{\n        subGroup = $SubGroup\n        setting = $Setting\n        oldAcValue = $currentValue\n    }\n    $script:State.power.settings += $record\n    Save-State\n    return $record\n}\n\nfunction Invoke-TrackedStep {\n    param(\n        [Parameter(Mandatory)][string]$Name,\n        [Parameter(Mandatory)][scriptblock]$ScriptBlock\n    )\n    try {\n        & $ScriptBlock\n    }\n    catch {\n        $message = \"{0} failed: {1}\" -f $Name, $_.Exception.Message\n        Write-Log $message 'WARN'\n        Add-StateWarning -Message $message\n    }\n}\n\nfunction Start-Logging {\n    try {\n        Start-Transcript -LiteralPath $script:Context.TranscriptPath -Force | Out-Null\n    }\n    catch {\n        Write-Log \"Transcript could not be started: $($_.Exception.Message)\" 'WARN'\n    }\n}\n\nfunction Stop-Logging {\n    try {\n        Stop-Transcript | Out-Null\n    }\n    catch {\n    }\n}\n\nfunction Initialize-ScriptState {\n    Initialize-Context\n    Start-Logging\n    Load-OrCreateState\n    Save-State\n}\n\nfunction Ensure-Admin {\n    if (-not (Test-IsAdmin)) {\n        throw 'Please run this script as Administrator.'\n    }\n}\n\nfunction Create-RestorePointIfPossible {\n    $script:State.restorePoint.attempted = $true\n    try {\n        Checkpoint-Computer -Description $script:Config.TweakName -RestorePointType 'MODIFY_SETTINGS' | Out-Null\n        $script:State.restorePoint.created = $true\n        $script:State.restorePoint.message = 'Restore point created successfully.'\n        Write-Log $script:State.restorePoint.message 'OK'\n    }\n    catch {\n        $script:State.restorePoint.created = $false\n        $script:State.restorePoint.message = \"Restore point skipped: $($_.Exception.Message)\"\n        Write-Log $script:State.restorePoint.message 'WARN'\n    }\n    Save-State\n}\n\nfunction Capture-BeforeMetrics {\n    $script:State.metrics.before = [ordered]@{\n        processCount = (Get-Process | Measure-Object).Count\n    }\n    Save-State\n}\n\nfunction Capture-AfterMetrics {\n    $script:State.metrics.after = [ordered]@{\n        processCount = (Get-Process | Measure-Object).Count\n    }\n    $script:State.summary = [ordered]@{\n        servicesChanged = $script:Summary.ServicesChanged\n        tasksChanged = $script:Summary.TasksChanged\n        startupEntriesChanged = $script:Summary.StartupEntriesChanged\n        appsRemoved = $script:Summary.AppsRemoved\n        provisionedAppsRemoved = $script:Summary.ProvisionedAppsRemoved\n    }\n    Save-State\n}\n\nfunction Is-ProtectedAppxName {\n    param([Parameter(Mandatory)][string]$Name)\n    foreach ($pattern in $script:Config.ProtectedAppx) {\n        if ($Name -like \"$pattern*\") {\n            return $true\n        }\n    }\n    return $false\n}\n\nfunction Get-AppxRecord {\n    param(\n        [Parameter(Mandatory)][string]$CollectionName,\n        [Parameter(Mandatory)][string]$Key\n    )\n    $collection = if ($CollectionName -eq 'removed') { $script:State.appx.removed } else { $script:State.appx.provisionedRemoved }\n    foreach ($record in $collection) {\n        if ($record.key -eq $Key) {\n            return $record\n        }\n    }\n    return $null\n}\n\nfunction Remove-ConfiguredAppxPackages {\n    foreach ($packageName in $script:Config.AppxRemovalList) {\n        Invoke-TrackedStep -Name \"AppX removal [$packageName]\" -ScriptBlock {\n            $installedPackages = Get-AppxPackage -AllUsers -Name $packageName -ErrorAction SilentlyContinue\n            foreach ($pkg in $installedPackages) {\n                if (Is-ProtectedAppxName -Name $pkg.Name) {\n                    Write-Log \"Protected AppX skipped: $($pkg.Name)\" 'INFO'\n                    continue\n                }\n\n                $key = \"installed::{0}\" -f $pkg.PackageFullName\n                if ($null -eq (Get-AppxRecord -CollectionName 'removed' -Key $key)) {\n                    $manifest = $null\n                    if ($pkg.InstallLocation) {\n                        $candidate = Join-Path $pkg.InstallLocation 'AppxManifest.xml'\n                        if (Test-Path -LiteralPath $candidate) {\n                            $manifest = $candidate\n                        }\n                    }\n\n                    $script:State.appx.removed += [pscustomobject]@{\n                        key = $key\n                        name = $pkg.Name\n                        packageFullName = $pkg.PackageFullName\n                        packageFamilyName = $pkg.PackageFamilyName\n                        installLocation = $pkg.InstallLocation\n                        manifestPath = $manifest\n                    }\n                    Save-State\n                }\n\n                try {\n                    Remove-AppxPackage -Package $pkg.PackageFullName -AllUsers -ErrorAction Stop\n                }\n                catch {\n                    Remove-AppxPackage -Package $pkg.PackageFullName -ErrorAction SilentlyContinue\n                }\n                $script:Summary.AppsRemoved++\n                Write-Log \"Removed installed AppX: $($pkg.PackageFullName)\" 'OK'\n            }\n\n            $provisionedPackages = Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $packageName }\n            foreach ($prov in $provisionedPackages) {\n                if (Is-ProtectedAppxName -Name $prov.DisplayName) {\n                    Write-Log \"Protected provisioned AppX skipped: $($prov.DisplayName)\" 'INFO'\n                    continue\n                }\n\n                $key = \"provisioned::{0}\" -f $prov.PackageName\n                if ($null -eq (Get-AppxRecord -CollectionName 'provisionedRemoved' -Key $key)) {\n                    $script:State.appx.provisionedRemoved += [pscustomobject]@{\n                        key = $key\n                        displayName = $prov.DisplayName\n                        packageName = $prov.PackageName\n                    }\n                    Save-State\n                }\n\n                Remove-AppxProvisionedPackage -Online -PackageName $prov.PackageName -ErrorAction SilentlyContinue | Out-Null\n                $script:Summary.ProvisionedAppsRemoved++\n                Write-Log \"Removed provisioned AppX: $($prov.PackageName)\" 'OK'\n            }\n        }\n    }\n}\n\nfunction Disable-ConfiguredTasks {\n    foreach ($taskInfo in $script:Config.TaskTargets) {\n        Invoke-TrackedStep -Name \"Scheduled task [$($taskInfo.TaskPath)$($taskInfo.TaskName)]\" -ScriptBlock {\n            Disable-ScheduledTaskTracked -TaskPath $taskInfo.TaskPath -TaskName $taskInfo.TaskName -Bucket 'tasks'\n        }\n    }\n}\n\nfunction Apply-ServiceTweaks {\n    foreach ($serviceInfo in $script:Config.ServiceTargets) {\n        Invoke-TrackedStep -Name \"Service [$($serviceInfo.Name)]\" -ScriptBlock {\n            $serviceNames = Resolve-ServiceNames -Pattern $serviceInfo.Name\n            if ($serviceNames.Count -eq 0) {\n                Write-Log \"Service pattern not found, skipping: $($serviceInfo.Name)\" 'INFO'\n                return\n            }\n\n            foreach ($resolvedName in $serviceNames) {\n                Set-ServiceTracked -Name $resolvedName -TargetStartupType $serviceInfo.StartupType\n            }\n        }\n    }\n}\n\nfunction Apply-SystemResponsivenessAndNetworkTweaks {\n    Write-Log 'Applying multimedia / scheduler / network stack tweaks (tracked, rollback-safe).' 'INFO'\n\n    Invoke-TrackedStep -Name 'PriorityControl Win32PrioritySeparation' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl' -Name 'Win32PrioritySeparation' -Value 38 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'SystemProfile responsiveness & network throttle' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name 'SystemResponsiveness' -Value 0 -Type DWord)\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile' -Name 'NetworkThrottlingIndex' -Value 4294967295 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'SystemProfile Games priority' -ScriptBlock {\n        Ensure-RegistryPath -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games'\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games' -Name 'GPU Priority' -Value 8 -Type DWord)\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games' -Name 'Priority' -Value 6 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'Memory management desktop defaults' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name 'LargeSystemCache' -Value 0 -Type DWord)\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management' -Name 'ClearPageFileAtShutdown' -Value 0 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'SvcHost split threshold' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control' -Name 'SvcHostSplitThresholdInKB' -Value 4294967295 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'HAGS (HwSchMode)' -ScriptBlock {\n        try {\n            [void](Set-RegistryValueTracked -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers' -Name 'HwSchMode' -Value 2 -Type DWord)\n        }\n        catch {\n            Write-Log \"HwSchMode not applied (driver/OS may not support HAGS): $($_.Exception.Message)\" 'WARN'\n        }\n    }\n\n    Invoke-TrackedStep -Name 'TCP global parameters (latency-friendly)' -ScriptBlock {\n        $tcpParams = 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters'\n        if (Test-Path -LiteralPath $tcpParams) {\n            [void](Set-RegistryValueTracked -Path $tcpParams -Name 'TcpAckFrequency' -Value 1 -Type DWord)\n            [void](Set-RegistryValueTracked -Path $tcpParams -Name 'TCPNoDelay' -Value 1 -Type DWord)\n            [void](Set-RegistryValueTracked -Path $tcpParams -Name 'TcpDelAckTicks' -Value 0 -Type DWord)\n        }\n    }\n\n    Invoke-TrackedStep -Name 'Game DVR / Game Bar capture (reduce overhead)' -ScriptBlock {\n        $gdvr = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR'\n        Ensure-RegistryPath -Path $gdvr\n        [void](Set-RegistryValueTracked -Path $gdvr -Name 'AppCaptureEnabled' -Value 0 -Type DWord)\n        [void](Set-RegistryValueTracked -Path $gdvr -Name 'GameDVR_Enabled' -Value 0 -Type DWord)\n\n        $gbar = 'HKCU:\\Software\\Microsoft\\GameBar'\n        Ensure-RegistryPath -Path $gbar\n        [void](Set-RegistryValueTracked -Path $gbar -Name 'AutoGameModeEnabled' -Value 0 -Type DWord)\n        [void](Set-RegistryValueTracked -Path $gbar -Name 'AllowAutoGameMode' -Value 0 -Type DWord)\n    }\n}\n\nfunction Disable-BackgroundAndConsumerFeatures {\n    Invoke-TrackedStep -Name 'Background apps' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications' -Name 'GlobalUserDisabled' -Value 1 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'Windows consumer features policy' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent' -Name 'DisableWindowsConsumerFeatures' -Value 1 -Type DWord)\n    }\n\n    $contentValues = @(\n        @{ Name = 'RotatingLockScreenOverlayEnabled'; Value = 0 },\n        @{ Name = 'SubscribedContent-338387Enabled'; Value = 0 },\n        @{ Name = 'SubscribedContent-338388Enabled'; Value = 0 },\n        @{ Name = 'SubscribedContent-338389Enabled'; Value = 0 },\n        @{ Name = 'SystemPaneSuggestionsEnabled'; Value = 0 },\n        @{ Name = 'SoftLandingEnabled'; Value = 0 },\n        @{ Name = 'PreInstalledAppsEnabled'; Value = 0 },\n        @{ Name = 'PreInstalledAppsEverEnabled'; Value = 0 },\n        @{ Name = 'SilentInstalledAppsEnabled'; Value = 0 },\n        @{ Name = 'OemPreInstalledAppsEnabled'; Value = 0 }\n    )\n\n    foreach ($valueInfo in $contentValues) {\n        Invoke-TrackedStep -Name \"ContentDeliveryManager [$($valueInfo.Name)]\" -ScriptBlock {\n            [void](Set-RegistryValueTracked -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name $valueInfo.Name -Value $valueInfo.Value -Type DWord)\n        }\n    }\n\n    Invoke-TrackedStep -Name 'Turn off Windows Copilot' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot' -Name 'TurnOffWindowsCopilot' -Value 1 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'Widgets and Copilot taskbar surfaces' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'TaskbarDa' -Value 0 -Type DWord)\n        [void](Set-RegistryValueTracked -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'ShowCopilotButton' -Value 0 -Type DWord)\n    }\n\n    Invoke-TrackedStep -Name 'News and interests policy' -ScriptBlock {\n        [void](Set-RegistryValueTracked -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Dsh' -Name 'AllowNewsAndInterests' -Value 0 -Type DWord)\n    }\n}\n\nfunction Disable-StartupEntries {\n    $runPaths = @(\n        'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run',\n        'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run',\n        'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run'\n    )\n\n    foreach ($runPath in $runPaths) {\n        Invoke-TrackedStep -Name \"Startup Run scan [$runPath]\" -ScriptBlock {\n            if (-not (Test-Path -LiteralPath $runPath)) {\n                return\n            }\n\n            $props = (Get-ItemProperty -LiteralPath $runPath).PSObject.Properties | Where-Object { $_.Name -notmatch '^PS' }\n            foreach ($prop in $props) {\n                if (Test-StartupNameTarget -Name $prop.Name) {\n                    Disable-StartupRunValue -Path $runPath -Name $prop.Name\n                }\n            }\n        }\n    }\n\n    $startupApprovedPaths = @(\n        'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run',\n        'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run32',\n        'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run',\n        'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run32',\n        'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder',\n        'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder'\n    )\n\n    foreach ($approvedPath in $startupApprovedPaths) {\n        Invoke-TrackedStep -Name \"StartupApproved scan [$approvedPath]\" -ScriptBlock {\n            if (-not (Test-Path -LiteralPath $approvedPath)) {\n                return\n            }\n\n            $props = (Get-ItemProperty -LiteralPath $approvedPath).PSObject.Properties | Where-Object { $_.Name -notmatch '^PS' }\n            foreach ($prop in $props) {\n                if (Test-StartupNameTarget -Name $prop.Name) {\n                    Disable-StartupApprovedValue -Path $approvedPath -Name $prop.Name\n                }\n            }\n        }\n    }\n\n    $startupFolders = @(\n        [Environment]::GetFolderPath('Startup'),\n        [Environment]::GetFolderPath('CommonStartup')\n    ) | Where-Object { $_ }\n\n    foreach ($folder in $startupFolders) {\n        Invoke-TrackedStep -Name \"Startup folder scan [$folder]\" -ScriptBlock {\n            if (-not (Test-Path -LiteralPath $folder)) {\n                return\n            }\n\n            Get-ChildItem -LiteralPath $folder -File -ErrorAction SilentlyContinue | ForEach-Object {\n                if (Test-StartupNameTarget -Name $_.Name) {\n                    Disable-StartupFolderItem -Path $_.FullName\n                }\n            }\n        }\n    }\n\n    Invoke-TrackedStep -Name 'Startup scheduled task scan' -ScriptBlock {\n        $tasks = Get-ScheduledTask -ErrorAction SilentlyContinue\n        foreach ($task in $tasks) {\n            $descriptor = '{0}{1}' -f $task.TaskPath, $task.TaskName\n            if (-not (Test-StartupNameTarget -Name $descriptor)) {\n                continue\n            }\n\n            Disable-ScheduledTaskTracked -TaskPath $task.TaskPath -TaskName $task.TaskName -Bucket 'scheduledTasks'\n        }\n    }\n}\n\nfunction Configure-PowerPlan {\n    Invoke-TrackedStep -Name 'Power plan selection' -ScriptBlock {\n        $script:State.power.previousActiveScheme = Get-ActivePowerSchemeGuid\n        Save-State\n\n        $allSchemes = powercfg /list\n        $targetScheme = $null\n        foreach ($line in $allSchemes) {\n            if ($line -match '([A-Fa-f0-9-]{36}).*Ultimate Performance') {\n                $targetScheme = $matches[1]\n                break\n            }\n        }\n\n        if (-not $targetScheme) {\n            powercfg /duplicatescheme $script:Config.UltimateSchemeGuid | Out-Null\n            if ($LASTEXITCODE -eq 0) {\n                $script:State.power.createdSchemes += $script:Config.UltimateSchemeGuid\n                Save-State\n                $allSchemes = powercfg /list\n                foreach ($line in $allSchemes) {\n                    if ($line -match '([A-Fa-f0-9-]{36}).*Ultimate Performance') {\n                        $targetScheme = $matches[1]\n                        break\n                    }\n                }\n            }\n        }\n\n        if (-not $targetScheme) {\n            foreach ($line in $allSchemes) {\n                if ($line -match '([A-Fa-f0-9-]{36}).*High performance') {\n                    $targetScheme = $matches[1]\n                    break\n                }\n            }\n        }\n\n        if (-not $targetScheme) {\n            $targetScheme = $script:Config.HighPerformanceGuid\n        }\n\n        powercfg /setactive $targetScheme | Out-Null\n        $script:State.power.appliedScheme = $targetScheme\n        Save-State\n        Write-Log \"Active power plan set to: $targetScheme\" 'OK'\n    }\n\n    $activeScheme = Get-ActivePowerSchemeGuid\n    foreach ($powerSetting in $script:Config.PowerSettings) {\n        Invoke-TrackedStep -Name \"Power setting [$($powerSetting.SubGroup)/$($powerSetting.Setting)]\" -ScriptBlock {\n            $null = Ensure-PowerSettingBackedUp -SchemeGuid $activeScheme -SubGroup $powerSetting.SubGroup -Setting $powerSetting.Setting\n            $currentValue = Get-PowerSettingAcValue -SchemeGuid $activeScheme -SubGroup $powerSetting.SubGroup -Setting $powerSetting.Setting\n            if ($currentValue -eq [int]$powerSetting.Value) {\n                return\n            }\n\n            powercfg /setacvalueindex $activeScheme $powerSetting.SubGroup $powerSetting.Setting $powerSetting.Value | Out-Null\n            Write-Log \"Power setting updated: $($powerSetting.SubGroup)/$($powerSetting.Setting) -> $($powerSetting.Value)\" 'OK'\n        }\n    }\n\n    Invoke-TrackedStep -Name 'Power scheme activation refresh' -ScriptBlock {\n        powercfg /setactive $activeScheme | Out-Null\n    }\n\n    Invoke-TrackedStep -Name 'Hibernate status' -ScriptBlock {\n        $script:State.power.hibernateEnabled = 0\n        try {\n            $hibernateValue = Get-ItemPropertyValue -LiteralPath 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power' -Name 'HibernateEnabled' -ErrorAction Stop\n            $script:State.power.hibernateEnabled = [int]$hibernateValue\n        }\n        catch {\n        }\n        Save-State\n        powercfg /hibernate off | Out-Null\n        Write-Log 'Hibernate disabled for desktop / AC profile.' 'OK'\n    }\n}\n\nfunction Configure-Bcd {\n    Invoke-TrackedStep -Name 'BCD export (before)' -ScriptBlock {\n        (bcdedit /enum all) | Set-Content -LiteralPath $script:Context.BcdBeforePath -Encoding UTF8\n        $script:State.bcd.beforePath = $script:Context.BcdBeforePath\n        Save-State\n    }\n\n    Invoke-TrackedStep -Name 'BCD disabledynamictick' -ScriptBlock {\n        $current = bcdedit /enum '{current}'\n        $alreadySet = $false\n        foreach ($line in $current) {\n            if ($line -match 'disabledynamictick\\s+Yes') {\n                $alreadySet = $true\n                break\n            }\n        }\n\n        if (-not $alreadySet) {\n            bcdedit /set '{current}' disabledynamictick yes | Out-Null\n            $script:State.bcd.changed = $true\n            Save-State\n            Write-Log 'BCD updated: disabledynamictick=yes' 'OK'\n        }\n        else {\n            Write-Log 'BCD already had disabledynamictick=yes.' 'INFO'\n        }\n    }\n\n    Invoke-TrackedStep -Name 'BCD useplatformtick' -ScriptBlock {\n        $enum = bcdedit /enum '{current}'\n        $already = $false\n        foreach ($line in $enum) {\n            if ($line -match 'useplatformtick\\s+Yes') {\n                $already = $true\n                break\n            }\n        }\n        if (-not $already) {\n            bcdedit /set '{current}' useplatformtick yes | Out-Null\n            $script:State.bcd.useplatformtickChanged = $true\n            Save-State\n            Write-Log 'BCD updated: useplatformtick=yes' 'OK'\n        }\n    }\n\n    Invoke-TrackedStep -Name 'BCD bootmenupolicy' -ScriptBlock {\n        $enum = bcdedit /enum '{current}'\n        $alreadyStd = $false\n        foreach ($line in $enum) {\n            if ($line -match 'bootmenupolicy\\s+Standard') {\n                $alreadyStd = $true\n                break\n            }\n        }\n        if (-not $alreadyStd) {\n            bcdedit /set '{current}' bootmenupolicy Standard | Out-Null\n            $script:State.bcd.bootMenuPolicyChanged = $true\n            Save-State\n            Write-Log 'BCD updated: bootmenupolicy=Standard' 'OK'\n        }\n    }\n\n    Invoke-TrackedStep -Name 'BCD export (after)' -ScriptBlock {\n        (bcdedit /enum all) | Set-Content -LiteralPath $script:Context.BcdAfterPath -Encoding UTF8\n        $script:State.bcd.afterPath = $script:Context.BcdAfterPath\n        Save-State\n        Write-Log \"BCD rollback command: $($script:State.bcd.rollbackCommand)\" 'INFO'\n    }\n}\n\nfunction Get-GpuVendor {\n    $controllers = Get-CimInstance Win32_VideoController -ErrorAction SilentlyContinue\n    foreach ($controller in $controllers) {\n        $pnpId = [string]$controller.PNPDeviceID\n        if ($pnpId -match 'VEN_10DE') {\n            return [pscustomobject]@{ Vendor = 'NVIDIA'; AdapterString = $controller.Name }\n        }\n        if ($pnpId -match 'VEN_1002|VEN_1022') {\n            return [pscustomobject]@{ Vendor = 'AMD'; AdapterString = $controller.Name }\n        }\n        if ($pnpId -match 'VEN_8086') {\n            return [pscustomobject]@{ Vendor = 'Intel'; AdapterString = $controller.Name }\n        }\n    }\n\n    return [pscustomobject]@{ Vendor = 'Unknown'; AdapterString = '' }\n}\n\nfunction Find-LiveVideoRegistryKeys {\n    $results = @()\n    $root = 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Video'\n    if (-not (Test-Path -LiteralPath $root)) {\n        return $results\n    }\n\n    foreach ($adapterKey in Get-ChildItem -LiteralPath $root -ErrorAction SilentlyContinue) {\n        foreach ($childName in @('0000', '0001')) {\n            $candidate = Join-Path $adapterKey.PSPath $childName\n            if (Test-Path -LiteralPath $candidate) {\n                $results += $candidate\n            }\n        }\n    }\n\n    return $results\n}\n\nfunction Try-EnableGpuScaling {\n    $gpu = Get-GpuVendor\n    $script:State.gpuScaling.vendor = $gpu.Vendor\n    Save-State\n\n    $manualMessage = switch ($gpu.Vendor) {\n        'NVIDIA' { 'Manual step: NVIDIA Control Panel or NVIDIA App > Display > Adjust desktop size and position > set scaling to GPU.' }\n        'AMD' { 'Manual step: AMD Software Adrenalin > Display > GPU Scaling = Enabled.' }\n        'Intel' { 'Manual step: Intel Graphics Command Center or Intel Arc Control > Display > Scaling.' }\n        default { 'Manual step: use your GPU driver control panel to enable GPU scaling if your display pipeline supports it.' }\n    }\n\n    Invoke-TrackedStep -Name 'GPU scaling detection' -ScriptBlock {\n        $candidateNames = switch ($gpu.Vendor) {\n            'NVIDIA' { @('Scaling', 'GPUScaling') }\n            'AMD' { @('Scaling', 'GPUScaling') }\n            'Intel' { @('Scaling', 'GPUScaling') }\n            default { @() }\n        }\n\n        if ($candidateNames.Count -eq 0) {\n            $script:State.gpuScaling.mode = 'Manual'\n            $script:State.gpuScaling.message = $manualMessage\n            Save-State\n            Write-Log $manualMessage 'WARN'\n            return\n        }\n\n        foreach ($regPath in Find-LiveVideoRegistryKeys) {\n            foreach ($valueName in $candidateNames) {\n                $snapshot = Get-RegistryValueSnapshot -Path $regPath -Name $valueName\n                if (-not $snapshot.existed) {\n                    continue\n                }\n\n                if ($snapshot.kind -ne 'DWord') {\n                    continue\n                }\n\n                $currentValue = [int]$snapshot.value\n                if ($currentValue -eq 1) {\n                    $script:State.gpuScaling.mode = 'Registry'\n                    $script:State.gpuScaling.message = \"GPU scaling already enabled via existing value [$valueName].\"\n                    Save-State\n                    Write-Log $script:State.gpuScaling.message 'INFO'\n                    return\n                }\n\n                $null = Ensure-RegistryValueBackedUp -Path $regPath -Name $valueName\n                New-ItemProperty -Path $regPath -Name $valueName -PropertyType DWord -Value 1 -Force | Out-Null\n                $script:State.gpuScaling.changed = $true\n                $script:State.gpuScaling.mode = 'Registry'\n                $script:State.gpuScaling.message = \"Enabled GPU scaling via existing registry value [$valueName] under [$regPath].\"\n                $script:State.gpuScaling.registry += [pscustomobject]@{\n                    path = $regPath\n                    name = $valueName\n                }\n                Save-State\n                Write-Log $script:State.gpuScaling.message 'OK'\n                return\n            }\n        }\n\n        $script:State.gpuScaling.mode = 'Manual'\n        $script:State.gpuScaling.message = $manualMessage\n        Save-State\n        Write-Log $manualMessage 'WARN'\n    }\n}\n\nfunction Print-Summary {\n    $beforeCount = [int]$script:State.metrics.before.processCount\n    $afterCount = [int]$script:State.metrics.after.processCount\n    $gpuNote = $script:State.gpuScaling.message\n    $restorePointNote = if ($script:State.restorePoint.created) { 'created' } else { 'skipped/unavailable' }\n\n    Write-Host ''\n    Write-Host '========== VieXF Ultra Debloat ==========' -ForegroundColor White\n    Write-Host (\"Processes: {0} -> {1}\" -f $beforeCount, $afterCount) -ForegroundColor White\n    Write-Host (\"Services changed: {0}\" -f $script:Summary.ServicesChanged) -ForegroundColor White\n    Write-Host (\"Tasks changed: {0}\" -f $script:Summary.TasksChanged) -ForegroundColor White\n    Write-Host (\"Startup entries changed: {0}\" -f $script:Summary.StartupEntriesChanged) -ForegroundColor White\n    Write-Host (\"Installed apps removed: {0}\" -f $script:Summary.AppsRemoved) -ForegroundColor White\n    Write-Host (\"Provisioned apps removed: {0}\" -f $script:Summary.ProvisionedAppsRemoved) -ForegroundColor White\n    Write-Host (\"Restore point: {0}\" -f $restorePointNote) -ForegroundColor White\n    Write-Host (\"GPU scaling: {0}\" -f $gpuNote) -ForegroundColor White\n    Write-Host (\"Logs: {0}\" -f $script:Context.LogRoot) -ForegroundColor White\n    Write-Host (\"Backups: {0}\" -f $script:Context.BackupRoot) -ForegroundColor White\n    Write-Host 'Note: sub-50 process counts are not guaranteed across Windows versions. Largest reductions usually appear after sign-out or reboot.' -ForegroundColor Yellow\n    Write-Host '=========================================' -ForegroundColor White\n}\n\ntry {\n    Ensure-Admin\n    Initialize-ScriptState\n    Write-Log 'Starting safe aggressive debloat for a desktop / AC gaming-workstation profile.' 'INFO'\n    Capture-BeforeMetrics\n    Create-RestorePointIfPossible\n    Remove-ConfiguredAppxPackages\n    Disable-ConfiguredTasks\n    Apply-ServiceTweaks\n    Disable-BackgroundAndConsumerFeatures\n    Apply-SystemResponsivenessAndNetworkTweaks\n    Disable-StartupEntries\n    Configure-PowerPlan\n    Configure-Bcd\n    Try-EnableGpuScaling\n    Capture-AfterMetrics\n    Write-Log 'Ultra debloat completed successfully.' 'OK'\n    Print-Summary\n    exit 0\n}\ncatch {\n    Write-Log (\"Fatal error: {0}\" -f $_.Exception.Message) 'ERROR'\n    Add-StateWarning -Message (\"Fatal error: {0}\" -f $_.Exception.Message)\n    throw\n}\nfinally {\n    if ($null -ne $script:State) {\n        $script:State.active = $true\n        Save-State\n    }\n    Stop-Logging\n}\n",
+        "unapply": "$rollbackScript = Join-Path $PSScriptRoot 'rollback.ps1'\nif (-not (Test-Path -LiteralPath $rollbackScript)) {\n    throw \"Rollback script not found: $rollbackScript\"\n}\n\n& $rollbackScript\nexit $LASTEXITCODE\n"
+      }
+    },
+    {
+      "id": "vie-amx",
+      "title": {
+        "vi": "VieXF Pro — Aggressive stack",
+        "en": "VieXF Pro — Aggressive stack"
+      },
+      "description": {
+        "vi": "Chạy toàn bộ Ultra Debloat trước; Pro thêm lớp service/registry mạnh + backup C:\\VieXF.",
+        "en": "Runs full Ultra Debloat first; Pro adds aggressive services/registry layer + C:\\VieXF backup."
+      },
+      "category": [
+        "Remember",
+        "Performance",
+        "Gaming"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "pro",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/vie-amx",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/vie-amx/meta.json",
+      "scripts": {
+        "apply": "﻿[CmdletBinding()]\nparam()\n\n$ErrorActionPreference = 'Stop'\nSet-StrictMode -Version Latest\n\n$identity = [Security.Principal.WindowsIdentity]::GetCurrent()\n$principal = New-Object Security.Principal.WindowsPrincipal($identity)\nif (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {\n    throw 'Chay PowerShell / VieXF bang quyen Administrator.'\n}\n\n$ultraScript = Join-Path (Split-Path -LiteralPath $PSScriptRoot -Parent) 'ultra-debloat\\apply.ps1'\nif (-not (Test-Path -LiteralPath $ultraScript)) {\n    throw \"Khong tim thay Ultra Debloat: $ultraScript\"\n}\n\nWrite-Host '[vie-amx] Buoc 1/2: chay toan bo Ultra Debloat...' -ForegroundColor Cyan\n& $ultraScript\nif (-not $?) {\n    Write-Host '[vie-amx] Ultra Debloat that bai.' -ForegroundColor Red\n    exit 1\n}\n\nif ($env:VIEXF_LICENSE_PRO -eq '1') {\n    Write-Host '[vie-amx] Buoc 2/2: Pro — aggressive services + backup C:\\VieXF...' -ForegroundColor Yellow\n    $proFile = Join-Path $PSScriptRoot 'pro-stack.ps1'\n    if (-not (Test-Path -LiteralPath $proFile)) {\n        throw \"Thieu pro-stack.ps1 tai $proFile\"\n    }\n    . $proFile\n    Invoke-VieAmxProStack\n}\n\nWrite-Host '[vie-amx] Hoan tat.' -ForegroundColor Green\nexit 0\n",
+        "unapply": "[CmdletBinding()]\nparam()\n\n$ErrorActionPreference = 'Stop'\nSet-StrictMode -Version Latest\n\n$ultraRollback = Join-Path (Split-Path -LiteralPath $PSScriptRoot -Parent) 'ultra-debloat\\rollback.ps1'\nif (-not (Test-Path -LiteralPath $ultraRollback)) {\n    throw \"Khong tim thay ultra-debloat rollback: $ultraRollback\"\n}\n\nWrite-Host '[vie-amx] Rollback Ultra Debloat (state trong thu muc ultra-debloat)...' -ForegroundColor Cyan\n& $ultraRollback\nif (-not $?) {\n    exit 1\n}\n\n# Phuc hoi lop Pro (registry / BCD / power) neu da backup tai C:\\VieXF\n$Brand = 'VieXF'\n$Root = Join-Path $env:SystemDrive $Brand\n$BackupRoot = Join-Path $Root 'Backup'\n$LogFile = Join-Path $Root 'VieXF-Rollback.log'\n\nfunction Write-Log {\n    param(\n        [Parameter(Mandatory)] [string]$Message,\n        [ValidateSet('INFO', 'WARN', 'ERROR', 'OK')] [string]$Level = 'INFO'\n    )\n    $line = \"[{0}] [{1}] {2}\" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Level, $Message\n    if (Test-Path -LiteralPath (Split-Path -Parent $LogFile)) {\n        Add-Content -Path $LogFile -Value $line -Encoding UTF8 -ErrorAction SilentlyContinue\n    }\n    switch ($Level) {\n        'INFO' { Write-Host $line -ForegroundColor Cyan }\n        'WARN' { Write-Host $line -ForegroundColor Yellow }\n        'ERROR' { Write-Host $line -ForegroundColor Red }\n        'OK' { Write-Host $line -ForegroundColor Green }\n    }\n}\n\nfunction Import-RegIfExists {\n    param([Parameter(Mandatory)][string]$FilePath)\n    if (Test-Path -LiteralPath $FilePath) {\n        $null = & reg.exe import $FilePath 2>$null\n        if ($LASTEXITCODE -eq 0) {\n            Write-Log \"Da import: $FilePath\" 'OK'\n        }\n        else {\n            Write-Log \"Import loi: $FilePath\" 'WARN'\n        }\n    }\n}\n\nif (Test-Path -LiteralPath $BackupRoot) {\n    Write-Host '[vie-amx] Khoi phuc backup Pro (C:\\VieXF\\Backup) neu co...' -ForegroundColor Yellow\n    Import-RegIfExists -FilePath (Join-Path $BackupRoot 'ServicesBackup.reg')\n    Import-RegIfExists -FilePath (Join-Path $BackupRoot 'SystemProfile.reg')\n    Import-RegIfExists -FilePath (Join-Path $BackupRoot 'GraphicsDrivers.reg')\n    Import-RegIfExists -FilePath (Join-Path $BackupRoot 'PriorityControl.reg')\n    Import-RegIfExists -FilePath (Join-Path $BackupRoot 'Policies-System.reg')\n    Import-RegIfExists -FilePath (Join-Path $BackupRoot 'Control.reg')\n\n    $bcdFile = Join-Path $BackupRoot 'BCD-Backup.bcd'\n    if (Test-Path -LiteralPath $bcdFile) {\n        $null = & bcdedit /import $bcdFile 2>&1\n        if ($LASTEXITCODE -eq 0) {\n            Write-Log 'Da phuc hoi BCD tu backup Pro.' 'OK'\n        }\n    }\n\n    $null = & powercfg /setactive SCHEME_BALANCED 2>&1\n    if ($LASTEXITCODE -eq 0) {\n        Write-Log 'Da dat power plan Balanced.' 'OK'\n    }\n}\nelse {\n    Write-Host '[vie-amx] Khong co C:\\VieXF\\Backup — bo qua rollback lop Pro.' -ForegroundColor DarkGray\n}\n\nWrite-Host '[vie-amx] Unapply hoan tat. Nen restart may.' -ForegroundColor Green\nexit 0\n"
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "title": {
+    "vi": "Gói nguồn Ultimate",
+    "en": "Ultimate Performance Plan"
+  },
+  "name": "ultimate-performance-plan",
+  "description": {
+    "vi": "Kích hoạt gói nguồn Ultimate Performance.",
+    "en": "Enables Ultimate Performance power plan."
+  },
+  "deepDescription": {
+    "vi": "Bật gói nguồn Ultimate Performance: tạo nếu thiếu, lấy GUID và kích hoạt để tối đa phản hồi và hiệu năng bằng cách loại bỏ giới hạn tiết kiệm điện.",
+    "en": "Enables Ultimate Performance power plan."
+  },
+  "recommended": true,
+  "top": true,
+  "category": [
+    "Performance",
+    "Gaming"
+  ]
+}

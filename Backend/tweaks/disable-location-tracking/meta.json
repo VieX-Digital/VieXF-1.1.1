@@ -1,0 +1,18 @@
+{
+  "title": {
+    "vi": "Tắt định vị",
+    "en": "Disable Location Tracking"
+  },
+  "name": "disable-location-tracking",
+  "category": [
+    "Privacy"
+  ],
+  "description": {
+    "vi": "Tắt tính năng theo dõi vị trí toàn hệ thống.",
+    "en": "Disables system-wide location tracking."
+  },
+  "deepDescription": {
+    "vi": "Tắt telemetry, quyền truy cập vị trí, theo dõi chẩn đoán và tự động cập nhật Windows bằng cách chỉnh các giá trị registry liên quan, giảm thu thập dữ liệu nền và tăng quyền riêng tư cùng hiệu năng.",
+    "en": "Disables system-wide location tracking."
+  }
+}

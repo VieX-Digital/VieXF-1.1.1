@@ -1,0 +1,28 @@
+node_modules
+dist
+dist-old
+dist-2
+out
+.DS_Store
+.eslintcache
+*.log*
+yarn.lock
+pnpm-lock.yaml
+firstsparkle2build.zip
+.env
+.mutagen.yml
+
+
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# docs
+site
+docs/tweaks

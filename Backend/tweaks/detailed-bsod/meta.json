@@ -1,0 +1,18 @@
+{
+  "title": {
+    "vi": "Màn hình xanh chi tiết",
+    "en": "Detailed BSOD"
+  },
+  "name": "detailed-bsod",
+  "category": [
+    "General"
+  ],
+  "description": {
+    "vi": "Hiển thị thêm thông tin chi tiết khi gặp lỗi màn hình xanh.",
+    "en": "Shows more details on BSOD screens."
+  },
+  "deepDescription": {
+    "vi": "Bật thông tin kỹ thuật chi tiết trên BSOD bằng cách đặt DisplayParameters thành 1 trong registry CrashControl.",
+    "en": "Shows more details on BSOD screens."
+  }
+}

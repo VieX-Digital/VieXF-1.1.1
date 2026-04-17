@@ -1,0 +1,19 @@
+{
+  "title": {
+    "vi": "Tắt khởi động nhanh",
+    "en": "Disable Fast Startup"
+  },
+  "name": "disable-fast-startup",
+  "category": [
+    "Performance",
+    "General"
+  ],
+  "description": {
+    "vi": "Tắt Fast Startup để sửa lỗi và giải phóng dung lượng.",
+    "en": "Disables Fast Startup to free up hibernation file."
+  },
+  "deepDescription": {
+    "vi": "Tắt Fast Startup bằng cách đặt HiberbootEnabled = 0, ngăn Windows dùng chế độ hybrid hibernation khi tắt máy để luôn khởi động sạch.",
+    "en": "Disables Fast Startup to free up hibernation file."
+  }
+}
