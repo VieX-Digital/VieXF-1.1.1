@@ -114,6 +114,17 @@
     transition: none !important;
   }
 
+  /* Exception: react-toastify requires animationend to fire for auto-close */
+  .Toastify *,
+  .Toastify *::before,
+  .Toastify *::after,
+  .Toastify__toast,
+  .vie-toast-enter,
+  .vie-toast-exit {
+    animation: revert !important;
+    transition: revert !important;
+  }
+
   /* Exceptions: allow essential UI feedback animations */
   .animate-spin {
     animation: spin 1s linear infinite !important;
@@ -623,5 +634,88 @@
   }
 }
 
-/* After all @import — ToastContainer cssTransition needs non-empty class tokens */
-.vie-toast-motion-placeholder {}
+/* ── VieXF Toast Animations ── */
+@keyframes vie-toast-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes vie-toast-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+.vie-toast-enter {
+  animation: vie-toast-slide-in 0.28s ease-out both !important;
+}
+
+.vie-toast-exit {
+  animation: vie-toast-slide-out 0.22s ease-in both !important;
+}
+
+/* ── Premium Toast Overrides ── */
+.Toastify__toast-container {
+  --toastify-toast-min-height: 48px;
+  padding: 0 !important;
+}
+
+.vie-toast-custom {
+  background: linear-gradient(135deg, #0e1117 0%, #151a24 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.12) !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.03) !important;
+  color: #e2e8f0 !important;
+  font-size: 13px !important;
+  font-family: 'Inter', sans-serif !important;
+  line-height: 1.5 !important;
+  min-height: 48px !important;
+  margin-bottom: 8px !important;
+}
+
+.vie-toast-custom .Toastify__toast-icon {
+  width: 18px !important;
+  min-width: 18px !important;
+}
+
+.vie-toast-custom .Toastify__close-button {
+  color: rgba(255, 255, 255, 0.3) !important;
+  opacity: 1 !important;
+  align-self: center !important;
+}
+
+.vie-toast-custom .Toastify__close-button:hover {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Success variant */
+.vie-toast-custom--success {
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Error variant */
+.vie-toast-custom--error {
+  border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Info variant */
+.vie-toast-custom--info {
+  border-color: rgba(56, 189, 248, 0.2) !important;
+}
+
+/* Warning variant */
+.vie-toast-custom--warning {
+  border-color: rgba(245, 158, 11, 0.2) !important;
+}

@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param()
 
 Set-StrictMode -Version Latest
@@ -32,32 +32,45 @@ $script:Config = [ordered]@{
         'WdNisSvc'
     )
     ProtectedServices = @(
+        # --- Network / Internet (NEVER disable) ---
+        'Dhcp',
+        'Dnscache',
         'WlanSvc',
+        'WwanSvc',
+        'NlaSvc',
+        'Netman',
+        'netprofm',
+        'MpsSvc',
+        'BFE',
+        'LanmanWorkstation',
+        'LanmanServer',
+        'lmhosts',
+        # --- Audio (NEVER disable) ---
+        'AudioEndpointBuilder',
+        'Audiosrv',
+        'AudioSrv',
+        # --- Bluetooth ---
         'bthserv',
         'BthServ',
         'BTAGService',
         'BthAvctpSvc',
+        # --- Device / Hardware discovery ---
         'DeviceAssociationService',
         'DeviceAssociationBrokerSvc_*',
         'DevicesFlowUserSvc_*',
         'DevicePickerUserSvc_*',
         'DsmSvc',
         'ShellHWDetection',
+        # --- User session / credentials ---
         'ProfSvc',
         'UserManager',
         'KeyIso',
         'VaultSvc',
         'NgcSvc',
         'NgcCtnrSvc',
-        'LanmanWorkstation',
-        'Dhcp',
-        'Dnscache',
-        'NlaSvc',
-        'netprofm',
+        # --- Core OS plumbing ---
         'gpsvc',
         'EventLog',
-        'MpsSvc',
-        'BFE',
         'CryptSvc',
         'BrokerInfrastructure',
         'CoreMessagingRegistrar'
@@ -75,7 +88,10 @@ $script:Config = [ordered]@{
         'Microsoft.VCLibs',
         'Microsoft.NET.Native',
         'Microsoft.Windows.StartMenuExperienceHost',
-        'MicrosoftWindows.Client.WebExperience'
+        'MicrosoftWindows.Client.WebExperience',
+        'Microsoft.WindowsCalculator',
+        'Microsoft.Paint',
+        'Microsoft.ScreenSketch'
     )
     AppxRemovalList = @(
         'Clipchamp.Clipchamp',
@@ -134,7 +150,16 @@ $script:Config = [ordered]@{
         'MicrosoftWindows.Client.Outlook',
         'MicrosoftCorporationII.MicrosoftFamily',
         'MicrosoftCorporationII.QuickAssist',
-        'MicrosoftWindows.CrossDevice'
+        'MicrosoftWindows.CrossDevice',
+        # v1.3.2 additions
+        'Microsoft.YourPhone',
+        'Microsoft.People',
+        'Microsoft.Microsoft3DViewer',
+        'Microsoft.MixedReality.Portal',
+        'Microsoft.MSPaint',
+        'Microsoft.Print3D',
+        'Microsoft.OneConnect',
+        'Microsoft.WindowsFeedback'
     )
     TaskTargets = @(
         @{ TaskPath = '\Microsoft\Windows\Application Experience\'; TaskName = 'Microsoft Compatibility Appraiser' },
@@ -151,7 +176,14 @@ $script:Config = [ordered]@{
         @{ TaskPath = '\Microsoft\Windows\PushToInstall\'; TaskName = 'LoginCheck' },
         @{ TaskPath = '\Microsoft\Windows\PushToInstall\'; TaskName = 'Registration' },
         @{ TaskPath = '\Microsoft\Windows\Shell\'; TaskName = 'FamilySafetyMonitor' },
-        @{ TaskPath = '\Microsoft\Windows\Shell\'; TaskName = 'FamilySafetyRefreshTask' }
+        @{ TaskPath = '\Microsoft\Windows\Shell\'; TaskName = 'FamilySafetyRefreshTask' },
+        # v1.3.2 additions — deeper telemetry / diagnostic cleanup
+        @{ TaskPath = '\Microsoft\Windows\DiskDiagnostic\'; TaskName = 'Microsoft-Windows-DiskDiagnosticDataCollector' },
+        @{ TaskPath = '\Microsoft\Windows\Windows Error Reporting\'; TaskName = 'QueueReporting' },
+        @{ TaskPath = '\Microsoft\Windows\CloudExperienceHost\'; TaskName = 'CreateObjectTask' },
+        @{ TaskPath = '\Microsoft\Windows\Diagnosis\'; TaskName = 'Scheduled' },
+        @{ TaskPath = '\Microsoft\Windows\NetTrace\'; TaskName = 'GatherNetworkInfo' },
+        @{ TaskPath = '\Microsoft\Windows\PI\'; TaskName = 'Sqm-Tasks' }
     )
     ServiceTargets = @(
         @{ Name = 'AarSvc*'; StartupType = 'Disabled' },
@@ -230,7 +262,26 @@ $script:Config = [ordered]@{
         @{ Name = 'XblAuthManager'; StartupType = 'Disabled' },
         @{ Name = 'XblGameSave'; StartupType = 'Disabled' },
         @{ Name = 'XboxNetApiSvc'; StartupType = 'Disabled' },
-        @{ Name = 'dmwappushservice'; StartupType = 'Manual' }
+        @{ Name = 'dmwappushservice'; StartupType = 'Disabled' },
+        # v1.3.2 additions — aggressive but safe targets
+        @{ Name = 'Spooler'; StartupType = 'Manual' },
+        @{ Name = 'TabletInputService'; StartupType = 'Disabled' },
+        @{ Name = 'wisvc'; StartupType = 'Disabled' },
+        @{ Name = 'WpnService'; StartupType = 'Disabled' },
+        @{ Name = 'WpnUserService*'; StartupType = 'Disabled' },
+        @{ Name = 'MessagingService*'; StartupType = 'Disabled' },
+        @{ Name = 'NcbService'; StartupType = 'Disabled' },
+        @{ Name = 'WbioSrvc'; StartupType = 'Disabled' },
+        @{ Name = 'icssvc'; StartupType = 'Disabled' },
+        @{ Name = 'InstallService'; StartupType = 'Disabled' },
+        @{ Name = 'LicenseManager'; StartupType = 'Manual' },
+        @{ Name = 'DPS'; StartupType = 'Disabled' },
+        @{ Name = 'WdiServiceHost'; StartupType = 'Disabled' },
+        @{ Name = 'WdiSystemHost'; StartupType = 'Disabled' },
+        @{ Name = 'edgeupdate'; StartupType = 'Disabled' },
+        @{ Name = 'edgeupdatem'; StartupType = 'Disabled' },
+        @{ Name = 'MixedRealityOpenXRSvc'; StartupType = 'Disabled' },
+        @{ Name = 'perceptionsimulation'; StartupType = 'Disabled' }
     )
     StartupNamePatterns = @(
         'OneDrive',

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import RootDiv from "@/components/rootdiv"
 import Button from "@/components/ui/button"
 import { invoke } from "@/lib/electron"
+import { toast } from "react-toastify"
 import {
   Cpu,
   Activity,
@@ -14,7 +15,8 @@ import {
   ArrowDownRight,
   Sparkles,
   Search,
-  Grid
+  Grid,
+  RefreshCw,
 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import useSystemMetricsStore, { useSystemMetricsSubscription } from "@/store/systemMetrics"
@@ -34,6 +36,25 @@ const TAB_COLORS: Record<string, string> = {
 }
 
 type ActiveTab = (typeof TABS)[number]["id"]
+
+function compareVersions(a: string, b: string) {
+  const left = String(a || "")
+    .replace(/[^0-9.]/g, "")
+    .split(".")
+    .map((part) => Number(part) || 0)
+  const right = String(b || "")
+    .replace(/[^0-9.]/g, "")
+    .split(".")
+    .map((part) => Number(part) || 0)
+  const max = Math.max(left.length, right.length)
+
+  for (let i = 0; i < max; i++) {
+    const diff = (left[i] || 0) - (right[i] || 0)
+    if (diff !== 0) return diff > 0 ? 1 : -1
+  }
+
+  return 0
+}
 
 // --- Components ---
 
@@ -148,6 +169,7 @@ export default function Home() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = React.useState<ActiveTab>("cpu")
   const [sysInfo, setSysInfo] = React.useState<any>(null)
+  const [checkingUpdate, setCheckingUpdate] = React.useState(false)
   const [userName, setUserName] = React.useState("Dân Chơi")
 
   useSystemMetricsSubscription()
@@ -182,6 +204,37 @@ export default function Home() {
     }
   }, [])
 
+  const checkForUpdates = async () => {
+    if (checkingUpdate) return
+
+    setCheckingUpdate(true)
+    try {
+      const [currentVersion, result] = await Promise.all([
+        invoke({ channel: "updater:get-version", payload: null }).catch(() => null),
+        invoke({ channel: "updater:check", payload: null }),
+      ])
+
+      if (!result?.ok) {
+        toast.error(result?.error ? String(result.error) : "Không thể kiểm tra bản cập nhật.")
+        return
+      }
+
+      const nextVersion = result?.updateInfo?.version ? String(result.updateInfo.version) : null
+      const currentVersionText = currentVersion ? String(currentVersion) : null
+
+      if (nextVersion && currentVersionText && compareVersions(nextVersion, currentVersionText) > 0) {
+        toast.info(`Có bản cập nhật mới: ${nextVersion}.`)
+        return
+      }
+
+      toast.success("Bạn đang dùng bản mới nhất.")
+    } catch (error: any) {
+      toast.error(error?.message || "Không thể kiểm tra bản cập nhật.")
+    } finally {
+      setCheckingUpdate(false)
+    }
+  }
+
   const activeValue = activeTab === "cpu" ? current.cpu : activeTab === "ram" ? current.ram : current.gpu
   const trendLabel = activeValue > 80 ? "Cháy Máy" : activeValue > 50 ? "Bình Thường" : "Cực Mượt"
 
@@ -204,6 +257,17 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <button className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all border border-white/5 hover:border-white/10 active:scale-95">
               <Search size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={checkForUpdates}
+              disabled={checkingUpdate}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all border border-white/10 hover:border-cyan-500/40 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <RefreshCw size={16} className={checkingUpdate ? "animate-spin" : ""} />
+              <span className="text-sm font-bold tracking-wider uppercase">
+                {checkingUpdate ? "Đang kiểm tra" : "Kiểm tra bản cập nhật mới"}
+              </span>
             </button>
             <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 hover:text-cyan-300 transition-all border border-cyan-500/30 shadow-[0_0_15px_-5px_rgba(34,211,238,0.4)] active:scale-95">
               <Sparkles size={16} fill="currentColor" />

@@ -15,6 +15,7 @@ import {
     Rocket,
     FileText,
     Gamepad2,
+    MemoryStick,
 } from "lucide-react"
 
 function Nav() {
@@ -34,6 +35,7 @@ function Nav() {
         { id: "apps", label: t("nav.apps"), path: "/apps", icon: LayoutGrid },
         { id: "optimize", label: t("nav.optimize"), path: "/optimize", icon: Rocket },
         { id: "gamemode", label: t("nav.gamemode"), path: "/gamemode", icon: Gamepad2 },
+        { id: "ramclear", label: "RamClear", path: "/ramclear", icon: MemoryStick },
         { id: "profiles", label: t("nav.profiles"), path: "/profiles", icon: Gauge },
         { id: "diagnostics", label: t("nav.diagnostics"), path: "/diagnostics", icon: Activity },
         { id: "recovery", label: t("nav.recovery"), path: "/recovery", icon: ArchiveRestore },

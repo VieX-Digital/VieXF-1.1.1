@@ -13,6 +13,7 @@ const DISCORD_REDIRECT_URI = "http://localhost:54321/auth/discord"
 const DISCORD_REQUIRED_GUILD_ID = "1274585470633906176"
 const DISCORD_REQUIRED_ROLE_ID = "1493244117101314069"
 const DISCORD_GAMEMODE_ROLE_ID = "1493244326594215997"
+const DISCORD_RAMCLEAR_ROLE_ID = "1493244241223094332"
 
 const AUTH_SCOPES = "identify guilds.members.read guilds"
 const logo = "[viexf:auth]:"
@@ -58,6 +59,26 @@ function loadGameModeSession() {
   return user
 }
 
+function saveRamClearSession(userData) {
+  store.set("auth:ramclear:user", userData)
+  store.set("auth:ramclear:authenticated", true)
+  store.set("auth:ramclear:savedAt", Date.now())
+}
+
+function clearRamClearSession() {
+  store.delete("auth:ramclear:user")
+  store.delete("auth:ramclear:authenticated")
+  store.delete("auth:ramclear:savedAt")
+}
+
+function loadRamClearSession() {
+  const authenticated = store.get("auth:ramclear:authenticated")
+  if (!authenticated) return null
+  const user = store.get("auth:ramclear:user")
+  if (!user) return null
+  return user
+}
+
 function getAuthFlowConfig(mode) {
   if (mode === "gamemode") {
     return {
@@ -67,6 +88,17 @@ function getAuthFlowConfig(mode) {
       errorChannel: "gamemode:auth:error",
       missingRoleMessage: "Game Mode yêu cầu Discord role Level 15.",
       save: saveGameModeSession,
+    }
+  }
+
+  if (mode === "ramclear") {
+    return {
+      mode,
+      requiredRoleId: DISCORD_RAMCLEAR_ROLE_ID,
+      successChannel: "ramclear:auth:success",
+      errorChannel: "ramclear:auth:error",
+      missingRoleMessage: "RamClear yêu cầu Discord role Level 10.",
+      save: saveRamClearSession,
     }
   }
 
@@ -276,6 +308,21 @@ export function setupAuthHandlers() {
   ipcMain.handle("gamemode:auth:logout", () => {
     clearGameModeSession()
     log.info(logo, "Game Mode session cleared.")
+    return { ok: true }
+  })
+
+  ipcMain.handle("ramclear:auth:loginWithDiscord", async () => {
+    return startDiscordOAuth("ramclear")
+  })
+
+  ipcMain.handle("ramclear:auth:getSession", () => {
+    const user = loadRamClearSession()
+    return { authenticated: !!user, user: user || null }
+  })
+
+  ipcMain.handle("ramclear:auth:logout", () => {
+    clearRamClearSession()
+    log.info(logo, "RamClear session cleared.")
     return { ok: true }
   })
 }

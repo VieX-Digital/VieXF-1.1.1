@@ -74,6 +74,10 @@ function getInvokePolicy(channel) {
     return { retries: 0, timeoutMs: 60000 }
   }
 
+  if (channel.startsWith("ramclear:")) {
+    return { retries: 0, timeoutMs: 30000 }
+  }
+
   if (channel === "updater:download") {
     return { retries: 0, timeoutMs: 30 * 60 * 1000 }
   }

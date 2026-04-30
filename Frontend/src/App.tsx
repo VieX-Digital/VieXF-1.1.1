@@ -19,6 +19,7 @@ import Backup from "./pages/Backup"
 import Optimize from "./pages/Optimize"
 import Profiles from "./pages/Profiles"
 import Gamemode from "./pages/Gamemode"
+import RamClear from "./pages/RamClear"
 import Diagnostics from "./pages/Diagnostics"
 import Recovery from "./pages/Recovery"
 import Logs from "./pages/Logs"
@@ -31,11 +32,14 @@ import ProTrialExpiredModal from "./components/ProTrialExpiredModal"
 import { updateThemeColors } from "./lib/theme"
 import { invoke } from "@/lib/electron"
 
-// react-toastify splits enter/exit by spaces and calls classList.add — empty strings throw.
-const NoMotionToastTransition = cssTransition({
-    enter: "vie-toast-motion-placeholder",
-    exit: "vie-toast-motion-placeholder",
-    collapse: false,
+// react-toastify custom transition with real CSS animations (slide in/out).
+// The previous empty "vie-toast-motion-placeholder" class caused animationend
+// to never fire → toasts never auto-closed. Fixed in v1.3.2.
+const VieToastTransition = cssTransition({
+    enter: "vie-toast-enter",
+    exit: "vie-toast-exit",
+    collapse: true,
+    collapseDuration: 200,
     appendPosition: false,
 })
 
@@ -143,6 +147,7 @@ function App() {
                             <Route path="/settings" element={<Settings />} />
                             <Route path="/optimize" element={<Optimize />} />
                             <Route path="/gamemode" element={<Gamemode />} />
+                            <Route path="/ramclear" element={<RamClear />} />
                             <Route path="/operations" element={<Navigate to="/optimize" replace />} />
                             <Route path="/profiles" element={<Profiles />} />
                             <Route path="/diagnostics" element={<Diagnostics />} />
@@ -160,10 +165,20 @@ function App() {
                 limit={5}
                 position="bottom-right"
                 theme="dark"
-                transition={NoMotionToastTransition}
+                autoClose={3000}
+                transition={VieToastTransition}
                 hideProgressBar
                 pauseOnFocusLoss={false}
-                toastClassName="!bg-vie-card !border !border-vie-border !text-vie-text !rounded-xl !shadow-2xl !backdrop-blur-lg"
+                toastClassName={(context) => {
+                    const base = "vie-toast-custom"
+                    const type = context?.type || "default"
+                    const variant =
+                        type === "success" ? "vie-toast-custom--success" :
+                        type === "error" ? "vie-toast-custom--error" :
+                        type === "info" ? "vie-toast-custom--info" :
+                        type === "warning" ? "vie-toast-custom--warning" : ""
+                    return `${base} ${variant}`.trim()
+                }}
             />
         </div>
     )

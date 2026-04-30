@@ -28,7 +28,7 @@ const METRICS_VISIBILITY_CHANNEL = "system-metrics:visibility"
 const METRICS_SNAPSHOT_CHANNEL = "system-metrics:snapshot"
 
 const ACTIVE_METRICS_INTERVAL_MS = 1200
-const HIDDEN_METRICS_INTERVAL_MS = 8000
+const HIDDEN_METRICS_INTERVAL_MS = 15000
 
 const metricsSubscribers = new Map()
 const trackedSenders = new Set()

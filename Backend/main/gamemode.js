@@ -177,18 +177,55 @@ function Set-MaxPowerPlan {
 }
 
 function Find-GameProcess {
-    $sampleMs = 1800
-    $minimumCpuPercent = 1.0
-    $minimumWorkingSetMb = 100
+    # v1.3.2: Lower thresholds and add MainWindowTitle-based Layer 1 detection
+    # to fix game detection on machines where CPU sampling fails.
+    $sampleMs = 2000
+    $minimumCpuPercent = 0.3
+    $minimumWorkingSetMb = 50
     $logicalProcessors = [Math]::Max([Environment]::ProcessorCount, 1)
     $excludedNames = @(
         'Idle', 'System', 'Registry', 'smss', 'csrss', 'wininit', 'services', 'lsass',
         'svchost', 'fontdrvhost', 'dwm', 'explorer', 'SearchHost', 'StartMenuExperienceHost',
         'ShellExperienceHost', 'RuntimeBroker', 'SecurityHealthSystray', 'MsMpEng',
         'audiodg', 'conhost', 'powershell', 'pwsh', 'cmd', 'WindowsTerminal',
-        'node', 'electron', 'VieXF', 'Code', 'devenv', 'Discord', 'steamwebhelper'
+        'node', 'electron', 'VieXF', 'Code', 'devenv', 'Discord', 'steamwebhelper',
+        # v1.3.2: Exclude browsers to avoid false positives
+        'chrome', 'msedge', 'firefox', 'opera', 'brave', 'vivaldi', 'iexplore',
+        'msedgewebview2', 'GoogleUpdate', 'BraveUpdate', 'OperaUpdate',
+        # Exclude common launchers
+        'steam', 'EpicGamesLauncher', 'GalaxyClient', 'Origin', 'Uplay',
+        'Spotify', 'slack', 'Telegram', 'Notion', 'Obsidian'
     )
 
+    # ===== LAYER 1: MainWindowTitle-based detection =====
+    # Catch games at idle/menu that do not spike CPU.
+    # Look for any process with a visible window + high memory that is not excluded.
+    $windowCandidates = @()
+    foreach ($proc in Get-Process -ErrorAction SilentlyContinue) {
+        if ($excludedNames -contains $proc.ProcessName) { continue }
+        try {
+            $title = [string]$proc.MainWindowTitle
+            if ([string]::IsNullOrWhiteSpace($title)) { continue }
+            $wsMb = [Math]::Round($proc.WorkingSet64 / 1MB, 1)
+            if ($wsMb -lt $minimumWorkingSetMb) { continue }
+
+            $windowCandidates += [pscustomobject]@{
+                Id = [int]$proc.Id
+                Name = [string]$proc.ProcessName
+                CpuPercent = 0.0
+                WorkingSetMb = $wsMb
+                MainWindowTitle = $title
+            }
+        } catch { }
+    }
+
+    # If we found exactly one large windowed process, it is very likely the game.
+    # If multiple, proceed to Layer 2 (CPU sampling) to pick the heaviest.
+    if ($windowCandidates.Count -eq 1) {
+        return $windowCandidates[0]
+    }
+
+    # ===== LAYER 2: CPU sampling (original method with lower thresholds) =====
     $first = @{}
     Get-Process -ErrorAction SilentlyContinue | ForEach-Object {
         if ($excludedNames -notcontains $_.ProcessName) {
@@ -219,7 +256,7 @@ function Find-GameProcess {
 
             $cpuPercent = (($deltaMs / $sampleMs) * 100.0) / $logicalProcessors
             $workingSetMb = [Math]::Round($proc.WorkingSet64 / 1MB, 1)
-            if ($cpuPercent -lt $minimumCpuPercent -or $workingSetMb -lt $minimumWorkingSetMb) {
+            if ($cpuPercent -lt $minimumCpuPercent -and $workingSetMb -lt $minimumWorkingSetMb) {
                 continue
             }
 
@@ -233,6 +270,12 @@ function Find-GameProcess {
         }
         catch {
         }
+    }
+
+    # Prefer candidates that also appeared in Layer 1 (have a window title)
+    $withWindow = $candidates | Where-Object { $_.MainWindowTitle -and $_.MainWindowTitle.Length -gt 0 }
+    if ($withWindow) {
+        return $withWindow | Sort-Object WorkingSetMb, CpuPercent -Descending | Select-Object -First 1
     }
 
     return $candidates | Sort-Object CpuPercent, WorkingSetMb -Descending | Select-Object -First 1

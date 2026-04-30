@@ -34,6 +34,7 @@ export default function Gamemode() {
   const [status, setStatus] = useState<GameModeStatus>({ active: false })
   const [busy, setBusy] = useState(false)
   const [showPreGameNotice, setShowPreGameNotice] = useState(false)
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
 
   useEffect(() => {
     const offSuccess = onIpc({
@@ -67,9 +68,10 @@ export default function Gamemode() {
 
     async function load() {
       try {
-        const [auth, nextStatus] = await Promise.all([
+        const [auth, nextStatus, adminCheck] = await Promise.all([
           invoke({ channel: "gamemode:auth:getSession", payload: null }),
           invoke({ channel: "game-mode:status", payload: null }).catch(() => ({ active: false })),
+          invoke({ channel: "app:is-admin", payload: null }).catch(() => false),
         ])
 
         if (!alive) return
@@ -80,6 +82,7 @@ export default function Gamemode() {
           error: null,
         })
         setStatus(nextStatus || { active: false })
+        setIsAdmin(!!adminCheck)
       } catch {
         if (!alive) return
         setGate({ loading: false, authenticated: false, waiting: false, error: null })
@@ -247,10 +250,15 @@ export default function Gamemode() {
         </div>
 
         {!active && (
-          <div className="px-6 pt-5">
+          <div className="px-6 pt-5 space-y-2">
             <div className="mx-auto max-w-xl rounded-xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
               Mở game lên trước rồi quay lại bấm nút. App sẽ tự bắt tiến trình đang gánh máy nhất để ưu tiên.
             </div>
+            {isAdmin === false && (
+              <div className="mx-auto max-w-xl rounded-xl border border-red-400/25 bg-red-400/10 px-4 py-3 text-sm text-red-200">
+                App đang chạy không có quyền Admin. Một số game có thể không bị phát hiện. Hãy tắt app và mở lại bằng &quot;Run as Administrator&quot;.
+              </div>
+            )}
           </div>
         )}
 

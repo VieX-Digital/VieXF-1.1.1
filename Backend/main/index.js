@@ -17,6 +17,7 @@ import { setupCleanHandlers } from "./cleanHandler"
 import { setupUtilitiesHandlers } from "./utilitiesHandler"
 import { setupAppsHandlers } from "./appsHandler"
 import { setupGameModeHandlers } from "./gamemode.js"
+import { setupRamClearHandlers } from "./ramclearHandler.js"
 import Store from "electron-store"
 import { startDiscordRPC, stopDiscordRPC } from "./rpc"
 import { initAutoUpdater, triggerAutoUpdateCheck } from "./updates.js"
@@ -228,6 +229,7 @@ function createWindow() {
       preload: join(__dirname, "../preload/index.js"),
       devTools: app.isPackaged ? false : true,
       sandbox: false,
+      backgroundThrottling: true,
     },
   })
 
@@ -290,6 +292,7 @@ app.whenReady().then(() => {
     setupUtilitiesHandlers()
     setupAppsHandlers()
     setupGameModeHandlers()
+    setupRamClearHandlers()
     setupAuthHandlers()
   }, 0)
 
