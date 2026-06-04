@@ -4,10 +4,7 @@
     "en": "Set Services to Manual"
   },
   "name": "set-services-to-manual",
-  "category": [
-    "Performance",
-    "Gaming"
-  ],
+  "category": ["Performance", "Gaming"],
   "recommended": true,
   "description": {
     "vi": "Chuyển các dịch vụ không cần thiết sang khởi động thủ công.",

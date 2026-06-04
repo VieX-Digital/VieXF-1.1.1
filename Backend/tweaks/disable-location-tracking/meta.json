@@ -4,9 +4,7 @@
     "en": "Disable Location Tracking"
   },
   "name": "disable-location-tracking",
-  "category": [
-    "Privacy"
-  ],
+  "category": ["Privacy"],
   "description": {
     "vi": "Tắt tính năng theo dõi vị trí toàn hệ thống.",
     "en": "Disables system-wide location tracking."

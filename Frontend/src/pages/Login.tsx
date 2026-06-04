@@ -1,52 +1,114 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import useAuthStore from "@/store/authStore"
-import { invoke, onIpc } from "@/lib/electron"
+import { invoke, onIpc, sendIpc } from "@/lib/electron"
+import { AnimatePresence, motion } from "framer-motion"
+import { hoverPresets, variants } from "@/lib/animations"
+import { useAdaptiveMotion } from "@/lib/performance"
+import logoImage from "../../Wallpaper/Frame 107.png"
+import heroImage from "../../Wallpaper/ChatGPT Image 16_30_55 11 thg 5, 2026.png"
 
-export default function Login() {
+export default function Login({ onLoginSuccess }: { onLoginSuccess?: () => void }) {
   const { isLoading, error, setLoading, setError } = useAuthStore()
   const [waiting, setWaiting] = useState(false)
+  const { disableNonEssentialEffects } = useAdaptiveMotion()
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Stable references for callbacks to avoid constantly unregistering/re-registering IPC
+  const onLoginSuccessRef = useRef(onLoginSuccess)
+  const setErrorRef = useRef(setError)
 
   useEffect(() => {
+    onLoginSuccessRef.current = onLoginSuccess
+  }, [onLoginSuccess])
+
+  useEffect(() => {
+    setErrorRef.current = setError
+  }, [setError])
+
+  const logDebug = (msg: string) => {
+    try {
+      sendIpc({ channel: "auth:debug", payload: `[renderer] ${msg}` })
+    } catch (e) {
+      console.error("[auth:debug]", msg, e)
+    }
+  }
+
+  useEffect(() => {
+    logDebug("Login component mounted, registering IPC listeners")
+    
     const offSuccess = onIpc({
       channel: "auth:success",
       listener: (user) => {
+        logDebug(`Received auth:success event: ${JSON.stringify(user)}`)
         setWaiting(false)
         useAuthStore.getState().setAuthenticated(user)
+        logDebug("Calling onLoginSuccess callback")
+        onLoginSuccessRef.current?.()
       },
     })
-
     const offError = onIpc({
       channel: "auth:error",
       listener: (payload: { message: string }) => {
+        logDebug(`Received auth:error event: ${JSON.stringify(payload)}`)
         setWaiting(false)
-        setError(payload?.message || "Xác thực thất bại.")
+        setErrorRef.current?.(payload?.message || "Xác thực thất bại.")
       },
     })
-
     return () => {
+      logDebug("Login component unmounting/cleaning up IPC listeners")
       offSuccess()
       offError()
     }
-  }, [setError])
+  }, [])
 
   useEffect(() => {
+    logDebug("getSession: checking active session on mount")
     invoke({ channel: "auth:getSession", payload: null })
       .then((res: any) => {
+        logDebug(`getSession response: ${JSON.stringify(res)}`)
         if (res?.authenticated && res?.user) {
           useAuthStore.getState().setAuthenticated(res.user)
+          onLoginSuccessRef.current?.()
         } else {
           setLoading(false)
         }
       })
-      .catch(() => setLoading(false))
+      .catch((err: any) => {
+        logDebug(`getSession failed: ${err?.message || err}`)
+        setLoading(false)
+      })
   }, [setLoading])
 
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container || disableNonEssentialEffects) return
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e
+      const { innerWidth, innerHeight } = window
+
+      const x = clientX / innerWidth - 0.5
+      const y = clientY / innerHeight - 0.5
+
+      container.style.setProperty("--mx", x.toFixed(4))
+      container.style.setProperty("--my", y.toFixed(4))
+    }
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+    }
+  }, [disableNonEssentialEffects])
+
   const handleLogin = async () => {
+    logDebug("handleLogin: starting Discord login flow")
     setError(null)
     setWaiting(true)
     try {
       await invoke({ channel: "auth:loginWithDiscord", payload: null })
-    } catch {
+      logDebug("handleLogin: auth:loginWithDiscord invoked successfully")
+    } catch (err: any) {
+      logDebug(`handleLogin: failed to invoke login - ${err?.message || err}`)
       setWaiting(false)
       setError("Không thể mở trình duyệt để xác thực.")
     }
@@ -54,114 +116,318 @@ export default function Login() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050505]">
-        <div className="flex flex-col items-center gap-4">
-          <DiscordLogo className="w-12 h-12 text-[#5865F2]" spinning />
-          <p className="text-vie-text-muted text-sm">Đang kiểm tra phiên đăng nhập...</p>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-zinc-950 text-white select-none">
+        <div className="flex flex-col items-center gap-5">
+          <motion.img
+            src={logoImage}
+            alt="VieXF"
+            className="max-w-[160px] w-full select-none pointer-events-none"
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: [0.3, 1, 0.3], scale: [0.98, 1.01, 0.98] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <p className="text-[10px] tracking-[0.25em] uppercase text-zinc-500 font-semibold">
+            Đang kiểm tra phiên đăng nhập
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-[#050505]" />
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[radial-gradient(ellipse_at_center,_#5865F240,_transparent_70%)] blur-3xl" />
-      <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] rounded-full bg-[radial-gradient(ellipse_at_center,_#8b5cf630,_transparent_70%)] blur-3xl" />
-      <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:64px_64px]" />
+    <div
+      ref={containerRef}
+      className="fixed inset-0 z-[9999] flex overflow-hidden bg-zinc-950 text-white select-none"
+    >
+      <style>{`
+        /* Metallic shimmer text */
+        @keyframes metallicSweep {
+          0% {
+            background-position: -200% center;
+          }
+          100% {
+            background-position: 200% center;
+          }
+        }
+        .shimmer-text {
+          background: linear-gradient(
+            90deg,
+            #94a3b8 0%,
+            #cbd5e1 25%,
+            #ffffff 50%,
+            #cbd5e1 75%,
+            #94a3b8 100%
+          );
+          background-size: 200% auto;
+          color: transparent;
+          -webkit-background-clip: text;
+          background-clip: text;
+          animation: metallicSweep 6s ease-in-out infinite;
+          display: inline-block;
+        }
 
-      <div
-        className="relative z-10 w-full max-w-md mx-4 rounded-2xl border border-vie-border overflow-hidden"
-        style={{
-          background: "rgba(10, 10, 14, 0.85)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)",
-        }}
+        /* Logo pulse breathing */
+        @keyframes logoPulse {
+          0%, 100% {
+            transform: scale(1) translate3d(0, 0, 0);
+          }
+          50% {
+            transform: scale(1.015) translate3d(0, 0, 0);
+          }
+        }
+        .logo-pulse {
+          animation: logoPulse 6s ease-in-out infinite;
+        }
+
+        /* Ambient glows breathing */
+        @keyframes glowBreathe1 {
+          0%, 100% {
+            transform: scale(1) translate3d(0, 0, 0);
+            opacity: 0.18;
+          }
+          50% {
+            transform: scale(1.04) translate3d(8px, -4px, 0);
+            opacity: 0.28;
+          }
+        }
+        .glow-breathe-1 {
+          animation: glowBreathe1 10s ease-in-out infinite;
+        }
+
+        @keyframes glowBreathe2 {
+          0%, 100% {
+            transform: scale(1) translate3d(0, 0, 0);
+            opacity: 0.12;
+          }
+          50% {
+            transform: scale(1.06) translate3d(-6px, 6px, 0);
+            opacity: 0.22;
+          }
+        }
+        .glow-breathe-2 {
+          animation: glowBreathe2 12s ease-in-out infinite;
+        }
+
+        /* Parallax layer performance rules */
+        .parallax-layer {
+          transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: transform;
+        }
+      `}</style>
+
+      {/* Ambient background glows for the overall page */}
+      <div className="pointer-events-none absolute inset-0 contain-paint z-0">
+        {!disableNonEssentialEffects && (
+          <>
+            <div className="absolute left-[200px] top-[-24%] h-[52%] w-[42%] rounded-full bg-[radial-gradient(ellipse_at_center,_#5865F21f,_transparent_70%)] glow-breathe-1" />
+            <div className="absolute bottom-[-14%] right-[-8%] h-[46%] w-[42%] rounded-full bg-[radial-gradient(ellipse_at_center,_#10b98114,_transparent_70%)] glow-breathe-2" />
+          </>
+        )}
+        <div className="absolute inset-0 opacity-[0.025] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:64px_64px]" />
+      </div>
+
+      <motion.aside
+        variants={variants.listStagger}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 flex h-full w-full max-w-[440px] flex-col justify-between border-r border-white/5 bg-[#09090b]/85 backdrop-blur-xl px-10 py-14 shadow-2xl shadow-black/50 will-change-[transform,opacity] transform-gpu"
       >
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#5865F2] to-transparent opacity-60" />
+        {/* Subtle top accent gradient */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#5865F2]/40 to-transparent" />
 
-        <div className="p-8 flex flex-col items-center gap-6">
-          <div className="flex flex-col items-center gap-3">
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center"
-              style={{
-                background: "linear-gradient(135deg, #5865F2 0%, #7983f5 100%)",
-                boxShadow: "0 8px 32px rgba(88,101,242,0.4)",
-              }}
-            >
-              <DiscordLogo className="w-9 h-9 text-white" />
-            </div>
-            <div className="text-center">
-              <h1 className="text-xl font-semibold text-vie-text font-display">VieXF</h1>
-              <p className="text-vie-text-muted text-sm mt-0.5">Yêu cầu xác thực Discord</p>
-            </div>
-          </div>
+        {/* Top/Middle container to push footer down */}
+        <div className="flex-1 flex flex-col justify-center my-auto">
+          {/* Logo Section */}
+          <motion.div variants={variants.fadeUp} className="mb-8 flex justify-center">
+            <img
+              src={logoImage}
+              alt="VieXF Logo"
+              className="logo-pulse max-w-[170px] w-full transform-gpu select-none pointer-events-none"
+            />
+          </motion.div>
 
-          <div
-            className="w-full rounded-xl p-4 border border-[rgba(88,101,242,0.25)] text-sm text-vie-text-muted leading-relaxed"
-            style={{ background: "rgba(88,101,242,0.08)" }}
-          >
-            <p>
-              Chỉ thành viên <span className="text-[#5865F2] font-medium">máy chủ VieX</span> có{" "}
-              <span className="text-vie-primary font-medium">role Level 5 khi chat nhiều</span> mới được truy cập ứng dụng.
+          {/* Welcome Text Section */}
+          <motion.div variants={variants.fadeUp} className="mb-7 text-center">
+            <span className="mb-2.5 inline-block text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-500 bg-emerald-500/5 border border-emerald-500/10 px-3 py-1 rounded-full select-none">
+              VieXF Access
+            </span>
+            <h1 className="mb-2 text-4xl font-extrabold tracking-tight text-white select-none">
+              <span className="shimmer-text">Welcome</span>
+            </h1>
+            <p className="text-sm leading-relaxed text-zinc-400 max-w-sm mx-auto select-none">
+              Đăng nhập để kích hoạt cấu hình tối ưu và bắt đầu trải nghiệm mượt mà cùng VieXF.
             </p>
-          </div>
+          </motion.div>
 
+          {/* Access Card Section */}
+          <motion.div
+            variants={variants.fadeUp}
+            className="mb-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-md p-5 text-sm leading-relaxed text-zinc-400 shadow-inner hover:border-white/[0.12] transition-colors duration-300"
+          >
+            <div className="flex gap-3.5 items-start">
+              <svg
+                className="h-5 w-5 text-emerald-500/80 shrink-0 mt-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              <p className="text-xs leading-relaxed text-zinc-400 select-none">
+                Chỉ thành viên chính thức của máy chủ{" "}
+                <span className="font-semibold text-[#5865F2]">VieX</span> (đạt{" "}
+                <span className="font-semibold text-emerald-500">Level 5 trở lên</span>) mới có
+                quyền truy cập ứng dụng.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Error Message */}
           {error && (
-            <div
-              className="w-full rounded-xl p-4 border border-[rgba(239,68,68,0.3)] text-sm text-red-400"
-              style={{ background: "rgba(239,68,68,0.08)" }}
+            <motion.div
+              variants={variants.fadeUp}
+              className="mb-4 rounded-xl border border-red-500/20 bg-red-500/5 p-3.5 text-xs text-red-300 transition-all duration-300"
             >
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center gap-2.5">
+                <svg
+                  className="h-4 w-4 shrink-0 text-red-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l-1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>{error}</span>
+                <span className="select-none">{error}</span>
               </div>
-            </div>
+            </motion.div>
           )}
 
-          <button
-            id="btn-discord-login"
-            onClick={handleLogin}
-            disabled={waiting}
-            className="w-full relative overflow-hidden rounded-xl py-3.5 px-6 text-white font-semibold text-sm flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-            style={{
-              background: waiting
-                ? "rgba(88,101,242,0.5)"
-                : "linear-gradient(135deg, #5865F2 0%, #7983f5 100%)",
-              boxShadow: waiting ? "none" : "0 4px 24px rgba(88,101,242,0.35)",
-            }}
-          >
-            {waiting ? (
-              <>
-                <Spinner className="w-4 h-4" />
-                Đang chờ xác thực...
-              </>
-            ) : (
-              <>
-                <DiscordLogo className="w-5 h-5" />
-                Đăng nhập bằng Discord
-              </>
+          {/* Button Section */}
+          <motion.div variants={variants.fadeUp} className="space-y-3">
+            <motion.button
+              id="btn-discord-login"
+              onClick={handleLogin}
+              disabled={waiting}
+              whileHover={
+                waiting
+                  ? undefined
+                  : { y: -2, scale: 1.01, boxShadow: "0 8px 24px rgba(88, 101, 242, 0.3)" }
+              }
+              whileTap={waiting ? undefined : { scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#4752C4] disabled:cursor-not-allowed disabled:opacity-60 shadow-[0_4px_12px_rgba(88,101,242,0.15)] transform-gpu will-change-[transform,opacity]"
+            >
+              {waiting ? (
+                <>
+                  <Spinner className="h-4 w-4" />
+                  Đang xử lý đăng nhập...
+                </>
+              ) : (
+                <>
+                  <DiscordLogo className="h-5 w-5" />
+                  Đăng nhập bằng Discord
+                </>
+              )}
+            </motion.button>
+          </motion.div>
+
+          {/* Waiting message below button */}
+          <AnimatePresence>
+            {waiting && (
+              <motion.p
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="mt-4 text-center text-xs leading-relaxed text-zinc-500 select-none"
+              >
+                Vui lòng hoàn tất xác thực trên trình duyệt để tiếp tục.
+              </motion.p>
             )}
-          </button>
-
-          {waiting && (
-            <p className="text-xs text-vie-text-dim text-center leading-relaxed">
-              Trình duyệt đã được mở. Vui lòng xác thực tài khoản Discord rồi quay lại đây.
-            </p>
-          )}
-
-          <p className="text-xs text-vie-text-dim text-center">
-            VieXF chỉ đọc thông tin cơ bản và vai trò trong server của bạn. Không thể thay đổi thông tin và đánh cắp token của bạn.
-          </p>
+          </AnimatePresence>
         </div>
-      </div>
+
+        {/* Bottom footer section */}
+        <motion.div
+          variants={variants.fadeUp}
+          className="mt-8 border-t border-white/[0.04] pt-6 space-y-4"
+        >
+          <div className="flex items-start gap-2.5 text-xs text-zinc-500">
+            <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded border border-white/10 bg-zinc-800/30 mt-0.5 select-none">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            </span>
+            <p className="leading-relaxed select-none">
+              Bằng việc tiếp tục, bạn đồng ý với{" "}
+              <span className="cursor-pointer text-emerald-500 hover:text-emerald-400 transition-colors">
+                Terms of Service
+              </span>{" "}
+              và{" "}
+              <span className="cursor-pointer text-emerald-500 hover:text-emerald-400 transition-colors">
+                Privacy Policy
+              </span>
+              .
+            </p>
+          </div>
+          <p className="text-center text-[10px] leading-relaxed text-zinc-600 select-none">
+            VieXF chỉ đọc thông tin cơ bản và vai trò trong server của bạn. Không đổi info, không
+            đụng token, yên tâm nha.
+          </p>
+        </motion.div>
+      </motion.aside>
+
+      {/* Right side: 3D Parallax & Depth Ambient effects */}
+      <main className="relative hidden flex-1 md:block overflow-hidden bg-[#030303]">
+        {/* Layer 1: Grid Layer */}
+        <div
+          className="absolute inset-0 opacity-[0.025] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:64px_64px] parallax-layer pointer-events-none"
+          style={{
+            transform: "translate3d(calc(var(--mx, 0) * -6px), calc(var(--my, 0) * -6px), 0)",
+          }}
+        />
+
+        {/* Layer 2: Glow breathing circles */}
+        {!disableNonEssentialEffects && (
+          <>
+            <div
+              className="absolute left-[15%] top-[-10%] h-[70%] w-[60%] rounded-full bg-[radial-gradient(ellipse_at_center,_#5865F21a,_transparent_70%)] glow-breathe-1 parallax-layer pointer-events-none"
+              style={{
+                transform: "translate3d(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 10px), 0)",
+              }}
+            />
+            <div
+              className="absolute bottom-[-10%] right-[10%] h-[60%] w-[60%] rounded-full bg-[radial-gradient(ellipse_at_center,_#10b98110,_transparent_70%)] glow-breathe-2 parallax-layer pointer-events-none"
+              style={{
+                transform: "translate3d(calc(var(--mx, 0) * 14px), calc(var(--my, 0) * 14px), 0)",
+              }}
+            />
+          </>
+        )}
+
+        {/* Layer 3: Ambient Fog / Vignette Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#09090b] via-transparent to-[#09090b]/30 pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#09090b]/10 via-transparent to-[#09090b]/60 pointer-events-none z-10" />
+
+        {/* Layer 4: Hero Image */}
+        <motion.img
+          src={heroImage}
+          alt="VieXF Hero"
+          className="h-full w-full object-cover opacity-50 scale-[1.03] parallax-layer pointer-events-none select-none"
+          style={{
+            transform: "translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -10px), 0)",
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </main>
     </div>
   )
 }

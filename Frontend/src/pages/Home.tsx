@@ -4,6 +4,7 @@ import RootDiv from "@/components/rootdiv"
 import Button from "@/components/ui/button"
 import { invoke } from "@/lib/electron"
 import { toast } from "react-toastify"
+import abkData from "@/assets/abk.json"
 import {
   Cpu,
   Activity,
@@ -19,7 +20,10 @@ import {
   RefreshCw,
 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
-import useSystemMetricsStore, { useSystemMetricsSubscription } from "@/store/systemMetrics"
+import useSystemMetricsStore, {
+  useSystemMetricsSubscription,
+  useSystemCurrentMetrics,
+} from "@/store/systemMetrics"
 
 // --- Constants & Config ---
 
@@ -58,111 +62,139 @@ function compareVersions(a: string, b: string) {
 
 // --- Components ---
 
-const AnimatedCounter = memo(({ value, label, subLabel }: { value: number; label: string; subLabel?: string }) => {
-  return (
-    <div className="flex flex-col">
-      <div className="flex items-baseline gap-2">
-        <div className="text-5xl lg:text-7xl font-display text-white tabular-nums leading-none tracking-tighter">
-          {value}<span className="text-3xl lg:text-5xl text-white/40">%</span>
+const AnimatedCounter = memo(
+  ({ value, label, subLabel }: { value: number; label: string; subLabel?: string }) => {
+    return (
+      <div className="flex flex-col">
+        <div className="flex items-baseline gap-2">
+          <div className="text-5xl lg:text-7xl font-metrics font-light text-white tabular-nums leading-none tracking-tight">
+            {value}
+            <span className="text-3xl lg:text-5xl text-white/40">%</span>
+          </div>
+          {subLabel && (
+            <span className="text-sm font-medium text-cyan-400 flex items-center gap-0.5 bg-cyan-950/40 px-2 py-1 rounded-md border border-cyan-500/20">
+              <ArrowUpRight size={14} /> {subLabel}
+            </span>
+          )}
         </div>
-        {subLabel && (
-          <span className="text-sm font-medium text-cyan-400 flex items-center gap-0.5 bg-cyan-950/40 px-2 py-1 rounded-md border border-cyan-500/20">
-            <ArrowUpRight size={14} /> {subLabel}
+        <p className="text-sm text-white/50 font-bold uppercase tracking-widest mt-4">{label}</p>
+      </div>
+    )
+  },
+)
+
+const StatCard = memo(
+  ({
+    title,
+    value,
+    subtext,
+    icon: Icon,
+    trend,
+    trendValue,
+    colorClass,
+    actionButton,
+  }: {
+    title: string
+    value: string
+    subtext?: string
+    icon: any
+    trend?: "up" | "down" | "neutral"
+    trendValue?: string
+    colorClass: string
+    actionButton?: React.ReactNode
+  }) => {
+    const borderColor = colorClass.replace("bg-", "border-")
+    const textColor = colorClass.replace("bg-", "text-")
+
+    return (
+      <div className="relative overflow-hidden p-5 group flex flex-col justify-between gap-4 tech-card">
+        <div className="relative z-10 flex flex-col justify-between h-full gap-4">
+          <div className="flex justify-between items-start">
+            <div
+              className={`p-3 rounded-xl bg-white/5 border border-white/10 ${textColor} shadow-inner transition-transform group-hover:scale-110 duration-300`}
+            >
+              <Icon size={24} strokeWidth={1.5} />
+            </div>
+            {trend && (
+              <div
+                className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md ${
+                  trend === "up"
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                    : trend === "down"
+                      ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
+                      : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                }`}
+              >
+                {trend === "up" || trend === "down" ? (
+                  <ArrowUpRight size={12} />
+                ) : (
+                  <ArrowDownRight size={12} />
+                )}
+                {trendValue}
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-end justify-between">
+            <div>
+              <h3 className="text-3xl font-metrics font-medium text-white tracking-tight leading-none mb-1">
+                {value}
+              </h3>
+              <p className="text-sm text-white/40 font-medium tracking-wide uppercase flex items-center gap-2">
+                {title}
+                {subtext && (
+                  <span className="opacity-50 lowercase font-normal normal-case tracking-normal">
+                    ({subtext})
+                  </span>
+                )}
+              </p>
+            </div>
+            {actionButton && (
+              <div className="transform translate-y-1 group-hover:translate-y-0 transition-transform">
+                {actionButton}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  },
+)
+
+const TweakItem = memo(
+  ({
+    label,
+    value,
+    percent,
+    color,
+  }: {
+    label: string
+    value: string
+    percent: string
+    color: string
+  }) => {
+    const textColor = color.replace("bg-", "text-")
+    return (
+      <div className="flex items-center justify-between py-3 px-2 rounded-lg hover:bg-white/5 transition-colors group cursor-default">
+        <div className="flex items-center gap-3">
+          <div className={`w-1.5 h-1.5 rounded-full ${color} shadow-[0_0_8px_currentColor]`} />
+          <span className="text-sm font-medium text-white/60 group-hover:text-white/90 transition-colors uppercase tracking-wide">
+            {label}
           </span>
-        )}
-      </div>
-      <p className="text-sm text-white/50 font-bold uppercase tracking-widest mt-4">{label}</p>
-    </div>
-  )
-})
-
-const StatCard = memo(({
-  title,
-  value,
-  subtext,
-  icon: Icon,
-  trend,
-  trendValue,
-  colorClass,
-  actionButton
-}: {
-  title: string;
-  value: string;
-  subtext?: string;
-  icon: any;
-  trend?: "up" | "down" | "neutral";
-  trendValue?: string;
-  colorClass: string;
-  actionButton?: React.ReactNode;
-}) => {
-  const borderColor = colorClass.replace('bg-', 'border-')
-  const textColor = colorClass.replace('bg-', 'text-')
-
-  return (
-    <div className="relative overflow-hidden rounded-2xl bg-[#09090b]/80 backdrop-blur-xl border border-white/5 p-5 group transition-all duration-300 hover:border-white/20 hover:-translate-y-1 shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex flex-col justify-between gap-4">
-      <div className="relative z-10 flex flex-col justify-between h-full gap-4">
-        <div className="flex justify-between items-start">
-          <div className={`p-3 rounded-xl bg-white/5 border border-white/10 ${textColor} shadow-inner transition-transform group-hover:scale-110 duration-300`}>
-            <Icon size={24} strokeWidth={1.5} />
-          </div>
-          {trend && (
-            <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md ${trend === 'up' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-              trend === 'down' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' :
-                'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-              }`}>
-              {trend === 'up' || trend === 'down' ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-              {trendValue}
-            </div>
-          )}
         </div>
 
-        <div className="flex items-end justify-between">
-          <div>
-            <h3 className="text-3xl font-display text-white tracking-tight leading-none mb-1">{value}</h3>
-            <p className="text-sm text-white/40 font-medium tracking-wide uppercase flex items-center gap-2">
-              {title}
-              {subtext && <span className="opacity-50 lowercase font-normal normal-case tracking-normal">({subtext})</span>}
-            </p>
-          </div>
-          {actionButton && (
-            <div className="transform translate-y-1 group-hover:translate-y-0 transition-transform">
-              {actionButton}
-            </div>
-          )}
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-bold text-white/90">{value}</span>
+          <span
+            className={`text-xs font-bold px-2 py-0.5 rounded bg-white/5 ${textColor} border border-white/10`}
+          >
+            {percent}
+          </span>
         </div>
       </div>
-    </div>
-  )
-})
-
-const TweakItem = memo(({
-  label,
-  value,
-  percent,
-  color
-}: {
-  label: string;
-  value: string;
-  percent: string;
-  color: string
-}) => {
-  const textColor = color.replace('bg-', 'text-')
-  return (
-    <div className="flex items-center justify-between py-3 px-2 rounded-lg hover:bg-white/5 transition-colors group cursor-default">
-      <div className="flex items-center gap-3">
-        <div className={`w-1.5 h-1.5 rounded-full ${color} shadow-[0_0_8px_currentColor]`} />
-        <span className="text-sm font-medium text-white/60 group-hover:text-white/90 transition-colors uppercase tracking-wide">{label}</span>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <span className="text-sm font-bold text-white/90">{value}</span>
-        <span className={`text-xs font-bold px-2 py-0.5 rounded bg-white/5 ${textColor} border border-white/10`}>
-          {percent}
-        </span>
-      </div>
-    </div>
-  )
-})
+    )
+  },
+)
 
 export default function Home() {
   const { t } = useTranslation()
@@ -174,9 +206,20 @@ export default function Home() {
 
   useSystemMetricsSubscription()
 
-  const current = useSystemMetricsStore((state) => state.current)
-  // History is not used in the minimal UI to save RAM, we removed recharts
-  const history = useSystemMetricsStore((state) => state.history)
+  const { cpu, ram, gpu } = useSystemCurrentMetrics()
+
+  const [marqueeItems, setMarqueeItems] = React.useState<any[]>([])
+
+  React.useEffect(() => {
+    const data = Array.isArray(abkData) && abkData.length > 0 ? abkData : []
+    if (data.length > 0) {
+      const shuffled = [...data].sort(() => 0.5 - Math.random())
+      const selected = shuffled.slice(0, 20)
+      setMarqueeItems([...selected, ...selected])
+    } else {
+      setMarqueeItems([])
+    }
+  }, [])
 
   useEffect(() => {
     let mounted = true
@@ -215,32 +258,65 @@ export default function Home() {
       ])
 
       if (!result?.ok) {
-        toast.error(result?.error ? String(result.error) : "Không thể kiểm tra bản cập nhật.")
+        toast.error(result?.error ? `❌ Úi, check update thất bại rồi anh em ơi: ${result.error}` : "❌ Úi, check update lỗi rồi anh em ơi, check lại kết nối xem sao nhé!")
         return
       }
 
       const nextVersion = result?.updateInfo?.version ? String(result.updateInfo.version) : null
       const currentVersionText = currentVersion ? String(currentVersion) : null
 
-      if (nextVersion && currentVersionText && compareVersions(nextVersion, currentVersionText) > 0) {
-        toast.info(`Có bản cập nhật mới: ${nextVersion}.`)
+      if (
+        nextVersion &&
+        currentVersionText &&
+        compareVersions(nextVersion, currentVersionText) > 0
+      ) {
+        toast.info(`🔥 Phát hiện phiên bản mới ${nextVersion} cực hot, lên đời ngay cho mượt anh em ơi!`)
         return
       }
 
-      toast.success("Bạn đang dùng bản mới nhất.")
+      toast.success("✨ VieXF đang ở phiên bản mới nhất rồi, chuẩn bài chiến game luôn nha anh em!")
     } catch (error: any) {
-      toast.error(error?.message || "Không thể kiểm tra bản cập nhật.")
+      toast.error(`❌ Check update lỗi rồi anh em ơi: ${error?.message || "Lỗi không xác định"}`)
     } finally {
       setCheckingUpdate(false)
     }
   }
 
-  const activeValue = activeTab === "cpu" ? current.cpu : activeTab === "ram" ? current.ram : current.gpu
+  const activeValue = activeTab === "cpu" ? cpu : activeTab === "ram" ? ram : gpu
   const trendLabel = activeValue > 80 ? "Cháy Máy" : activeValue > 50 ? "Bình Thường" : "Cực Mượt"
 
   return (
     <RootDiv style={{}}>
-      <div className="relative max-w-7xl mx-auto px-6 py-6 flex flex-col gap-8 h-full">
+      <div className="relative w-full max-w-[1600px] py-10 flex flex-col gap-8 h-full">
+        {/* Fake Purchase Marquee Banner */}
+        {marqueeItems && marqueeItems.length > 0 ? (
+          <div className="w-full h-11 min-h-[44px] flex items-center overflow-hidden relative z-50 rounded-xl border border-cyan-500/25 bg-[#121214]/90 backdrop-blur-md marquee-container">
+            <div className="marquee-track">
+              {marqueeItems.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3.5 whitespace-nowrap text-sm font-bold text-zinc-100"
+                >
+                  <span className="text-cyan-400 text-base animate-pulse">🎉</span>
+                  <span className="text-white font-extrabold uppercase tracking-wide">
+                    {item.username}
+                  </span>
+                  <span className="text-zinc-400 font-medium">đã mua !</span>
+                  <span className="text-emerald-400 font-metrics font-extrabold text-base drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+                    {item.amount.toLocaleString("vi-VN")} VNĐ
+                  </span>
+                </div>
+              ))}
+            </div>
+            {/* Soft gradient fade on edges */}
+            <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#121214] to-transparent pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#121214] to-transparent pointer-events-none" />
+          </div>
+        ) : (
+          <div className="w-full h-11 min-h-[44px] flex items-center justify-center relative z-50 rounded-xl border border-cyan-500/25 bg-[#121214]/90 backdrop-blur-md text-sm font-bold text-cyan-400">
+            🔥 VieXF luôn sẵn sàng phục vụ anh em, chiến game không lag, out trình mọi trận đấu!
+          </div>
+        )}
 
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2 border-b border-white/5">
@@ -251,7 +327,9 @@ export default function Home() {
                 Pro
               </span>
             </h1>
-            <p className="text-white/40 text-sm mt-1 uppercase tracking-widest font-bold">Wassup, <span className="text-cyan-400">{userName}</span></p>
+            <p className="text-white/40 text-sm mt-1 uppercase tracking-widest font-bold">
+              Wassup, <span className="text-cyan-400">{userName}</span>
+            </p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -271,7 +349,9 @@ export default function Home() {
             </button>
             <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 hover:text-cyan-300 transition-all border border-cyan-500/30 shadow-[0_0_15px_-5px_rgba(34,211,238,0.4)] active:scale-95">
               <Sparkles size={16} fill="currentColor" />
-              <span className="text-sm font-bold tracking-wider uppercase">Boost FPS</span>
+              <span className="text-sm font-bold tracking-wider uppercase">
+                Adaptive Performance
+              </span>
             </button>
           </div>
         </div>
@@ -308,7 +388,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500 hover:text-red-400 text-xs font-bold uppercase tracking-wider border border-red-500/30 transition-colors shadow-[0_0_15px_-5px_rgba(239,68,68,0.5)] inline-block"
               >
-                Tăng FPS
+                Turbo Response
               </a>
             }
           />
@@ -316,7 +396,6 @@ export default function Home() {
 
         {/* Main Content Area - Metrics & Tweaks */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-[calc(100%-240px)] min-h-[400px]">
-
           {/* Core Metrics */}
           <div className="lg:col-span-8 flex flex-col gap-4">
             {/* Minimal Tabs */}
@@ -325,10 +404,11 @@ export default function Home() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative px-6 py-2 rounded-lg text-sm font-bold tracking-wider uppercase transition-all duration-300 outline-none ${activeTab === tab.id
-                    ? `bg-white/10 text-white shadow-md border border-white/10`
-                    : `text-white/40 hover:text-white/80 hover:bg-white/5 border border-transparent`
-                    }`}
+                  className={`relative px-6 py-2 rounded-lg text-sm font-bold tracking-wider uppercase transition-all duration-300 outline-none ${
+                    activeTab === tab.id
+                      ? `bg-white/10 text-white shadow-md border border-white/10`
+                      : `text-white/40 hover:text-white/80 hover:bg-white/5 border border-transparent`
+                  }`}
                 >
                   {tab.label}
                   {activeTab === tab.id && (
@@ -339,25 +419,54 @@ export default function Home() {
             </div>
 
             {/* Performance Visualizer (No heavy charts, minimal aesthetic) */}
-            <div className="relative flex-1 rounded-2xl bg-[#09090b]/80 backdrop-filter backdrop-blur-xl border border-white/5 p-8 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.8)] flex flex-col justify-center overflow-hidden group">
+            <div className="relative flex-1 p-8 flex flex-col justify-center overflow-hidden group tech-card">
               {/* Dynamic decorative minimal glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-900/20 blur-[80px] rounded-full transition-opacity duration-1000 group-hover:opacity-100 opacity-50 pointer-events-none" />
 
+              <div className="absolute bottom-3 left-8 text-[9px] font-mono text-cyan-500/30 tracking-widest uppercase">
+                SYSTEM PRIORITY ACTIVE // RUNNING
+              </div>
+
               <div className="relative z-10 w-full flex items-center justify-between">
-                <AnimatedCounter value={activeValue} label={`${activeTab} Load Status`} subLabel={trendLabel} />
+                <AnimatedCounter
+                  value={activeValue}
+                  label={`${activeTab} Load Status`}
+                  subLabel={trendLabel}
+                />
 
                 {/* CSS Visualizer Rings */}
                 <div className="relative w-48 h-48 flex items-center justify-center">
-                  <svg className="-rotate-90 w-full h-full drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-                    <circle cx="96" cy="96" r="80" stroke="rgba(255,255,255,0.05)" strokeWidth="12" fill="none" />
-                    <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="12" fill="none"
-                      className={`text-${TAB_COLORS[activeTab]} transition-all duration-1000 ease-out`}
+                  {/* Glowing background behind active gauge */}
+                  <div className="absolute inset-4 rounded-full bg-cyan-500/5 blur-xl pointer-events-none animate-pulse-slow" />
+                  <svg className="-rotate-90 w-full h-full drop-shadow-[0_0_20px_rgba(6,182,212,0.35)]">
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="80"
+                      stroke="rgba(255,255,255,0.05)"
+                      strokeWidth="12"
+                      fill="none"
+                    />
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="80"
+                      stroke="currentColor"
+                      strokeWidth="12"
+                      fill="none"
+                      className={`text-${TAB_COLORS[activeTab]} transition-all duration-700 ease-out`}
                       strokeDasharray="502"
                       strokeDashoffset={502 - (502 * activeValue) / 100}
-                      strokeLinecap="round" />
+                      strokeLinecap="round"
+                    />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center flex-col">
-                    <span className="text-white/30 text-xs font-bold uppercase tracking-widest">{activeTab}</span>
+                    <span className="text-white/30 text-xs font-bold uppercase tracking-widest">
+                      {activeTab}
+                    </span>
+                    <span className="text-[8px] font-mono text-cyan-400/50 uppercase tracking-wider mt-1 text-center max-w-[120px] leading-none">
+                      SYS_PRIORITY // ACTIVE
+                    </span>
                   </div>
                 </div>
               </div>
@@ -366,11 +475,13 @@ export default function Home() {
 
           {/* Tweaks List */}
           <div className="lg:col-span-4 h-full">
-            <div className="rounded-2xl bg-[#09090b]/80 border border-white/5 p-5 h-full flex flex-col shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)] relative">
+            <div className="p-5 h-full flex flex-col relative tech-card">
               <div className="flex items-center justify-between mb-4 pb-4 border-b border-white/5">
-                <h3 className="text-sm font-bold text-white/50 tracking-widest uppercase">Tối Ưu Hoá VIP</h3>
+                <h3 className="text-sm font-bold text-white/50 tracking-widest uppercase">
+                  Tối Ưu Hoá VIP
+                </h3>
                 <button
-                  onClick={() => navigate('/tweaks')}
+                  onClick={() => navigate("/tweaks")}
                   className="text-[10px] font-bold text-white hover:text-cyan-400 transition-colors uppercase tracking-widest bg-white/5 border border-white/10 hover:border-cyan-500/50 py-1.5 px-3 rounded"
                 >
                   Setup
@@ -378,25 +489,59 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col flex-1 overflow-auto no-scrollbar gap-1">
-                <TweakItem label="Độ Trễ Phản Hồi" value="Max Tốc" percent="+24%" color="bg-cyan-400" />
-                <TweakItem label="Ping Mạng" value="Cực Thấp" percent="-12ms" color="bg-emerald-400" />
-                <TweakItem label="Khử Giật Lag" value="Đang Bật" percent="100%" color="bg-amber-400" />
-                <TweakItem label="Dịch Vụ Nền" value="Đóng Băng" percent="-45%" color="bg-rose-400" />
-                <TweakItem label="Bộ Nhớ Đệm" value="Tối Đa" percent="+1.2GB" color="bg-purple-400" />
+                <TweakItem
+                  label="Độ Trễ Phản Hồi"
+                  value="Max Tốc"
+                  percent="+24%"
+                  color="bg-cyan-400"
+                />
+                <TweakItem
+                  label="Ping Mạng"
+                  value="Cực Thấp"
+                  percent="-12ms"
+                  color="bg-emerald-400"
+                />
+                <TweakItem
+                  label="Khử Giật Lag"
+                  value="Đang Bật"
+                  percent="100%"
+                  color="bg-amber-400"
+                />
+                <TweakItem
+                  label="Dịch Vụ Nền"
+                  value="Đóng Băng"
+                  percent="-45%"
+                  color="bg-rose-400"
+                />
+                <TweakItem
+                  label="Bộ Nhớ Đệm"
+                  value="Tối Đa"
+                  percent="+1.2GB"
+                  color="bg-purple-400"
+                />
               </div>
 
               <div className="mt-4 pt-4 border-t border-white/5">
-                <h4 className="text-xs font-bold text-white/30 uppercase tracking-widest mb-3">Hành Động Khẩn</h4>
+                <h4 className="text-xs font-bold text-white/30 uppercase tracking-widest mb-3">
+                  Hành Động Khẩn
+                </h4>
                 <div className="grid grid-cols-2 gap-3">
-                  <Button variant="ghost" className="h-10 text-xs font-bold tracking-wider uppercase border border-white/10 hover:bg-white/10 hover:text-white text-white/60 bg-transparent rounded-lg transition-all" onClick={() => navigate('/clean')}>
+                  <Button
+                    variant="ghost"
+                    className="h-10 text-xs font-bold tracking-wider uppercase border border-white/10 hover:bg-white/10 hover:text-white text-white/60 bg-transparent rounded-lg transition-all"
+                    onClick={() => navigate("/clean")}
+                  >
                     Dọn Rác
                   </Button>
-                  <Button variant="ghost" className="h-10 text-xs font-bold tracking-wider uppercase border border-cyan-900/40 hover:bg-cyan-950/40 hover:text-cyan-400 hover:border-cyan-500/50 text-cyan-500/80 bg-cyan-950/20 rounded-lg transition-all" onClick={() => navigate('/utilities')}>
+                  <Button
+                    variant="ghost"
+                    className="h-10 text-xs font-bold tracking-wider uppercase border border-cyan-900/40 hover:bg-cyan-950/40 hover:text-cyan-400 hover:border-cyan-500/50 text-cyan-500/80 bg-cyan-950/20 rounded-lg transition-all"
+                    onClick={() => navigate("/utilities")}
+                  >
                     Check Hàng
                   </Button>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

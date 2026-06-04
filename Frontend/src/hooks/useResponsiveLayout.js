@@ -22,7 +22,9 @@ const computeLayout = (width) => {
 }
 
 export default function useResponsiveLayout() {
-  const [layout, setLayout] = useState(() => computeLayout(typeof window !== "undefined" ? window.innerWidth : 1440))
+  const [layout, setLayout] = useState(() =>
+    computeLayout(typeof window !== "undefined" ? window.innerWidth : 1440),
+  )
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,7 +37,10 @@ export default function useResponsiveLayout() {
 
   useEffect(() => {
     document.documentElement.style.setProperty("--vie-nav-width", `${layout.navWidth}px`)
-    document.documentElement.style.setProperty("--vie-content-padding", `${layout.contentPadding}px`)
+    document.documentElement.style.setProperty(
+      "--vie-content-padding",
+      `${layout.contentPadding}px`,
+    )
     document.documentElement.style.setProperty("--vie-scale", layout.scale.toFixed(3))
   }, [layout])
 

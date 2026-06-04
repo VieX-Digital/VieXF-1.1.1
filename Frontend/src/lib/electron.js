@@ -70,7 +70,7 @@ function getInvokePolicy(channel) {
     return { retries: 1, timeoutMs: 30000 }
   }
 
-  if (channel.startsWith("game-mode:")) {
+  if (channel.startsWith("game-mode:") || channel.startsWith("gamemode:")) {
     return { retries: 0, timeoutMs: 60000 }
   }
 
@@ -124,7 +124,7 @@ export async function invoke({ channel, payload }) {
     }
 
     const normalized = new Error(
-      `[${correlationId}] invoke failed for "${channel}": ${lastError?.message || "Unknown error"}`
+      `[${correlationId}] invoke failed for "${channel}": ${lastError?.message || "Unknown error"}`,
     )
     normalized.cause = lastError
     pushOperationLog({
@@ -135,7 +135,7 @@ export async function invoke({ channel, payload }) {
     throw normalized
   }
 
-  console.log("[mock invoke]", channel, payload);
+  console.log("[mock invoke]", channel, payload)
   // Basic mock returns for initial UI load
   if (channel === "license:get") {
     return {
@@ -147,11 +147,11 @@ export async function invoke({ channel, payload }) {
       discordUrl: "https://discord.com/channels/1274585470633906176/1466020101554835466",
     }
   }
-  if (channel === "tweak:active") return [];
-  if (channel === "tweaks:fetch") return [];
-  if (channel === "get-system-specs") return { hasGPU: false };
-  if (channel === "get-system-metrics") return { cpu_usage: 0, memory_usage: 0 };
-  return {};
+  if (channel === "tweak:active") return []
+  if (channel === "tweaks:fetch") return []
+  if (channel === "get-system-specs") return { hasGPU: false }
+  if (channel === "get-system-metrics") return { cpu_usage: 0, memory_usage: 0 }
+  return {}
 }
 
 export function getOperationLogs() {
@@ -160,6 +160,39 @@ export function getOperationLogs() {
 
 export function clearOperationLogs() {
   writeOperationLogs([])
+}
+
+export function onceIpc({ channel, listener }) {
+  const ipc = getIpcRenderer()
+  if (!ipc || typeof listener !== "function") return () => {}
+
+  let unsubscribe
+  const wrapped = (_, payload) => {
+    if (unsubscribe) unsubscribe()
+    listener(payload)
+  }
+
+  if (typeof ipc.once === "function") {
+    unsubscribe = ipc.once(channel, wrapped)
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }
+
+  unsubscribe = ipc.on?.(channel, wrapped)
+  return () => {
+    if (unsubscribe) unsubscribe()
+  }
+}
+
+export function removeIpc(channel, listener) {
+  const ipc = getIpcRenderer()
+  if (!ipc || !channel) return
+  if (listener && typeof ipc.off === "function") return ipc.off(channel, listener)
+  if (listener && typeof ipc.removeListener === "function")
+    return ipc.removeListener(channel, listener)
+  if (!listener && typeof ipc.removeAllListeners === "function")
+    return ipc.removeAllListeners(channel)
 }
 
 export function sendIpc({ channel, payload }) {
@@ -173,19 +206,18 @@ export function onIpc({ channel, listener }) {
   if (!ipc?.on || typeof listener !== "function") return () => {}
 
   const wrapped = (_, payload) => listener(payload)
-  ipc.on(channel, wrapped)
+  const unsubscribe = ipc.on(channel, wrapped)
 
   return () => {
-    if (typeof ipc.off === "function") {
-      ipc.off(channel, wrapped)
-      return
-    }
-    if (typeof ipc.removeListener === "function") {
-      ipc.removeListener(channel, wrapped)
-      return
-    }
-    if (typeof ipc.removeAllListeners === "function") {
-      ipc.removeAllListeners(channel)
+    if (typeof unsubscribe === "function") {
+      unsubscribe()
+    } else {
+      if (typeof ipc.off === "function") {
+        ipc.off(channel, wrapped)
+      } else if (typeof ipc.removeListener === "function") {
+        ipc.removeListener(channel, wrapped)
+      }
     }
   }
 }
+

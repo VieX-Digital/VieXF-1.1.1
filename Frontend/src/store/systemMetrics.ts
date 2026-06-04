@@ -1,6 +1,7 @@
-﻿import { create } from "zustand"
+import { create } from "zustand"
 import { useEffect } from "react"
 import { invoke, onIpc, sendIpc } from "@/lib/electron"
+import { useShallow } from "zustand/react/shallow"
 
 type MetricsCurrent = {
   cpu: number
@@ -29,8 +30,8 @@ type MetricsState = {
 }
 
 const MAX_HISTORY_POINTS = 60
-const CURRENT_COMMIT_MS = 500
-const HISTORY_COMMIT_MS = 1200
+const CURRENT_COMMIT_MS = 3000
+const HISTORY_COMMIT_MS = 3000
 
 const initialCurrent: MetricsCurrent = {
   cpu: 0,
@@ -273,5 +274,8 @@ export function useSystemMetricsSubscription() {
   }, [])
 }
 
-export default useSystemMetricsStore
+export function useSystemCurrentMetrics() {
+  return useSystemMetricsStore(useShallow((state) => state.current))
+}
 
+export default useSystemMetricsStore

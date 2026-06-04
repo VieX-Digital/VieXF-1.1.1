@@ -4,10 +4,7 @@
     "en": "Enable Dark Mode"
   },
   "name": "enable-dark-mode",
-  "category": [
-    "General",
-    "Appearance"
-  ],
+  "category": ["General", "Appearance"],
   "description": {
     "vi": "Bắt buộc hệ thống và ứng dụng sử dụng chế độ tối.",
     "en": "Forces system and apps to use Dark Mode."

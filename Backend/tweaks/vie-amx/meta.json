@@ -15,9 +15,5 @@
   },
   "recommended": false,
   "top": false,
-  "category": [
-    "Remember",
-    "Performance",
-    "Gaming"
-  ]
+  "category": ["Remember", "Performance", "Gaming"]
 }

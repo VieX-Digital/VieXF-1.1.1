@@ -1,7 +1,10 @@
-import { ipcMain, webContents } from "electron"
+import { ipcMain, webContents, app } from "electron"
 import { executePowerShell } from "./powershell"
 import log from "electron-log"
 import os from "os"
+import { spawn } from "child_process"
+import { promises as fsp } from "fs"
+import path from "path"
 
 console.log = log.log
 console.error = log.error
@@ -9,7 +12,7 @@ console.warn = log.warn
 
 // ── Push-based subscriber system (mirrors system.js pattern) ──────────────
 const RAMCLEAR_UPDATE_CHANNEL = "ramclear:stats:update"
-const RAMCLEAR_INTERVAL_MS = 3000
+const RAMCLEAR_INTERVAL_MS = 5000
 const ramclearSubscribers = new Map()
 const trackedRamSenders = new Set()
 let ramPollTimer = null
@@ -17,7 +20,7 @@ let ramPollInFlight = false
 
 // ── RAM Stats Collection (pure Node.js, zero PowerShell) ──────────────────
 // Uses os.totalmem/freemem for basic stats. For Standby/Cache breakdown,
-// we call WMI once via a lightweight PowerShell query.
+// we call WMI once via a lightweight PowerShell query and cache it for 15 seconds.
 
 const ramStatsCache = {
   totalMb: 0,
@@ -28,6 +31,9 @@ const ramStatsCache = {
   timestamp: 0,
 }
 
+let lastStandbyQueryTime = 0
+let cachedStandbyMb = 0
+
 async function collectRamStats() {
   try {
     const totalBytes = os.totalmem()
@@ -36,23 +42,27 @@ async function collectRamStats() {
     const freeMb = Math.round(freeBytes / 1024 / 1024)
     const usedMb = totalMb - freeMb
 
-    // Try to get Standby/Cache breakdown from WMI (cached query, lightweight)
-    let standbyMb = 0
-    try {
-      const script = `
-        $mem = Get-CimInstance Win32_PerfFormattedData_PerfOS_Memory -ErrorAction Stop
-        $standby = [Math]::Round(([double]$mem.StandbyCacheNormalPriorityBytes + [double]$mem.StandbyCacheReserveBytes + [double]$mem.StandbyCacheCoreBytes) / 1MB, 0)
-        Write-Output $standby
-      `
-      const result = await executePowerShell(null, { script, name: "ramclear-standby" })
-      if (result.success) {
-        standbyMb = parseInt(result.output.trim(), 10) || 0
+    const now = Date.now()
+    // Chỉ truy vấn PowerShell lấy Standby Cache sau mỗi 30 giây để CPU được chill cực hạn
+    if (now - lastStandbyQueryTime > 30000 || cachedStandbyMb === 0) {
+      lastStandbyQueryTime = now
+      try {
+        const script = `
+          $mem = Get-CimInstance Win32_PerfFormattedData_PerfOS_Memory -ErrorAction Stop
+          $standby = [Math]::Round(([double]$mem.StandbyCacheNormalPriorityBytes + [double]$mem.StandbyCacheReserveBytes + [double]$mem.StandbyCacheCoreBytes) / 1MB, 0)
+          Write-Output $standby
+        `
+        const result = await executePowerShell(null, { script, name: "ramclear-standby" })
+        if (result.success) {
+          cachedStandbyMb = parseInt(result.output.trim(), 10) || 0
+        }
+      } catch {
+        // Fallback: Ước lượng standby bằng 15% lượng RAM đã sử dụng nếu lỗi
+        cachedStandbyMb = Math.round(usedMb * 0.15)
       }
-    } catch {
-      // Fallback: estimate standby as (total - free - active)
-      standbyMb = 0
     }
 
+    const standbyMb = Math.min(usedMb, cachedStandbyMb)
     const activeMb = usedMb - standbyMb
     const usagePercent = totalMb > 0 ? Math.round((usedMb / totalMb) * 100) : 0
 
@@ -61,7 +71,7 @@ async function collectRamStats() {
     ramStatsCache.standbyMb = Math.max(0, standbyMb)
     ramStatsCache.freeMb = freeMb
     ramStatsCache.usagePercent = usagePercent
-    ramStatsCache.timestamp = Date.now()
+    ramStatsCache.timestamp = now
 
     return { ...ramStatsCache }
   } catch (error) {
@@ -252,11 +262,118 @@ async function runRamTick() {
   }
 }
 
+let timerResProcess = null
+
+async function runRfmOptimize() {
+  try {
+    // 1. Force-clear Standby List / system cache
+    const purgeScript = `
+$ErrorActionPreference = 'Stop'
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+public static class RamCleaner {
+    [DllImport("ntdll.dll", SetLastError = true)]
+    public static extern int NtSetSystemInformation(int InfoClass, ref int Info, int Length);
+
+    public static int PurgeStandbyList() {
+        int command = 4;
+        return NtSetSystemInformation(80, ref command, sizeof(int));
+    }
+}
+"@ -ReferencedAssemblies @('System.dll')
+try {
+    $res = [RamCleaner]::PurgeStandbyList()
+    Write-Output "PurgeStatus: $res"
+} catch {
+    Write-Output "PurgeError: $_"
+}
+`
+    const purgeResult = await executePowerShell(null, {
+      script: purgeScript,
+      name: "ramclear-rfm-purge",
+    })
+    log.info("[ramclear] RFM Standby list purge result:", purgeResult)
+
+    // 2. Set System Timer Resolution to 0.5ms (if not already running)
+    if (!timerResProcess) {
+      const timerScript = `
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+public static class Win32Timer {
+    [DllImport("ntdll.dll", SetLastError = true)]
+    public static extern int NtSetTimerResolution(uint DesiredResolution, bool SetResolution, out uint CurrentResolution);
+}
+"@
+$current = 0
+$status = [Win32Timer]::NtSetTimerResolution(5000, $true, [ref]$current)
+Write-Output "TimerStatus: $status, CurrentRes: $current"
+while ($true) {
+    Start-Sleep -Seconds 3600
+}
+`
+      const tempDir = path.join(app.getPath("userData"), "scripts")
+      if (!require("fs").existsSync(tempDir)) {
+        require("fs").mkdirSync(tempDir, { recursive: true })
+      }
+      const tempFile = path.join(tempDir, `rfm-timerres.ps1`)
+      const withBom = `\uFEFF${timerScript}`
+      await fsp.writeFile(tempFile, withBom, "utf8")
+
+      log.info("[ramclear] Spawning background Timer Resolution process...")
+      timerResProcess = spawn(
+        "powershell.exe",
+        ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", tempFile],
+        {
+          windowsHide: true,
+          stdio: ["ignore", "pipe", "pipe"],
+        },
+      )
+
+      timerResProcess.stdout.on("data", (data) => {
+        log.info(`[ramclear-timerres-stdout]: ${data.toString().trim()}`)
+      })
+
+      timerResProcess.stderr.on("data", (data) => {
+        log.warn(`[ramclear-timerres-stderr]: ${data.toString().trim()}`)
+      })
+
+      timerResProcess.on("close", (code) => {
+        log.info(`[ramclear] Timer resolution process closed with code ${code}`)
+        timerResProcess = null
+      })
+    } else {
+      log.info("[ramclear] Timer Resolution process is already running, skipping spawn.")
+    }
+
+    return { success: true }
+  } catch (error) {
+    log.error("[ramclear] RFM optimization error:", error)
+    return { success: false, error: error.message }
+  }
+}
+
+// Clean up timer resolution process on quit
+app.on("will-quit", () => {
+  if (timerResProcess) {
+    log.info("[ramclear] Killing background Timer Resolution process on app exit...")
+    try {
+      timerResProcess.kill("SIGTERM")
+    } catch (e) {
+      log.error("[ramclear] Failed to kill timerResProcess on exit:", e)
+    }
+  }
+})
+
 // ── IPC Handlers ──────────────────────────────────────────────────────────
 
 export function setupRamClearHandlers() {
   ipcMain.removeHandler("ramclear:stats")
   ipcMain.removeHandler("ramclear:clean")
+  ipcMain.removeHandler("ramclear:rfm-optimize")
   ipcMain.removeAllListeners("ramclear:subscribe")
   ipcMain.removeAllListeners("ramclear:unsubscribe")
 
@@ -266,6 +383,10 @@ export function setupRamClearHandlers() {
 
   ipcMain.handle("ramclear:clean", async () => {
     return await cleanRam()
+  })
+
+  ipcMain.handle("ramclear:rfm-optimize", async () => {
+    return await runRfmOptimize()
   })
 
   ipcMain.on("ramclear:subscribe", (event) => {

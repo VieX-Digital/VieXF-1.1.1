@@ -4,10 +4,7 @@
     "en": "Disable Core Isolation"
   },
   "name": "disable-core-isolation",
-  "category": [
-    "Performance",
-    "Gaming"
-  ],
+  "category": ["Performance", "Gaming"],
   "restart": true,
   "description": {
     "vi": "Tắt tính năng bảo mật ảo hóa để tăng hiệu năng game.",

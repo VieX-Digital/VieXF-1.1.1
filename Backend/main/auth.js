@@ -107,7 +107,7 @@ function getAuthFlowConfig(mode) {
     requiredRoleId: DISCORD_REQUIRED_ROLE_ID,
     successChannel: "auth:success",
     errorChannel: "auth:error",
-    missingRoleMessage: "Bạn không có quyền truy cập (thiếu role VieXF Plus).",
+    missingRoleMessage: "Bạn không có quyền truy cập (thiếu role Level 5).",
     save: saveSession,
   }
 }
@@ -215,8 +215,18 @@ async function handleAuthCode(code, mode = "app") {
 function sendToRenderer(channel, payload) {
   try {
     const win = mainWindow
+    log.info(logo, `sendToRenderer: channel=${channel}, mainWindow is defined: ${!!win}`)
+    if (win) {
+      log.info(logo, `sendToRenderer: win.isDestroyed()=${win.isDestroyed()}, win.webContents is defined: ${!!win.webContents}`)
+      if (win.webContents) {
+        log.info(logo, `sendToRenderer: win.webContents.isDestroyed()=${win.webContents.isDestroyed()}`)
+      }
+    }
     if (win && !win.isDestroyed() && !win.webContents.isDestroyed()) {
       win.webContents.send(channel, payload)
+      log.info(logo, `sendToRenderer: successfully sent ${channel} to renderer`)
+    } else {
+      log.warn(logo, `sendToRenderer: skipped sending ${channel} (window or webContents destroyed/null)`)
     }
   } catch (e) {
     log.error(logo, "Failed to send to renderer:", e)
@@ -281,6 +291,10 @@ async function startDiscordOAuth(mode = "app") {
 }
 
 export function setupAuthHandlers() {
+  ipcMain.on("auth:debug", (event, msg) => {
+    log.info(logo, msg)
+  })
+
   ipcMain.handle("auth:loginWithDiscord", async () => {
     return startDiscordOAuth("app")
   })

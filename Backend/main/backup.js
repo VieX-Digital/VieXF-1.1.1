@@ -53,7 +53,7 @@ ipcMain.handle("create-vie-restore-point", async () => {
     console.error(error)
     let msg = error.message || error
     if (msg.includes("Access is denied") || msg.includes("Access denied")) {
-        msg = "Quyền truy cập bị từ chối. Vui lòng chạy VieXF bằng quyền Administrator."
+      msg = "Quyền truy cập bị từ chối. Vui lòng chạy VieXF bằng quyền Administrator."
     }
     return { success: false, error: msg }
   }
@@ -70,7 +70,7 @@ ipcMain.handle("create-restore-point", async (_, name) => {
     console.error(error)
     let msg = error.message || error
     if (msg.includes("Access is denied") || msg.includes("Access denied")) {
-        msg = "Quyền truy cập bị từ chối. Vui lòng chạy VieXF bằng quyền Administrator."
+      msg = "Quyền truy cập bị từ chối. Vui lòng chạy VieXF bằng quyền Administrator."
     }
     return { success: false, error: msg }
   }
@@ -132,7 +132,7 @@ ipcMain.handle("delete-restore-point", async (_, sequenceNumber) => {
       } else { "" }
     `
     const shadowId = (await runPowerShell(getShadowCmd)).trim()
-    
+
     if (shadowId && shadowId !== "") {
       await runPowerShell(`vssadmin delete shadows /shadow=${shadowId} /quiet`)
     } else {

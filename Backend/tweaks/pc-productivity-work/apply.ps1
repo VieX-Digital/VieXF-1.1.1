@@ -49,6 +49,25 @@ function Disable-ScheduledTaskSafe {
         Write-Log "Task not found/error: $TaskName" 'WARN'
     }
 }
+
+function Set-RegistryValueSafe {
+    param(
+        [Parameter(Mandatory)] [string] $Path,
+        [Parameter(Mandatory)] [string] $Name,
+        [Parameter(Mandatory)] [string] $Type,
+        [Parameter(Mandatory)] $Value
+    )
+    try {
+        if (-not (Test-Path $Path)) {
+            New-Item -Path $Path -Force | Out-Null
+        }
+        Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force | Out-Null
+        Write-Log "Registry Set: $Path \ $Name = $Value"
+    }
+    catch {
+        Write-Log "Registry Set failed: $Path \ $Name" 'WARN'
+    }
+}
 #endregion
 
 try {
@@ -78,8 +97,8 @@ try {
 
     # 4. Disable Xbox / Game Bar (Bloat for work PC)
     Write-Log "Disabling Game Bar & Xbox features..."
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 0 /f | Out-Null
-    reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Type DWord -Value 0
+    Set-RegistryValueSafe -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_Enabled" -Type DWord -Value 0
 
     $xboxServices = @("XblAuthManager", "XblGameSave", "XboxNetApiSvc", "XboxGipSvc")
     foreach ($svc in $xboxServices) {
@@ -114,8 +133,8 @@ try {
 
     # 6. Privacy / Telemetry (Safe)
     Write-Log "Applying Safe Privacy Tweaks..."
-    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 1 /f | Out-Null # 1 = Basic/Security only
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /t REG_DWORD /d 0 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 1 # 1 = Basic/Security only
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" -Name "Enabled" -Type DWord -Value 0
 
     # 7. Disable Hibernate (Desktop generally doesn't need it, saves space)
     Write-Log "Disabling Hibernation (Free up C: space)..."
@@ -127,3 +146,46 @@ catch {
     Write-Log "FATAL ERROR: $($_.Exception.Message)" 'ERROR'
     throw
 }
+
+
+# ==========================================
+# WIRED WALLPAPER SETTINGS (GEN Z TECH BRO STYLE)
+# ==========================================
+try {
+    $wallpaperPath = "D:\WorkSpace\VieXF-1.1.1-main\VieXF-1.1.1-main\Frontend\Wallpaper\ChatGPT Image 16_30_55 11 thg 5, 2026.png"
+
+    # 1. Thiet lap registry cho wallpaper & style (Style 10 = Fill, tu dong responsive bat ke man to nho)
+    $desktopPath = "HKCU:\Control Panel\Desktop"
+    Set-ItemProperty -Path $desktopPath -Name "Wallpaper" -Value $wallpaperPath -Force | Out-Null
+    Set-ItemProperty -Path $desktopPath -Name "WallpaperStyle" -Value "10" -Force | Out-Null
+    Set-ItemProperty -Path $desktopPath -Name "TileWallpaper" -Value "0" -Force | Out-Null
+
+    # 2. Lock cung khong cho user doi wallpaper lung tung
+    $activeDesktopPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\ActiveDesktop"
+    if (-not (Test-Path $activeDesktopPath)) {
+        New-Item -Path $activeDesktopPath -Force | Out-Null
+    }
+    Set-ItemProperty -Path $activeDesktopPath -Name "NoChangingWallPaper" -Value 1 -Type DWord -Force | Out-Null
+
+    $systemPoliciesPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+    if (-not (Test-Path $systemPoliciesPath)) {
+        New-Item -Path $systemPoliciesPath -Force | Out-Null
+    }
+    Set-ItemProperty -Path $systemPoliciesPath -Name "Wallpaper" -Value $wallpaperPath -Type String -Force | Out-Null
+    Set-ItemProperty -Path $systemPoliciesPath -Name "WallpaperStyle" -Value "10" -Type String -Force | Out-Null
+
+    # 3. Force API he thong nap lai wallpaper ngay lap tuc cho muot
+    $code = @'
+    using System;
+    using System.Runtime.InteropServices;
+    public class Wallpaper {
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+    }
+'@
+    Add-Type -TypeDefinition $code -ErrorAction SilentlyContinue
+    [Wallpaper]::SystemParametersInfo(20, 0, $wallpaperPath, 3) | Out-Null
+} catch {
+    # Keep silent to prevent application crash
+}
+# ==========================================

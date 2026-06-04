@@ -4,11 +4,7 @@
     "en": "Disable Wi-Fi Sense"
   },
   "name": "disable-wifi-sense",
-  "category": [
-    "Privacy",
-    "Network",
-    "General"
-  ],
+  "category": ["Privacy", "Network", "General"],
   "description": {
     "vi": "Ngăn chặn chia sẻ thông tin đăng nhập Wi-Fi.",
     "en": "Prevents sharing Wi-Fi credentials."

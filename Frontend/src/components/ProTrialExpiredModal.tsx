@@ -59,8 +59,12 @@ export default function ProTrialExpiredModal({ open, onClose, discordUrl }: Prop
   return (
     <Modal open={open} onClose={onClose}>
       <div className="p-6 pt-10 space-y-4">
-        <h3 className="text-lg font-semibold text-white pr-8">{t("license.pro_trial_expired_title")}</h3>
-        <p className="text-sm text-white/70 leading-relaxed">{t("license.pro_trial_expired_body")}</p>
+        <h3 className="text-lg font-semibold text-white pr-8">
+          {t("license.pro_trial_expired_title")}
+        </h3>
+        <p className="text-sm text-white/70 leading-relaxed">
+          {t("license.pro_trial_expired_body")}
+        </p>
         <p className="text-xs text-amber-200/80">
           {t("license.pro_trial_auto_open", { seconds: Math.max(0, secondsLeft) })}
         </p>

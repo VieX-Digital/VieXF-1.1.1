@@ -107,9 +107,7 @@ const useAppsStore = create<AppsState>((set, get) => ({
     })),
   updateQueueItem: (id, updates) =>
     set((s) => ({
-      installQueue: s.installQueue.map((item) =>
-        item.id === id ? { ...item, ...updates } : item
-      ),
+      installQueue: s.installQueue.map((item) => (item.id === id ? { ...item, ...updates } : item)),
     })),
   clearQueue: () => set({ installQueue: [], isInstalling: false }),
   setIsInstalling: (v) => set({ isInstalling: v }),

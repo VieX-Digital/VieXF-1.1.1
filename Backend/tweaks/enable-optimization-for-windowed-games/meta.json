@@ -4,11 +4,7 @@
     "en": "Optimize Windowed Games"
   },
   "name": "enable-optimization-for-windowed-games",
-  "category": [
-    "General",
-    "Performance",
-    "Gaming"
-  ],
+  "category": ["General", "Performance", "Gaming"],
   "restart": true,
   "description": {
     "vi": "Bật các tối ưu hóa cho game chạy ở chế độ cửa sổ.",

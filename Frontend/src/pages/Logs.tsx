@@ -21,7 +21,10 @@ export default function Logs() {
       subtitle={t("logs.subtitle")}
       actions={
         <>
-          <Button variant="secondary" onClick={() => invoke({ channel: "open-log-folder", payload: null })}>
+          <Button
+            variant="secondary"
+            onClick={() => invoke({ channel: "open-log-folder", payload: null })}
+          >
             {t("logs.open_folder")}
           </Button>
           <Button
@@ -40,7 +43,8 @@ export default function Logs() {
         {logs.length === 0 && <div className="text-white/50">{t("logs.empty")}</div>}
         {logs.map((line) => (
           <div key={line.id} className="border-b border-white/5 py-1 last:border-b-0">
-            [{new Date(line.time).toLocaleTimeString()}] [{line.status}] {line.channel} - {line.detail}
+            [{new Date(line.time).toLocaleTimeString()}] [{line.status}] {line.channel} -{" "}
+            {line.detail}
           </div>
         ))}
       </div>

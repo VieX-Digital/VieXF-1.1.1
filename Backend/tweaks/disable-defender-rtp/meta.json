@@ -4,10 +4,7 @@
     "en": "Disable Defender RTP"
   },
   "name": "disable-defender-rtp",
-  "category": [
-    "Performance",
-    "General"
-  ],
+  "category": ["Performance", "General"],
   "description": {
     "vi": "Tắt tính năng bảo vệ thời gian thực của Windows Defender.",
     "en": "Disables Windows Defender Real-time Protection."

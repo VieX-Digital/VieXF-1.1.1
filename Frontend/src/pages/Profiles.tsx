@@ -45,7 +45,9 @@ export default function Profiles() {
     try {
       const changes = tweaks
         .filter((tw) => {
-          const cat = (Array.isArray(tw.category) ? tw.category.join(" ") : String(tw.category || "")).toLowerCase()
+          const cat = (
+            Array.isArray(tw.category) ? tw.category.join(" ") : String(tw.category || "")
+          ).toLowerCase()
           return profile.categories.some((token) => cat.includes(token))
         })
         .map((tw) => ({ id: tw.id, state: true }))
@@ -67,11 +69,16 @@ export default function Profiles() {
     <PageShell title={t("profiles.title")} subtitle={t("profiles.subtitle")}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {PROFILE_PRESETS.map((p) => {
-          const matchCount = p.categories.reduce((sum, c) => sum + (tweakCountByCategory[c] || 0), 0)
+          const matchCount = p.categories.reduce(
+            (sum, c) => sum + (tweakCountByCategory[c] || 0),
+            0,
+          )
           return (
             <div key={p.id} className="rounded-lg border border-white/10 bg-[#0F0F10] p-4">
               <h3 className="text-white font-medium">{t(`profiles.presets.${p.id}.name`)}</h3>
-              <p className="text-sm text-white/60 mt-1 min-h-10">{t(`profiles.presets.${p.id}.desc`)}</p>
+              <p className="text-sm text-white/60 mt-1 min-h-10">
+                {t(`profiles.presets.${p.id}.desc`)}
+              </p>
               <p className="text-xs text-cyan-300 mt-2">
                 {t("profiles.matching", { count: matchCount })}
               </p>

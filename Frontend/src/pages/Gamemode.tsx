@@ -145,7 +145,9 @@ export default function Gamemode() {
       }
 
       setStatus(next)
-      toast.success(next.active ? "Đã bật Chế độ game, tập trung leo rank thôi." : "Đã tắt Chế độ game.")
+      toast.success(
+        next.active ? "Đã bật Chế độ game, tập trung leo rank thôi." : "Đã tắt Chế độ game.",
+      )
     } catch (error: any) {
       toast.error(error?.message || "Chế độ game đang dỗi, thử lại sau nha.")
     } finally {
@@ -172,7 +174,9 @@ export default function Gamemode() {
   if (gate.loading) {
     return (
       <RootDiv>
-        <div className="h-full flex items-center justify-center text-white/60 text-sm">Đang check quyền Chế độ game...</div>
+        <div className="h-full flex items-center justify-center text-white/60 text-sm">
+          Đang check quyền Chế độ game...
+        </div>
       </RootDiv>
     )
   }
@@ -252,11 +256,13 @@ export default function Gamemode() {
         {!active && (
           <div className="px-6 pt-5 space-y-2">
             <div className="mx-auto max-w-xl rounded-xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-              Mở game lên trước rồi quay lại bấm nút. App sẽ tự bắt tiến trình đang gánh máy nhất để ưu tiên.
+              Mở game lên trước rồi quay lại bấm nút. App sẽ tự bắt tiến trình đang gánh máy nhất để
+              ưu tiên.
             </div>
             {isAdmin === false && (
               <div className="mx-auto max-w-xl rounded-xl border border-red-400/25 bg-red-400/10 px-4 py-3 text-sm text-red-200">
-                App đang chạy không có quyền Admin. Một số game có thể không bị phát hiện. Hãy tắt app và mở lại bằng &quot;Run as Administrator&quot;.
+                App đang chạy không có quyền Admin. Một số game có thể không bị phát hiện. Hãy tắt
+                app và mở lại bằng &quot;Run as Administrator&quot;.
               </div>
             )}
           </div>
@@ -277,14 +283,17 @@ export default function Gamemode() {
             ].join(" ")}
           >
             <Power size={44} />
-            <span className="text-2xl font-bold tracking-[0.18em]">{busy ? "CHỜ" : active ? "BẬT" : "TẮT"}</span>
+            <span className="text-2xl font-bold tracking-[0.18em]">
+              {busy ? "CHỜ" : active ? "BẬT" : "TẮT"}
+            </span>
           </button>
 
           <div className="mt-8 h-16 text-center">
             {active ? (
               <>
                 <p className="text-sm text-emerald-200">
-                  Đang ưu tiên {status.processName || "game"} {status.processId ? `#${status.processId}` : ""}
+                  Đang ưu tiên {status.processName || "game"}{" "}
+                  {status.processId ? `#${status.processId}` : ""}
                 </p>
                 <p className="text-xs text-white/40 mt-1">Ưu tiên: Cao | Nguồn: max hiệu năng</p>
               </>
@@ -311,7 +320,8 @@ export default function Gamemode() {
               </div>
 
               <p className="mt-4 text-sm text-white/65 leading-relaxed">
-                Nếu chưa mở game, Chế độ game sẽ không biết ưu tiên tiến trình nào. Mở game, vào sảnh hoặc trận rồi quay lại bấm bật nha.
+                Nếu chưa mở game, Chế độ game sẽ không biết ưu tiên tiến trình nào. Mở game, vào
+                sảnh hoặc trận rồi quay lại bấm bật nha.
               </p>
 
               <div className="mt-5 flex items-center gap-2">

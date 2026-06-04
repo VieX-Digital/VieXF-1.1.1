@@ -21,7 +21,12 @@ import { setupRamClearHandlers } from "./ramclearHandler.js"
 import Store from "electron-store"
 import { startDiscordRPC, stopDiscordRPC } from "./rpc"
 import { initAutoUpdater, triggerAutoUpdateCheck } from "./updates.js"
-import { getLicenseTier, getLicenseState, setLicenseTier, tryActivateLicenseKey } from "./licenseTier.js"
+import {
+  getLicenseTier,
+  getLicenseState,
+  setLicenseTier,
+  tryActivateLicenseKey,
+} from "./licenseTier.js"
 import { setupAuthHandlers, handleProtocolUrl } from "./auth.js"
 
 // DIAGNOSTIC LOGGING: Check if @electron-toolkit/utils can be resolved
@@ -208,7 +213,7 @@ function createWindow() {
     windowIcon = getResourcePath("vie.ico")
   } catch (error) {
     console.warn(`[vie]: Could not resolve window icon path, using default`)
-    windowIcon = undefined  // Electron will use default icon
+    windowIcon = undefined // Electron will use default icon
   }
 
   mainWindow = new BrowserWindow({
@@ -222,9 +227,9 @@ function createWindow() {
     show: false,
     autoHideMenuBar: true,
     icon: windowIcon,
-    titleBarStyle: 'hidden',
+    titleBarStyle: "hidden",
     transparent: true,
-    vibrancy: 'acrylic',
+    vibrancy: "acrylic",
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       devTools: app.isPackaged ? false : true,
@@ -269,10 +274,10 @@ app.whenReady().then(() => {
   // Đăng ký protocol cho chế độ Dev trên Windows
   if (process.defaultApp) {
     if (process.argv.length >= 2) {
-      app.setAsDefaultProtocolClient('viex', process.execPath, [path.resolve(process.argv[1])])
+      app.setAsDefaultProtocolClient("viex", process.execPath, [path.resolve(process.argv[1])])
     }
   } else {
-    app.setAsDefaultProtocolClient('viex')
+    app.setAsDefaultProtocolClient("viex")
   }
 
   createWindow()
@@ -338,6 +343,12 @@ app.whenReady().then(() => {
         app.quit()
       }
     }
+  })
+
+  ipcMain.removeHandler("window:getMaximized")
+  ipcMain.handle("window:getMaximized", () => {
+    if (!mainWindow || mainWindow.isDestroyed()) return false
+    return mainWindow.isMaximized() || isEffectivelyMaximized(mainWindow)
   })
 
   const gotTheLock = app.requestSingleInstanceLock()

@@ -1,5 +1,5 @@
 {
-  "version": "2026-04-30T03:08:20.737Z",
+  "version": "2026-05-21T14:35:40.732Z",
   "tweaks": [
     {
       "id": "align-taskbar-left",
@@ -21,6 +21,27 @@
       "reversible": true,
       "docsurl": "https://docs.getvie.net/tweaks/align-taskbar-left",
       "source": "https://github.com/vie/Vie/blob/v2/tweaks/align-taskbar-left/meta.json"
+    },
+    {
+      "id": "debloat-windows",
+      "title": {
+        "vi": "Gỡ bỏ Bloatware Windows",
+        "en": "Debloat Windows Apps"
+      },
+      "description": {
+        "vi": "Gỡ bỏ các ứng dụng rác và ứng dụng mặc định ít dùng trên Windows.",
+        "en": "Remove bloated and unused pre-installed applications on Windows."
+      },
+      "category": [
+        "System",
+        "Debloat"
+      ],
+      "recommended": false,
+      "top": false,
+      "tier": "free",
+      "reversible": true,
+      "docsurl": "https://docs.getvie.net/tweaks/debloat-windows",
+      "source": "https://github.com/vie/Vie/blob/v2/tweaks/debloat-windows/meta.json"
     },
     {
       "id": "detailed-bsod",

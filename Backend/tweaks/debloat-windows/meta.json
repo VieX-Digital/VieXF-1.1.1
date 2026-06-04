@@ -1,0 +1,16 @@
+{
+  "name": "debloat-windows",
+  "title": {
+    "vi": "Gỡ bỏ Bloatware Windows",
+    "en": "Debloat Windows Apps"
+  },
+  "deepDescription": {
+    "vi": "Gỡ cài đặt các ứng dụng mặc định không cần thiết (bloatware) của Windows để giải phóng dung lượng và tài nguyên hệ thống.",
+    "en": "Uninstall unnecessary pre-installed Windows default apps (bloatware) to free up storage and system resources."
+  },
+  "description": {
+    "vi": "Gỡ bỏ các ứng dụng rác và ứng dụng mặc định ít dùng trên Windows.",
+    "en": "Remove bloated and unused pre-installed applications on Windows."
+  },
+  "category": ["System", "Debloat"]
+}

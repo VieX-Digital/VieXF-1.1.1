@@ -12,7 +12,5 @@
     "vi": "Điều chỉnh Win32PrioritySeparation để tăng độ phản hồi.",
     "en": "Adjusts Win32PrioritySeparation for responsiveness."
   },
-  "category": [
-    "Performance"
-  ]
+  "category": ["Performance"]
 }

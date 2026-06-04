@@ -8,7 +8,5 @@
     "vi": "Xóa bỏ các gợi ý và mẹo vặt trên màn hình khóa.",
     "en": "Removes fun facts and tips from lockscreen."
   },
-  "category": [
-    "General"
-  ]
+  "category": ["General"]
 }

@@ -4,11 +4,7 @@
     "en": "Enable Game Mode"
   },
   "name": "enable-game-mode",
-  "category": [
-    "General",
-    "Performance",
-    "Gaming"
-  ],
+  "category": ["General", "Performance", "Gaming"],
   "description": {
     "vi": "Đảm bảo chế độ Game Mode được bật.",
     "en": "Ensures Windows Game Mode is ON."

@@ -27,7 +27,7 @@ const METRICS_UNSUBSCRIBE_CHANNEL = "system-metrics:unsubscribe"
 const METRICS_VISIBILITY_CHANNEL = "system-metrics:visibility"
 const METRICS_SNAPSHOT_CHANNEL = "system-metrics:snapshot"
 
-const ACTIVE_METRICS_INTERVAL_MS = 1200
+const ACTIVE_METRICS_INTERVAL_MS = 3000
 const HIDDEN_METRICS_INTERVAL_MS = 15000
 
 const metricsSubscribers = new Map()
@@ -44,16 +44,19 @@ async function getSystemSpecs() {
     const totalMemory = os.totalmem()
     const cpuModel = os.cpus()[0].model.trim()
     const cpuCores = os.cpus().length
-    
+
     // Lightweight PowerShell for GPU and Storage to avoid 'si' overhead
-    const gpuScript = 'Get-CimInstance Win32_VideoController | Select-Object -First 1 -ExpandProperty Name'
-    const diskScript = 'Get-CimInstance Win32_DiskDrive | Select-Object -First 1 | ForEach-Object { "$($_.Model) ($([Math]::Round($_.Size / 1GB))) GB" }'
-    const windowsVersionScript = '(Get-ItemProperty "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion").ProductName'
+    const gpuScript =
+      "Get-CimInstance Win32_VideoController | Select-Object -First 1 -ExpandProperty Name"
+    const diskScript =
+      'Get-CimInstance Win32_DiskDrive | Select-Object -First 1 | ForEach-Object { "$($_.Model) ($([Math]::Round($_.Size / 1GB))) GB" }'
+    const windowsVersionScript =
+      '(Get-ItemProperty "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion").ProductName'
 
     const [gpuRes, diskRes, winVerRes] = await Promise.all([
       executePowerShell(null, { script: gpuScript, name: "GetGPU" }),
       executePowerShell(null, { script: diskScript, name: "GetDisk" }),
-      executePowerShell(null, { script: windowsVersionScript, name: "GetWinVer" })
+      executePowerShell(null, { script: windowsVersionScript, name: "GetWinVer" }),
     ])
 
     const specs = {
@@ -91,14 +94,16 @@ async function collectSystemMetricsRaw() {
     let totalDiff = 0
 
     for (let i = 0; i < cpus.length; i++) {
-        const cpu = cpus[i]
-        const last = lastCpuInfo[i] || cpu
+      const cpu = cpus[i]
+      const last = lastCpuInfo[i] || cpu
 
-        const idle = cpu.times.idle - last.times.idle
-        const total = Object.values(cpu.times).reduce((a, b) => a + b, 0) - Object.values(last.times).reduce((a, b) => a + b, 0)
+      const idle = cpu.times.idle - last.times.idle
+      const total =
+        Object.values(cpu.times).reduce((a, b) => a + b, 0) -
+        Object.values(last.times).reduce((a, b) => a + b, 0)
 
-        idleDiff += idle
-        totalDiff += total
+      idleDiff += idle
+      totalDiff += total
     }
 
     const cpuUsage = totalDiff > 0 ? (1 - idleDiff / totalDiff) * 100 : 0
@@ -322,12 +327,16 @@ function getUserName() {
 }
 
 function clearVieCache() {
-    // simplified for brevity, logic same as before
-    return { success: true }
+  // simplified for brevity, logic same as before
+  return { success: true }
 }
 
 function openLogFolder() {
-  const logPath = path.join(process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming"), "vie", "logs")
+  const logPath = path.join(
+    process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming"),
+    "vie",
+    "logs",
+  )
   if (fs.existsSync(logPath)) {
     shell.openPath(logPath)
     return { success: true }
@@ -344,12 +353,12 @@ ipcMain.handle("get-system-metrics", getSystemMetrics)
 ipcMain.handle("get-system-info", getSystemSpecs) // Fallback for safety if frontend calls old one
 ipcMain.handle("get-user-name", getUserName)
 ipcMain.handle("app:is-admin", async () => {
-    try {
-        const { stdout } = await execPromise('net session');
-        return true;
-    } catch (e) {
-        return false;
-    }
+  try {
+    const { stdout } = await execPromise("net session")
+    return true
+  } catch (e) {
+    return false
+  }
 })
 ipcMain.removeAllListeners(METRICS_SUBSCRIBE_CHANNEL)
 ipcMain.removeAllListeners(METRICS_UNSUBSCRIBE_CHANNEL)
@@ -361,29 +370,29 @@ ipcMain.on(METRICS_VISIBILITY_CHANNEL, handleMetricsVisibility)
 ipcMain.handle(METRICS_SNAPSHOT_CHANNEL, handleMetricsSnapshot)
 
 const startResourceMonitor = () => {
-    try {
-        const isDev = !app.isPackaged;
-        const setworkPath = isDev 
-            ? path.join(process.cwd(), "Backend", "resources", "setwork.exe") 
-            : path.join(process.resourcesPath, "setwork.exe");
-        
-        if (fs.existsSync(setworkPath)) {
-            console.log(`[VieXF] Spawning RAM Optimizer: ${setworkPath}`);
-            const daemon = spawn(setworkPath, [], {
-                detached: true,
-                stdio: 'ignore'
-            });
-            daemon.unref();
-            
-            daemon.on('error', (err) => {
-                console.error("[VieXF] RAM Optimizer failed to spawn:", err);
-            });
-        } else {
-            console.warn(`[VieXF] RAM Optimizer NOT found at: ${setworkPath}`);
-        }
-    } catch (e) {
-        console.error("SetWork error", e);
+  try {
+    const isDev = !app.isPackaged
+    const setworkPath = isDev
+      ? path.join(process.cwd(), "Backend", "resources", "setwork.exe")
+      : path.join(process.resourcesPath, "setwork.exe")
+
+    if (fs.existsSync(setworkPath)) {
+      console.log(`[VieXF] Spawning RAM Optimizer: ${setworkPath}`)
+      const daemon = spawn(setworkPath, [], {
+        detached: true,
+        stdio: "ignore",
+      })
+      daemon.unref()
+
+      daemon.on("error", (err) => {
+        console.error("[VieXF] RAM Optimizer failed to spawn:", err)
+      })
+    } else {
+      console.warn(`[VieXF] RAM Optimizer NOT found at: ${setworkPath}`)
     }
+  } catch (e) {
+    console.error("SetWork error", e)
+  }
 }
 
-startResourceMonitor();
+startResourceMonitor()

@@ -12,8 +12,5 @@
     "vi": "Căn thanh taskbar về phía bên trái màn hình.",
     "en": "Aligns the taskbar to the left side."
   },
-  "category": [
-    "General",
-    "Appearance"
-  ]
+  "category": ["General", "Appearance"]
 }

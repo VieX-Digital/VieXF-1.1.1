@@ -6,6 +6,8 @@ import { promisify } from "util"
 import { logo } from "./index"
 import { executePowerShell } from "./powershell"
 import { getLicenseTier } from "./licenseTier.js"
+import { validateTweaks } from "./tweakValidator.js"
+import { logTweakOperation, getTweakHistory, setupTweakHistoryHandlers } from "./tweakHistory.js"
 import si from "systeminformation"
 import log from "electron-log"
 
@@ -17,7 +19,9 @@ const execPromise = promisify(exec)
 const userDataPath = app.getPath("userData")
 const tweaksStatePath = path.join(userDataPath, "tweakStates.json")
 const isDev = !app.isPackaged
-const tweaksDir = isDev ? path.join(process.cwd(), "Backend", "tweaks") : path.join(process.resourcesPath, "tweaks")
+const tweaksDir = isDev
+  ? path.join(process.cwd(), "Backend", "tweaks")
+  : path.join(process.resourcesPath, "tweaks")
 
 const tweakCatalogCache = {
   data: null,
@@ -58,6 +62,19 @@ const normalizeError = (error, fallbackMessage) => {
   return fallbackMessage
 }
 
+function getRiskLevel(tweak) {
+  const text = `${tweak?.risk || ""} ${tweak?.category || ""} ${tweak?.name || ""}`.toLowerCase()
+  if (
+    text.includes("debloat") ||
+    text.includes("bcd") ||
+    text.includes("defender") ||
+    text.includes("services")
+  )
+    return "high"
+  if (text.includes("registry") || text.includes("network") || text.includes("gpu")) return "medium"
+  return "low"
+}
+
 const runInTweakQueue = async (runner) => {
   const queuedTask = tweakExecutionQueue.then(runner, runner)
   tweakExecutionQueue = queuedTask.catch(() => undefined)
@@ -66,7 +83,11 @@ const runInTweakQueue = async (runner) => {
 
 async function loadTweaks(forceRefresh = false) {
   const now = Date.now()
-  if (!forceRefresh && tweakCatalogCache.data && now - tweakCatalogCache.timestamp < TWEAK_CATALOG_TTL_MS) {
+  if (
+    !forceRefresh &&
+    tweakCatalogCache.data &&
+    now - tweakCatalogCache.timestamp < TWEAK_CATALOG_TTL_MS
+  ) {
     return tweakCatalogCache.data
   }
 
@@ -418,8 +439,19 @@ async function setTweakState(id, targetState) {
   }
 
   try {
+    const startedAt = Date.now()
     const executionResult = await runTweakScript(tweak, id, targetState)
     if (!executionResult.success) {
+      await logTweakOperation({
+        tweakId: id,
+        action: targetState ? "apply" : "unapply",
+        status: "failed",
+        state: currentState,
+        category: tweak.category || "unknown",
+        riskLevel: getRiskLevel(tweak),
+        duration: Date.now() - startedAt,
+        error: executionResult.error,
+      })
       return {
         ...executionResult,
         state: currentState,
@@ -436,6 +468,15 @@ async function setTweakState(id, targetState) {
       await saveTweakStatesObject(currentStates)
     }
 
+    await logTweakOperation({
+      tweakId: id,
+      action: targetState ? "apply" : "unapply",
+      status: nextState ? "applied" : "reverted",
+      state: nextState,
+      category: tweak.category || "unknown",
+      riskLevel: getRiskLevel(tweak),
+      duration: Date.now() - startedAt,
+    })
     return {
       id,
       success: true,
@@ -444,6 +485,15 @@ async function setTweakState(id, targetState) {
       message: executionResult.message,
     }
   } catch (error) {
+    await logTweakOperation({
+      tweakId: id,
+      action: targetState ? "apply" : "unapply",
+      status: "failed",
+      state: currentState,
+      category: tweak?.category || "unknown",
+      riskLevel: getRiskLevel(tweak),
+      error: normalizeError(error, `Failed to execute tweak "${id}"`),
+    })
     return {
       id,
       success: false,
@@ -481,6 +531,9 @@ export const setupTweaksHandlers = () => {
   ipcMain.removeHandler("tweak:unapply")
   ipcMain.removeHandler("tweak:active")
   ipcMain.removeHandler("nvidia-inspector")
+  ipcMain.removeHandler("tweaks:validate")
+  ipcMain.removeHandler("tweak:history")
+  ipcMain.removeHandler("tweak:restore-applied")
 
   ipcMain.handle("tweak-states:load", async () => {
     const states = await loadTweakStatesObject()
@@ -515,24 +568,64 @@ export const setupTweaksHandlers = () => {
   })
 
   ipcMain.handle("tweak:apply", async (_, idOrName) => {
-    const result = await runInTweakQueue(() => setTweakState(idOrName, true))
-    if (!result.success) {
-      throw new Error(result.error || `Failed to apply tweak "${idOrName}"`)
-    }
-    return result
+    const tweakId = String(idOrName || "")
+    const result = await runInTweakQueue(() => setTweakState(tweakId, true))
+    return result.success
+      ? {
+          ok: true,
+          success: true,
+          tweak: tweakId,
+          message: result.message || "Applied successfully",
+          ...result,
+        }
+      : {
+          ok: false,
+          success: false,
+          tweak: tweakId,
+          error: result.error || `Failed to apply tweak "${tweakId}"`,
+          ...result,
+        }
   })
 
   ipcMain.handle("tweak:unapply", async (_, idOrName) => {
-    const result = await runInTweakQueue(() => setTweakState(idOrName, false))
-    if (!result.success) {
-      throw new Error(result.error || `Failed to unapply tweak "${idOrName}"`)
-    }
-    return result
+    const tweakId = String(idOrName || "")
+    const result = await runInTweakQueue(() => setTweakState(tweakId, false))
+    return result.success
+      ? {
+          ok: true,
+          success: true,
+          tweak: tweakId,
+          message: result.message || "Reverted successfully",
+          ...result,
+        }
+      : {
+          ok: false,
+          success: false,
+          tweak: tweakId,
+          error: result.error || `Failed to unapply tweak "${tweakId}"`,
+          ...result,
+        }
   })
 
   ipcMain.handle("tweak:active", async () => {
     return await getActiveTweaks()
   })
+
+  ipcMain.handle("tweaks:validate", async () => validateTweaks(tweaksDir))
+
+  ipcMain.handle("tweak:history", async () => getTweakHistory())
+
+  ipcMain.handle("tweak:restore-applied", async () => {
+    return await runInTweakQueue(async () => {
+      const states = await loadTweakStatesObject()
+      const ids = Object.keys(states).filter((id) => !!states[id])
+      const results = []
+      for (const id of ids) results.push(await setTweakState(id, false))
+      return { success: results.every((r) => r.success), results }
+    })
+  })
+
+  setupTweakHistoryHandlers()
 
   ipcMain.handle("nvidia-inspector", (_, args) => {
     return NvidiaProfileInspector(args)
@@ -550,10 +643,12 @@ export const cleanupTweaksHandlers = () => {
   ipcMain.removeHandler("tweak:unapply")
   ipcMain.removeHandler("tweak:active")
   ipcMain.removeHandler("nvidia-inspector")
+  ipcMain.removeHandler("tweaks:validate")
+  ipcMain.removeHandler("tweak:history")
+  ipcMain.removeHandler("tweak:restore-applied")
 }
 
 export default {
   setupTweaksHandlers,
   cleanupTweaksHandlers,
 }
-

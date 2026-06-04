@@ -1,0 +1,52 @@
+{
+  "welcome": {
+    "title": "Chào mừng đến với VieXF",
+    "subtitle": "Trải nghiệm tối ưu hóa Windows thông minh, an toàn và dễ dàng.",
+    "start": "Bắt đầu quét thông minh"
+  },
+  "scan": {
+    "title": "Đang kiểm tra thiết bị của bạn",
+    "subtitle": "VieXF đang tìm kiếm các giải pháp tối ưu hóa an toàn. Hệ thống chưa có bất kỳ thay đổi nào lúc này.",
+    "analyzing": "Đang kiểm tra độ phản hồi...",
+    "apps": "Đang kiểm tra ứng dụng nền...",
+    "startup": "Đang kiểm tra tải khởi động...",
+    "gaming": "Đang kiểm tra thiết lập chơi game...",
+    "complete": "Quét hoàn tất"
+  },
+  "recommendation": {
+    "title": "Đã tìm thấy các cải tiến hiệu suất an toàn cho máy tính của bạn",
+    "subtitle": "Bắt đầu với các đề xuất an toàn nhất. Bạn có thể khôi phục bất kỳ lúc nào tại mục Khôi phục.",
+    "ultraDebloatTitle": "Ultra Debloat",
+    "ultraDebloatDescription": "Tối ưu hóa các tiến trình nền để cải thiện tốc độ phản hồi của hệ thống.",
+    "tagRecommended": "Khuyên dùng",
+    "tagSafe": "An toàn",
+    "tagPopular": "Phổ biến",
+    "enable": "Áp dụng tối ưu hóa",
+    "enabling": "Đang áp dụng...",
+    "skip": "Bỏ qua lúc này"
+  },
+  "success": {
+    "title": "Tối ưu hóa thành công",
+    "subtitle": "Hệ thống đã được cấu hình tối ưu để hoạt động mượt mà hơn.",
+    "toast": "Đã áp dụng các cấu hình tối ưu hóa hệ thống thành công.",
+    "finish": "Khám phá VieXF"
+  },
+  "tour": {
+    "title": "Hướng dẫn nhanh",
+    "next": "Tiếp",
+    "back": "Quay lại",
+    "skip": "Bỏ qua",
+    "finish": "Hoàn tất",
+    "tweaksTitle": "Tweaks",
+    "tweaksBody": "Các thiết lập được đề xuất sẽ hiển thị đầu tiên.",
+    "recoveryTitle": "Recovery",
+    "recoveryBody": "Bạn có thể hoàn tác mọi thay đổi tại đây.",
+    "optimizeTitle": "Optimize",
+    "optimizeBody": "Chạy các tác vụ an toàn khi máy phản hồi chậm hơn bình thường."
+  },
+  "toast": {
+    "applyFailed": "Không thể bật đề xuất này.",
+    "scanFailed": "Không thể quét đầy đủ, nhưng đề xuất vẫn khả dụng."
+  },
+  "versionLabel": "Lần mở đầu tiên"
+}

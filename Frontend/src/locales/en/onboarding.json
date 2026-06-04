@@ -1,0 +1,52 @@
+﻿{
+  "welcome": {
+    "title": "Welcome to VieXF",
+    "subtitle": "A guided first optimization experience for a smoother Windows PC.",
+    "start": "Start smart scan"
+  },
+  "scan": {
+    "title": "Checking your PC",
+    "subtitle": "VieXF is looking for safe improvements without changing anything yet.",
+    "analyzing": "Analyzing system responsiveness...",
+    "apps": "Checking background apps...",
+    "startup": "Checking startup load...",
+    "gaming": "Checking gaming setup...",
+    "complete": "Scan complete"
+  },
+  "recommendation": {
+    "title": "We found a few safe improvements for your PC.",
+    "subtitle": "Start with the recommended preset. You can undo changes later in Recovery.",
+    "ultraDebloatTitle": "Ultra Debloat",
+    "ultraDebloatDescription": "Reduce unnecessary background apps for a smoother experience.",
+    "tagRecommended": "Recommended",
+    "tagSafe": "Safe",
+    "tagPopular": "Popular",
+    "enable": "Enable Recommendation",
+    "enabling": "Enabling recommendation...",
+    "skip": "Skip for now"
+  },
+  "success": {
+    "title": "Optimization enabled",
+    "subtitle": "Your PC has been optimized for a smoother experience.",
+    "toast": "Your PC has been optimized for a smoother experience.",
+    "finish": "Enter VieXF"
+  },
+  "tour": {
+    "title": "Quick guide",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "finish": "Finish",
+    "tweaksTitle": "Tweaks",
+    "tweaksBody": "Recommended improvements are shown first.",
+    "recoveryTitle": "Recovery",
+    "recoveryBody": "You can restore any changes here.",
+    "optimizeTitle": "Optimize",
+    "optimizeBody": "Run quick safe fixes when your PC feels slower than usual."
+  },
+  "toast": {
+    "applyFailed": "Could not enable the recommendation.",
+    "scanFailed": "Scan could not finish, but the recommendation is still available."
+  },
+  "versionLabel": "First run"
+}

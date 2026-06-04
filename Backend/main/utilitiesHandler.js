@@ -7,44 +7,44 @@ export const setupUtilitiesHandlers = () => {
     try {
       switch (id) {
         case "activation":
-           exec("start slmgr /xpr")
-           break
+          exec("start slmgr /xpr")
+          break
         case "keyboard":
-           await shell.openExternal("https://keyboard-test.space/")
-           break
+          await shell.openExternal("https://keyboard-test.space/")
+          break
         case "display":
-           exec("start ms-settings:display")
-           break
+          exec("start ms-settings:display")
+          break
         case "network":
-           exec("start ms-settings:network-status")
-           break
+          exec("start ms-settings:network-status")
+          break
         case "disk":
-           exec("cleanmgr")
-           break
+          exec("cleanmgr")
+          break
         case "cmd":
-           exec("start cmd")
-           break
+          exec("start cmd")
+          break
         case "taskmgr":
-           exec("start taskmgr")
-           break
+          exec("start taskmgr")
+          break
         case "control":
-           exec("start control")
-           break
+          exec("start control")
+          break
         case "devmgmt":
-           exec("start devmgmt.msc")
-           break
+          exec("start devmgmt.msc")
+          break
         case "ncpa":
-           exec("start ncpa.cpl")
-           break
+          exec("start ncpa.cpl")
+          break
         case "regedit":
-           exec("start regedit")
-           break
+          exec("start regedit")
+          break
         case "powercfg":
-           exec("start active.cp @0,3") // This is Power Options
-           break
+          exec("start active.cp @0,3") // This is Power Options
+          break
         default:
-           console.warn(`Unknown utility id: ${id}`)
-           return { success: false, error: "Unknown utility" }
+          console.warn(`Unknown utility id: ${id}`)
+          return { success: false, error: "Unknown utility" }
       }
       return { success: true }
     } catch (err) {

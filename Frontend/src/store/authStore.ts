@@ -7,6 +7,7 @@ export interface DiscordUser {
   globalName: string
   avatar: string
   nick: string | null
+  roles?: string[]
 }
 
 interface AuthState {
@@ -26,17 +27,13 @@ const useAuthStore = create<AuthState>((set) => ({
   isLoading: true,
   error: null,
 
-  setAuthenticated: (user) =>
-    set({ isAuthenticated: true, user, isLoading: false, error: null }),
+  setAuthenticated: (user) => set({ isAuthenticated: true, user, isLoading: false, error: null }),
 
-  setError: (error) =>
-    set({ error, isLoading: false }),
+  setError: (error) => set({ error, isLoading: false }),
 
-  setLoading: (loading) =>
-    set({ isLoading: loading }),
+  setLoading: (loading) => set({ isLoading: loading }),
 
-  logout: () =>
-    set({ isAuthenticated: false, user: null, isLoading: false, error: null }),
+  logout: () => set({ isAuthenticated: false, user: null, isLoading: false, error: null }),
 }))
 
 export default useAuthStore

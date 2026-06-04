@@ -7,7 +7,24 @@ import Toggle from "@/components/ui/toggle"
 import { invoke } from "@/lib/electron"
 import { toast } from "react-toastify"
 import log from "electron-log/renderer"
-import { Zap, Wrench, RefreshCcw, Monitor, Shield, Star, Rocket, Crown, Lock } from "lucide-react"
+import {
+  Zap,
+  Wrench,
+  RefreshCcw,
+  Monitor,
+  Shield,
+  Star,
+  Rocket,
+  Crown,
+  Lock,
+  Info,
+  Filter,
+  Search,
+  TrendingUp,
+  Bookmark,
+  RotateCcw,
+  Gamepad2,
+} from "lucide-react"
 import { Virtuoso } from "react-virtuoso"
 
 interface Tweak {
@@ -20,6 +37,7 @@ interface Tweak {
 }
 
 type CategoryId = "remember" | "performance" | "network" | "privacy" | "ui"
+type CategoryViewId = CategoryId | "gaming"
 
 type ToggleResult = {
   id: string
@@ -69,12 +87,7 @@ const TweakCard = memo(
 
     return (
       <div
-        className={`
-          relative p-4 flex flex-col justify-between h-full rounded-xl transition-all duration-300 overflow-hidden
-          bg-[#0A0A0C] border
-          ${proLocked ? "border-amber-500/25 opacity-90 cursor-not-allowed" : "cursor-pointer"}
-          ${isActive && !proLocked ? "border-cyan-400/50 shadow-[0_0_15px_-3px_rgba(34,211,238,0.08)] bg-white/[0.02]" : !proLocked ? "border-white/5 hover:border-white/15 hover:bg-white/[0.01]" : ""}
-        `}
+        className={`bg-[#121214] border border-white/5 rounded-xl p-5 hover:border-white/10 hover:scale-[1.01] transition-all duration-300 ${proLocked ? "opacity-75 cursor-not-allowed" : "cursor-pointer"}`}
         onClick={() => {
           if (isProcessing || proLocked) {
             if (proLocked) onProLocked()
@@ -83,38 +96,85 @@ const TweakCard = memo(
           onToggle(tweak.id)
         }}
       >
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className={`w-2 h-2 shrink-0 rounded-full transition-colors duration-300 ${isActive ? "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" : "bg-white/20"}`} />
-            <h3 className={`text-sm font-semibold tracking-wide truncate ${isActive ? "text-cyan-50" : "text-white/80"}`}>
-              {getLocalized(tweak.label, language)}
-            </h3>
-            {proLocked && (
-              <span className="shrink-0 inline-flex items-center gap-0.5 text-[10px] uppercase tracking-wider text-amber-400/90 font-bold">
-                <Lock size={11} /> Pro
-              </span>
-            )}
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-3 min-w-0">
+              <h3 className="text-base font-semibold text-white truncate">
+                {getLocalized(tweak.label, language)}
+              </h3>
+
+              <div className="ml-1 flex shrink-0 items-center gap-2 text-xs font-medium">
+                <span className="inline-flex items-center gap-1 rounded-full bg-zinc-800 px-2 py-1 text-white">
+                  <Zap size={12} className="text-amber-400" />
+                  +18 XP
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-zinc-800 px-2 py-1 text-white">
+                  <TrendingUp size={12} className="text-emerald-400" />
+                  +0.4%
+                </span>
+                {proLocked && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/20 bg-purple-500/10 px-2 py-1 text-purple-300">
+                    <Lock size={11} /> Pro
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-          <div onClick={(e) => e.stopPropagation()}>
-            <Toggle
-              checked={isActive}
-              onChange={() => {
-                if (proLocked) {
-                  onProLocked()
-                  return
-                }
-                onToggle(tweak.id)
-              }}
-              disabled={isProcessing || proLocked}
-            />
+
+          <div className="flex shrink-0 items-center gap-3" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="text-zinc-500 hover:text-white transition-colors"
+              aria-label="Bookmark"
+            >
+              <Bookmark size={18} />
+            </button>
+            <label
+              className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-all duration-300 ${
+                isProcessing || proLocked ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+              } ${isActive ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" : "bg-zinc-700"}`}
+              aria-label="Toggle tweak"
+            >
+              <input
+                type="checkbox"
+                checked={isActive}
+                disabled={isProcessing || proLocked}
+                onChange={() => {
+                  if (proLocked) {
+                    onProLocked()
+                    return
+                  }
+                  onToggle(tweak.id)
+                }}
+                className="sr-only"
+              />
+              <span
+                className={`h-4 w-4 rounded-full bg-white transition-all duration-300 ${isActive ? "translate-x-6" : "translate-x-1"}`}
+              />
+            </label>
           </div>
         </div>
-        <p className="text-xs text-white/50 leading-relaxed font-light pl-5">
+
+        <p className="mt-2 mb-4 pr-12 text-sm leading-relaxed text-zinc-400">
           {getLocalized(tweak.description, language)}
         </p>
+
+        <div className="flex flex-wrap gap-2 text-xs font-medium">
+          <span className="rounded bg-zinc-800 px-2 py-1 text-zinc-300">{tweak.category}</span>
+          {tweak.top && (
+            <span className="rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-emerald-400">
+              Recommended
+            </span>
+          )}
+          <span className="rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-emerald-400">
+            Safe
+          </span>
+          <span className="rounded border border-amber-500/15 bg-amber-500/10 px-2 py-1 text-amber-400">
+            Restart Required
+          </span>
+        </div>
       </div>
     )
-  }
+  },
 )
 
 export default function Tweaks() {
@@ -125,6 +185,7 @@ export default function Tweaks() {
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set())
   const [appVersion, setAppVersion] = useState<string>("")
   const [licenseTier, setLicenseTier] = useState<"free" | "pro">("free")
+  const [selectedCategory, setSelectedCategory] = useState<CategoryViewId>("performance")
 
   const mountedRef = useRef(true)
   const inFlightRef = useRef<Set<string>>(new Set())
@@ -141,11 +202,30 @@ export default function Tweaks() {
     const lowerCats = cats.map((c) => c.toString().toLowerCase())
 
     if (lowerCats.some((c) => c.includes("remember"))) return "remember"
-    if (lowerCats.some((c) => c.includes("network") || c.includes("wifi") || c.includes("internet"))) return "network"
-    if (lowerCats.some((c) => c.includes("privacy") || c.includes("security") || c.includes("telemetry") || c.includes("defender"))) {
+    if (
+      lowerCats.some((c) => c.includes("network") || c.includes("wifi") || c.includes("internet"))
+    )
+      return "network"
+    if (
+      lowerCats.some(
+        (c) =>
+          c.includes("privacy") ||
+          c.includes("security") ||
+          c.includes("telemetry") ||
+          c.includes("defender"),
+      )
+    ) {
       return "privacy"
     }
-    if (lowerCats.some((c) => c.includes("ui") || c.includes("appearance") || c.includes("general") || c.includes("context"))) {
+    if (
+      lowerCats.some(
+        (c) =>
+          c.includes("ui") ||
+          c.includes("appearance") ||
+          c.includes("general") ||
+          c.includes("context"),
+      )
+    ) {
       return "ui"
     }
 
@@ -189,10 +269,13 @@ export default function Tweaks() {
       clearTimeout(flushTimerRef.current)
     }
 
-    flushTimerRef.current = setTimeout(() => {
-      flushTimerRef.current = null
-      flushQueueRef.current()
-    }, Math.max(0, delayMs))
+    flushTimerRef.current = setTimeout(
+      () => {
+        flushTimerRef.current = null
+        flushQueueRef.current()
+      },
+      Math.max(0, delayMs),
+    )
   }, [])
 
   const flushQueue = useCallback(async () => {
@@ -271,7 +354,9 @@ export default function Tweaks() {
       } else if (results.length === 1) {
         const only = results[0]
         if (only?.changed) {
-          toast.success(only.state ? t("tweaks.enabled") : t("tweaks.disabled"), { autoClose: 1000 })
+          toast.success(only.state ? t("tweaks.enabled") : t("tweaks.disabled"), {
+            autoClose: 1000,
+          })
         } else if (only?.message) {
           toast.info(only.message, { autoClose: 1200 })
         }
@@ -302,7 +387,9 @@ export default function Tweaks() {
 
   const queueToggle = useCallback(
     (id: string, explicitState?: boolean) => {
-      const queuedState = pendingStateRef.current.has(id) ? pendingStateRef.current.get(id) : activeTweaks.has(id)
+      const queuedState = pendingStateRef.current.has(id)
+        ? pendingStateRef.current.get(id)
+        : activeTweaks.has(id)
       const targetState = typeof explicitState === "boolean" ? explicitState : !queuedState
       pendingStateRef.current.set(id, targetState)
 
@@ -318,7 +405,7 @@ export default function Tweaks() {
 
       scheduleFlush(BATCH_WINDOW_MS)
     },
-    [activeTweaks, scheduleFlush]
+    [activeTweaks, scheduleFlush],
   )
 
   const loadTweaks = useCallback(async () => {
@@ -330,7 +417,7 @@ export default function Tweaks() {
         invoke({ channel: "app:version", payload: null }),
         invoke({ channel: "license:get", payload: null }).catch(() => ({ tier: "free" })),
       ])
-      
+
       setAppVersion(version as string)
       setLicenseTier((lic as { tier?: string })?.tier === "pro" ? "pro" : "free")
 
@@ -404,104 +491,200 @@ export default function Tweaks() {
     toast.info(t("tweaks.pro_locked_hint"))
   }, [t])
 
+  const categoryItems: Array<{
+    id: CategoryViewId
+    title: string
+    subtitle: string
+    icon: any
+    premium?: boolean
+  }> = [
+    {
+      id: "performance",
+      title: "Performance",
+      subtitle: "Tối ưu hóa phản hồi, giảm độ trễ và tăng độ ổn định hệ thống",
+      icon: Zap,
+    },
+    { id: "network", title: "Network", subtitle: "Ping ổn hơn, mạng chill hơn", icon: RefreshCcw },
+    { id: "privacy", title: "Privacy", subtitle: "Dọn telemetry, bớt bị soi", icon: Shield },
+    { id: "ui", title: "Interface", subtitle: "Windows gọn nhẹ, đỡ rối", icon: Monitor },
+    { id: "remember", title: "Remember", subtitle: "Các tweak đáng lưu tâm", icon: Star },
+    {
+      id: "gaming",
+      title: "Gaming",
+      subtitle: "Preset chiến game cao cấp",
+      icon: Gamepad2,
+      premium: true,
+    },
+  ]
+
+  const visibleTweaks =
+    selectedCategory === "gaming" ? [] : groupedTweaks.get(selectedCategory) || []
+  const sectionTitle =
+    selectedCategory === "gaming"
+      ? "Gaming Optimizations"
+      : `${categoryItems.find((cat) => cat.id === selectedCategory)?.title || "General"} Optimizations`
+
+  const applyVisibleTweaks = () => {
+    visibleTweaks.forEach((tweak) => {
+      const tier = String(tweak.tier || "free").toLowerCase()
+      if (tier === "pro" && !isProUser) return
+      queueToggle(tweak.id, true)
+    })
+  }
+
+  const unapplyVisibleTweaks = () => {
+    visibleTweaks.forEach((tweak) => queueToggle(tweak.id, false))
+  }
+
   return (
     <RootDiv style={{}}>
-      <div className="relative h-full">
-
-        <div className="relative max-w-6xl mx-auto px-6 py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
-          <div className="flex items-center justify-between">
-            <div className="rounded-2xl bg-[#09090B] ring-1 ring-white/5 px-5 py-4 shadow-[0_10px_32px_rgba(0,0,0,0.5)]">
-              <h1 className="text-3xl font-display text-white">{t("tweaks.title")}</h1>
-              <p className="text-white/50 text-sm mt-1">{t("tweaks.subtitle")}</p>
-            </div>
-          </div>
-
-          <div
-            className="relative overflow-hidden group rounded-2xl bg-[#09090B] ring-1 ring-cyan-400/50 hover:ring-cyan-400 hover:shadow-[0_0_40px_rgba(34,211,238,0.4)] transition-all duration-500 p-[2px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_20px_40px_rgba(0,0,0,0.8)]"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 via-transparent to-transparent opacity-100 pointer-events-none" />
-            <div className="relative flex items-center justify-between p-6 bg-[#0A0A0C] rounded-xl gap-6 shadow-[inset_0_2px_15px_rgba(34,211,238,0.1)] border border-cyan-400/20 group-hover:border-cyan-400/40 transition-colors">
-              <div className="flex items-center gap-6">
-                <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-300 to-cyan-600 flex items-center justify-center shadow-[0_10px_20px_rgba(34,211,238,0.3),inset_0_2px_4px_rgba(255,255,255,0.5)] ring-1 ring-white/20 transform group-hover:scale-[1.03] transition-transform duration-500">
-                  <Rocket size={32} className="text-white fill-white drop-shadow-md" />
-                  <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_10px_rgba(255,255,255,0.4)] pointer-events-none"></div>
-                </div>
-                <div>
-                  <h2 className="text-[28px] tracking-wide font-extrabold font-display text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-cyan-500 mb-1 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
-                    {t("tweaks.one_click_title", { version: appVersion || "…" })}
-                  </h2>
-                  <p className="text-cyan-50/70 text-sm max-w-xl font-light">{t("tweaks.one_click_subtitle_free")}</p>
-                  <p className="text-amber-200/50 text-xs mt-2 flex items-center gap-1.5">
-                    <Crown size={12} className="text-amber-400/80 shrink-0" />
-                    {t("tweaks.one_click_pro_hint")}
-                  </p>
-                </div>
+      <div className="flex h-screen bg-transparent py-10 pr-6 pl-0 text-white">
+        {/* Left column: Categories */}
+        <aside className="w-72 shrink-0 border-r border-white/5 pr-6">
+          <div className="mb-8 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-400 text-black">
+                <Rocket size={22} />
               </div>
-              <Button
-                onClick={() => queueToggle(ONE_CLICK_FREE_TWEAK_ID, !isVieXActive)}
-                disabled={isVieXProcessing}
-                className={`
-                  h-12 px-8 text-base font-bold transition-all duration-300 capitalize rounded-xl
-                  ${isVieXActive
-                    ? "bg-[#0A0A0C] text-red-500 border border-red-500/50 hover:bg-red-500/10 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] shadow-[inset_0_1px_4px_rgba(255,255,255,0.05)]"
-                    : "bg-gradient-to-b from-cyan-400 to-cyan-500 text-black border border-cyan-300/50 hover:from-cyan-300 hover:to-cyan-400 hover:shadow-[0_0_25px_rgba(34,211,238,0.7)] shadow-[inset_0_1px_4px_rgba(255,255,255,0.6)]"
-                  }
-                `}
+              <div>
+                <h2 className="text-sm font-bold text-white">VieXF {appVersion || "..."}</h2>
+                <p className="text-xs text-zinc-400">One-click optimization</p>
+              </div>
+            </div>
+            <button
+              onClick={() => queueToggle(ONE_CLICK_FREE_TWEAK_ID, !isVieXActive)}
+              disabled={isVieXProcessing}
+              className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                isVieXActive
+                  ? "bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                  : "bg-cyan-400 text-black hover:bg-cyan-300"
+              }`}
+            >
+              {isVieXProcessing ? (
+                <RefreshCcw size={16} className="animate-spin" />
+              ) : (
+                <Crown size={16} />
+              )}
+              {isVieXActive ? "Hoàn tác preset" : "Áp dụng preset"}
+            </button>
+          </div>
+
+          <h2 className="mb-4 text-lg font-bold">Categories</h2>
+          <div className="space-y-2">
+            {categoryItems.map((cat) => {
+              const Icon = cat.icon
+              const active = selectedCategory === cat.id
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`flex w-full items-center gap-4 rounded-xl p-3 text-left cursor-pointer transition-all ${
+                    active
+                      ? "bg-zinc-800 border border-white/5"
+                      : "border border-transparent hover:bg-zinc-800/50"
+                  }`}
+                >
+                  <Icon size={20} className="shrink-0 text-zinc-300" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-white">{cat.title}</span>
+                      {cat.premium && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/20 bg-purple-950 px-2 py-0.5 text-[10px] font-semibold text-purple-300">
+                          <Lock size={10} /> Premium
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-0.5 truncate text-xs text-zinc-500">{cat.subtitle}</p>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        </aside>
+
+        {/* Right column: Main Content */}
+        <main className="flex-1 flex flex-col pl-8 overflow-hidden">
+          {/* Global header */}
+          <header>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold">Optimizations</h1>
+              <Info size={18} className="text-zinc-500" />
+            </div>
+            <p className="mt-1 mb-8 text-sm text-zinc-400">
+              Fine-tune your system with safe, reversible optimizations across performance, privacy,
+              security, and more.
+            </p>
+          </header>
+
+          {/* Toolbar */}
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <button className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800">
+                <Filter size={16} /> Filter
+              </button>
+              <div className="relative">
+                <Search
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                />
+                <input
+                  className="w-64 rounded-lg border border-zinc-800 bg-zinc-900 py-2 pl-9 pr-4 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-zinc-700"
+                  placeholder="Search tweaks..."
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={applyVisibleTweaks}
+                className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-emerald-500 hover:bg-emerald-500/10"
               >
-                {isVieXProcessing ? (
-                  <RefreshCcw size={20} className="animate-spin mr-2" />
-                ) : isVieXActive ? (
-                  i18n.language === "vi" ? "Hoàn tác" : "Revert"
-                ) : i18n.language === "vi" ? (
-                  "Áp dụng"
-                ) : (
-                  "Apply"
-                )}
-              </Button>
+                <Zap size={16} /> Apply All
+              </button>
+              <button
+                onClick={unapplyVisibleTweaks}
+                className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-amber-500 hover:bg-amber-500/10"
+              >
+                <RotateCcw size={16} /> Un-Apply All
+              </button>
             </div>
           </div>
 
-          {categories.map((cat) => {
-            const catTweaks = groupedTweaks.get(cat.id) || []
-            if (catTweaks.length === 0) return null
+          {/* Section header */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold">{sectionTitle}</h2>
+              <Info size={17} className="text-zinc-500" />
+            </div>
+            <p className="mt-1 text-sm text-zinc-400">
+              Chọn tweak hợp gu rồi bật/tắt thoải mái — mọi thay đổi đều đi qua queue để đỡ lag app
+              nha.
+            </p>
+          </div>
 
-            const Icon = cat.icon
-            const isRemember = cat.id === "remember"
-
-            return (
-              <div key={cat.id} className="space-y-4">
-                <div className={`flex items-center gap-2 border-b pb-2 ${isRemember ? "text-yellow-400 border-yellow-500/30" : "text-white/80 border-cyan-400/20"}`}>
-                  <Icon size={18} className={isRemember ? "text-yellow-400 fill-yellow-400" : "text-cyan-300"} />
-                  <h2 className="text-lg font-medium capitalize">{cat.labelKey === "Remember" ? "Remember" : t(cat.labelKey)}</h2>
-                </div>
-
-                {catTweaks.length > VIRTUALIZE_THRESHOLD ? (
-                  <Virtuoso
-                    style={{ height: Math.min(640, catTweaks.length * 118) }}
-                    totalCount={catTweaks.length}
-                    itemContent={(index) => {
-                      const tweak = catTweaks[index]
-                      return (
-                        <div className="pb-4">
-                          <TweakCard
-                            tweak={tweak}
-                            isActive={activeTweaks.has(tweak.id)}
-                            isProcessing={processingIds.has(tweak.id)}
-                            onToggle={queueToggle}
-                            getLocalized={getLocalized}
-                            language={i18n.language}
-                            isProUser={isProUser}
-                            onProLocked={onProLocked}
-                          />
-                        </div>
-                      )
-                    }}
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {catTweaks.map((tweak) => (
+          {/* Tweak cards */}
+          <div className="flex-1 overflow-y-auto pr-2">
+            {loading ? (
+              <div className="flex h-64 items-center justify-center text-sm text-zinc-500">
+                Đang load tweak xịn cho bạn...
+              </div>
+            ) : selectedCategory === "gaming" ? (
+              <div className="rounded-xl border border-purple-500/20 bg-purple-500/10 p-8 text-center">
+                <Lock size={34} className="mx-auto mb-4 text-purple-300" />
+                <h3 className="text-lg font-bold text-white">Gaming Premium đang khóa nha</h3>
+                <p className="mt-2 text-sm text-zinc-400">
+                  Preset gaming cao cấp sẽ mở khi bạn nâng cấp Pro. Chill chút, hàng ngon đang chờ.
+                </p>
+              </div>
+            ) : visibleTweaks.length > VIRTUALIZE_THRESHOLD ? (
+              <Virtuoso
+                style={{ height: "100%" }}
+                totalCount={visibleTweaks.length}
+                itemContent={(index) => {
+                  const tweak = visibleTweaks[index]
+                  return (
+                    <div className="pb-4">
                       <TweakCard
-                        key={tweak.id}
                         tweak={tweak}
                         isActive={activeTweaks.has(tweak.id)}
                         isProcessing={processingIds.has(tweak.id)}
@@ -511,22 +694,35 @@ export default function Tweaks() {
                         isProUser={isProUser}
                         onProLocked={onProLocked}
                       />
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  )
+                }}
+              />
+            ) : visibleTweaks.length > 0 ? (
+              <div className="flex flex-col gap-4 pb-10">
+                {visibleTweaks.map((tweak) => (
+                  <TweakCard
+                    key={tweak.id}
+                    tweak={tweak}
+                    isActive={activeTweaks.has(tweak.id)}
+                    isProcessing={processingIds.has(tweak.id)}
+                    onToggle={queueToggle}
+                    getLocalized={getLocalized}
+                    language={i18n.language}
+                    isProUser={isProUser}
+                    onProLocked={onProLocked}
+                  />
+                ))}
               </div>
-            )
-          })}
-
-          {!loading && tweaks.length === 0 && (
-            <div className="text-center py-20 text-white/40">
-              <Wrench size={48} className="mx-auto mb-4 opacity-20" />
-              <p>{t("tweaks.no_tweaks")}</p>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="py-20 text-center text-zinc-500">
+                <Wrench size={48} className="mx-auto mb-4 opacity-20" />
+                <p>{t("tweaks.no_tweaks")}</p>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     </RootDiv>
   )
 }
-

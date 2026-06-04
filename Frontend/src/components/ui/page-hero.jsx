@@ -1,13 +1,6 @@
 import { cn } from "@/lib/utils"
 
-export default function PageHero({
-  title,
-  subtitle,
-  icon,
-  actions,
-  className,
-  accentClassName,
-}) {
+export default function PageHero({ title, subtitle, icon, actions, className, accentClassName }) {
   return (
     <div
       className={cn(
@@ -33,7 +26,9 @@ export default function PageHero({
             </div>
           )}
           <div className="space-y-1">
-            <h1 className="text-base md:text-lg font-semibold text-vie-text leading-tight">{title}</h1>
+            <h1 className="text-base md:text-lg font-semibold text-vie-text leading-tight">
+              {title}
+            </h1>
             {subtitle && (
               <p className="text-xs md:text-sm text-vie-text-secondary leading-relaxed max-w-2xl">
                 {subtitle}
@@ -46,4 +41,3 @@ export default function PageHero({
     </div>
   )
 }
-

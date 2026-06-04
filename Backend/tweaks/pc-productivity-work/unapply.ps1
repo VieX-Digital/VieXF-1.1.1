@@ -17,6 +17,25 @@ if (-not (Test-IsAdmin)) {
     exit 1
 }
 
+function Set-RegistryValueSafe {
+    param(
+        [Parameter(Mandatory)] [string] $Path,
+        [Parameter(Mandatory)] [string] $Name,
+        [Parameter(Mandatory)] [string] $Type,
+        [Parameter(Mandatory)] $Value
+    )
+    try {
+        if (-not (Test-Path $Path)) {
+            New-Item -Path $Path -Force | Out-Null
+        }
+        Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force | Out-Null
+        Write-Host "Registry Set: $Path \ $Name = $Value"
+    }
+    catch {
+        Write-Host "Registry Set failed: $Path \ $Name"
+    }
+}
+
 try {
     Write-Host "Reverting PC Productivity Tweaks..."
 
@@ -25,8 +44,8 @@ try {
     & powercfg /setactive scheme_balanced
 
     # 2. Re-enable Game Bar
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 1 /f | Out-Null
-    reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 1 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Type DWord -Value 1
+    Set-RegistryValueSafe -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_Enabled" -Type DWord -Value 1
 
     # 3. Re-enable Xbox Services
     $xboxServices = @("XblAuthManager", "XblGameSave", "XboxNetApiSvc", "XboxGipSvc")
@@ -42,8 +61,8 @@ try {
     & powercfg /hibernate on
 
     # 5. Re-enable Telemetry (Default)
-    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 3 /f | Out-Null # 3 = Full
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /t REG_DWORD /d 1 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 3 # 3 = Full
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" -Name "Enabled" -Type DWord -Value 1
 
     Write-Host "Revert complete. Note: Removed AppX packages cannot be restored without reinstalling from Store."
     Write-Host "Please restart your computer."

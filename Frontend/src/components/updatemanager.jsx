@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { toast } from "react-toastify"
-import { invoke } from "@/lib/electron"
+import { invoke, onIpc } from "@/lib/electron"
 
 function UpdateManager() {
   const availableToastId = useRef(null)
@@ -8,9 +8,6 @@ function UpdateManager() {
   const downloadedToastId = useRef(null)
 
   useEffect(() => {
-    const ipc = window.electron?.ipcRenderer
-    if (!ipc?.on) return
-
     const dismissAll = () => {
       if (availableToastId.current) toast.dismiss(availableToastId.current)
       if (downloadToastId.current) toast.dismiss(downloadToastId.current)
@@ -45,7 +42,7 @@ function UpdateManager() {
       await invoke({ channel: "updater:install" })
     }
 
-    const onAvailable = (_event, payload) => {
+    const onAvailable = (payload) => {
       if (availableToastId.current || downloadedToastId.current) return
 
       const nextVersion = payload?.version ? String(payload.version) : null
@@ -82,11 +79,11 @@ function UpdateManager() {
       dismissAll()
     }
 
-    const onError = (_event, payload) => {
+    const onError = (payload) => {
       toast.error(payload?.message ? String(payload.message) : "Không thể kiểm tra cập nhật.")
     }
 
-    const onProgress = (_event, payload) => {
+    const onProgress = (payload) => {
       if (!downloadToastId.current) return
       const percent = Number(payload?.percent ?? 0)
       const clamped = Math.max(0, Math.min(100, percent))
@@ -97,7 +94,7 @@ function UpdateManager() {
       })
     }
 
-    const onDownloaded = (_event, payload) => {
+    const onDownloaded = (payload) => {
       if (downloadToastId.current) {
         toast.dismiss(downloadToastId.current)
         downloadToastId.current = null
@@ -125,18 +122,18 @@ function UpdateManager() {
       )
     }
 
-    ipc.on("updater:available", onAvailable)
-    ipc.on("updater:not-available", onNotAvailable)
-    ipc.on("updater:error", onError)
-    ipc.on("updater:download-progress", onProgress)
-    ipc.on("updater:downloaded", onDownloaded)
+    const offAvailable = onIpc({ channel: "updater:available", listener: onAvailable })
+    const offNotAvailable = onIpc({ channel: "updater:not-available", listener: onNotAvailable })
+    const offError = onIpc({ channel: "updater:error", listener: onError })
+    const offProgress = onIpc({ channel: "updater:download-progress", listener: onProgress })
+    const offDownloaded = onIpc({ channel: "updater:downloaded", listener: onDownloaded })
 
     return () => {
-      ipc.removeListener("updater:available", onAvailable)
-      ipc.removeListener("updater:not-available", onNotAvailable)
-      ipc.removeListener("updater:error", onError)
-      ipc.removeListener("updater:download-progress", onProgress)
-      ipc.removeListener("updater:downloaded", onDownloaded)
+      offAvailable()
+      offNotAvailable()
+      offError()
+      offProgress()
+      offDownloaded()
     }
   }, [])
 

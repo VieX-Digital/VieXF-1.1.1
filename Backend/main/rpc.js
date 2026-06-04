@@ -17,28 +17,30 @@ async function startDiscordRPC() {
       rpcClient.on("ready", () => {
         console.log("(rpc.js) ", logo, "Discord RPC connected")
 
-        rpcClient.setActivity({
-          details: "VieXF - Tối ưu hóa trải nghiệm PC/Laptop",
-          state: "Đang tối ưu hóa PC/Laptop",
-          buttons: [
-            // keep this as parcoil incase of the domain going down
-            { label: "✨ Tải xuống VieXF", url: "https://discord.gg/wsphWPp7Zr" },
-            { label: "✨ Tham Gia Discord", url: "https://discord.gg/VRAk33YzkE" },
-          ],
-          largeImageKey: "vie",
-          largeImageText: "VieXF",
-          instance: false,
-        }).catch(err => {
-          console.warn("(rpc.js) ", "Failed to set Discord RPC activity:", err.message)
-        })
+        rpcClient
+          .setActivity({
+            details: "VieXF - Tối ưu hóa trải nghiệm PC/Laptop",
+            state: "Đang tối ưu hóa PC/Laptop",
+            buttons: [
+              // keep this as parcoil incase of the domain going down
+              { label: "✨ Tải xuống VieXF", url: "https://discord.gg/wsphWPp7Zr" },
+              { label: "✨ Tham Gia Discord", url: "https://discord.gg/VRAk33YzkE" },
+            ],
+            largeImageKey: "vie",
+            largeImageText: "VieXF",
+            instance: false,
+          })
+          .catch((err) => {
+            console.warn("(rpc.js) ", "Failed to set Discord RPC activity:", err.message)
+          })
       })
 
-      rpcClient.on('error', (error) => {
+      rpcClient.on("error", (error) => {
         console.warn("(rpc.js) ", "Discord RPC error:", error.message)
         stopDiscordRPC()
       })
 
-      await rpcClient.login({ clientId }).catch(error => {
+      await rpcClient.login({ clientId }).catch((error) => {
         console.warn("(rpc.js) ", "Discord RPC login failed:", error.message)
         stopDiscordRPC()
       })

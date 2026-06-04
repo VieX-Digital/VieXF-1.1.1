@@ -4,9 +4,7 @@
     "en": "Enable Right-Click End Task"
   },
   "name": "enable-end-task-right-click",
-  "category": [
-    "General"
-  ],
+  "category": ["General"],
   "recommended": true,
   "description": {
     "vi": "Thêm tùy chọn 'End Task' vào menu chuột phải thanh taskbar.",

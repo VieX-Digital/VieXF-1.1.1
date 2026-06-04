@@ -10,10 +10,7 @@
   },
   "reversible": false,
   "modal": "Bạn có thể cài lại các ứng dụng này trong Microsoft Store. Tìm: 'Xbox Game Bar' và 'Xbox App'.",
-  "category": [
-    "Performance",
-    "Privacy"
-  ],
+  "category": ["Performance", "Privacy"],
   "links": [
     {
       "name": "Cài lại Xbox App",

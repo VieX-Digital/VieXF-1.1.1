@@ -4,10 +4,7 @@
     "en": "Run Disk Cleanup"
   },
   "name": "run-disk-cleanup",
-  "category": [
-    "General",
-    "Performance"
-  ],
+  "category": ["General", "Performance"],
   "description": {
     "vi": "Chạy công cụ dọn dẹp ổ đĩa của Windows.",
     "en": "Runs native Disk Cleanup utility."

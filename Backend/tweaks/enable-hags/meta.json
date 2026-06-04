@@ -4,11 +4,7 @@
     "en": "Enable HAGS"
   },
   "name": "enable-hags",
-  "category": [
-    "Performance",
-    "Gaming",
-    "GPU"
-  ],
+  "category": ["Performance", "Gaming", "GPU"],
   "description": {
     "vi": "Bật tính năng lập lịch GPU bằng phần cứng.",
     "en": "Enables Hardware Accelerated GPU Scheduling."

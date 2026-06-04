@@ -4,9 +4,7 @@
     "en": "Disable Dynamic Ticking"
   },
   "name": "disable-dynamic-ticking",
-  "category": [
-    "Performance"
-  ],
+  "category": ["Performance"],
   "warning": "Có thể tăng mức tiêu thụ điện.",
   "description": {
     "vi": "Tắt tính năng dynamic ticking để ổn định độ trễ.",

@@ -10,11 +10,7 @@
     "vi": "Tối ưu hóa cài đặt driver NVIDIA bao gồm chế độ quản lý năng lượng, chất lượng lọc vân bề mặt, chế độ độ trễ thấp, bộ đệm shader, tối ưu hóa luồng và đồng bộ dọc để đạt hiệu suất tối đa trong chơi game.",
     "en": "Optimizes NVIDIA driver settings including power management mode, texture filtering quality, low latency mode, shader cache, threaded optimization, and vertical sync for maximum gaming performance."
   },
-  "category": [
-    "Performance",
-    "GPU",
-    "Gaming"
-  ],
+  "category": ["Performance", "GPU", "Gaming"],
   "description": {
     "vi": "Áp dụng các cài đặt NVIDIA được khuyến nghị để tối ưu hiệu suất chơi game và giảm độ trễ.",
     "en": "Applies recommended NVIDIA settings for optimal gaming performance and reduced latency."

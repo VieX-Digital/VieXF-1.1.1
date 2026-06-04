@@ -12,8 +12,5 @@
     "vi": "Giảm độ trễ hiển thị menu xuống 0ms.",
     "en": "Reduces menu show delay to 0ms."
   },
-  "category": [
-    "Performance",
-    "Appearance"
-  ]
+  "category": ["Performance", "Appearance"]
 }

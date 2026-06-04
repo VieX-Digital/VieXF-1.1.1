@@ -88,8 +88,8 @@ export const setupDNSHandlers = () => {
               }
           }
       }
-      `;
-      
+      `
+
       const result = await executePowerShell(null, { script, name: "Get-DNS" })
 
       if (result.success) {

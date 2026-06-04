@@ -4,10 +4,7 @@
     "en": "Disable Hibernation"
   },
   "name": "disable-hibernation",
-  "category": [
-    "Performance",
-    "General"
-  ],
+  "category": ["Performance", "General"],
   "warning": "Không khuyến nghị cho laptop!",
   "description": {
     "vi": "Tắt chế độ ngủ đông và xóa file hiberfil.sys.",

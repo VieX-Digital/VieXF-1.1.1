@@ -11,8 +11,5 @@
   "deep-description": "Bật hiển thị giây trên đồng hồ taskbar bằng cách đặt khóa registry `ShowSecondsInSystemClock`.\n\n**Cần khởi động lại Explorer.**",
   "reversible": true,
   "restart": true,
-  "category": [
-    "Appearance",
-    "General"
-  ]
+  "category": ["Appearance", "General"]
 }

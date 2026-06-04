@@ -4,10 +4,7 @@
     "en": "Disable Copilot"
   },
   "name": "disable-copilot",
-  "category": [
-    "Performance",
-    "Privacy"
-  ],
+  "category": ["Performance", "Privacy"],
   "recommended": true,
   "description": {
     "vi": "Vô hiệu hóa tính năng AI Copilot trên thanh taskbar.",

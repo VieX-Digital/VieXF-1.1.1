@@ -5,16 +5,16 @@ import path from "path"
 const isDev = !app.isPackaged
 
 const getScriptPath = () => {
-    if (isDev) {
-        return path.join(process.cwd(), "Backend", "resources", "scripts", "clean.ps1")
-    }
-    return path.join(process.resourcesPath, "scripts", "clean.ps1")
+  if (isDev) {
+    return path.join(process.cwd(), "Backend", "resources", "scripts", "clean.ps1")
+  }
+  return path.join(process.resourcesPath, "scripts", "clean.ps1")
 }
 
 export const setupCleanHandlers = () => {
   ipcMain.handle("clean:run", async (event, ids) => {
     const scriptPath = getScriptPath()
-    
+
     // Construct switches
     let args = ""
     if (ids.includes("temp")) args += " -Temp"
@@ -34,10 +34,10 @@ export const setupCleanHandlers = () => {
     `
 
     try {
-       await executePowerShell(null, { script, name: "Clean-System" })
-       return { success: true }
+      await executePowerShell(null, { script, name: "Clean-System" })
+      return { success: true }
     } catch (err) {
-       return { success: false, error: err.message }
+      return { success: false, error: err.message }
     }
   })
 }

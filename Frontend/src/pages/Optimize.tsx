@@ -16,7 +16,10 @@ import {
   FolderOpen,
 } from "lucide-react"
 import { invoke } from "@/lib/electron"
-import useSystemMetricsStore, { useSystemMetricsSubscription } from "@/store/systemMetrics"
+import useSystemMetricsStore, {
+  useSystemMetricsSubscription,
+  useSystemCurrentMetrics,
+} from "@/store/systemMetrics"
 import { useState } from "react"
 
 const QUICK_CLEAN_IDS = ["temp", "prefetch", "logs"] as const
@@ -25,7 +28,7 @@ export default function Optimize() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   useSystemMetricsSubscription()
-  const { cpu, ram, gpu } = useSystemMetricsStore((s) => s.current)
+  const { cpu, ram, gpu } = useSystemCurrentMetrics()
   const [busyKey, setBusyKey] = useState<string | null>(null)
 
   const run = async (key: string, fn: () => Promise<void>) => {
@@ -63,12 +66,7 @@ export default function Optimize() {
       toast.success(t("optimize.done_vie_cache"))
     })
 
-  const metricCard = (
-    label: string,
-    value: number,
-    Icon: typeof Cpu,
-    color: string
-  ) => (
+  const metricCard = (label: string, value: number, Icon: typeof Cpu, color: string) => (
     <div
       className={`rounded-xl border border-white/10 bg-[#0F0F10] p-4 flex items-center gap-3 ${color}`}
     >
@@ -76,7 +74,7 @@ export default function Optimize() {
         <Icon size={22} strokeWidth={1.5} />
       </div>
       <div>
-        <p className="text-2xl font-display tabular-nums text-white leading-none">{value}%</p>
+        <p className="text-2xl font-metrics font-light text-white leading-none">{value}%</p>
         <p className="text-xs uppercase tracking-wider text-white/45 mt-1">{label}</p>
       </div>
     </div>
@@ -104,9 +102,7 @@ export default function Optimize() {
           <div className="min-w-0 flex-1">
             <h3 className="text-sm font-semibold text-white">{opts.title}</h3>
             <p className="text-xs text-white/50 mt-1 leading-relaxed">{opts.desc}</p>
-            {loading && (
-              <p className="text-xs text-cyan-400/80 mt-2">{t("optimize.running")}</p>
-            )}
+            {loading && <p className="text-xs text-cyan-400/80 mt-2">{t("optimize.running")}</p>}
           </div>
         </div>
       </button>

@@ -17,12 +17,31 @@ if (-not (Test-IsAdmin)) {
     exit 1
 }
 
+function Set-RegistryValueSafe {
+    param(
+        [Parameter(Mandatory)] [string] $Path,
+        [Parameter(Mandatory)] [string] $Name,
+        [Parameter(Mandatory)] [string] $Type,
+        [Parameter(Mandatory)] $Value
+    )
+    try {
+        if (-not (Test-Path $Path)) {
+            New-Item -Path $Path -Force | Out-Null
+        }
+        Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force | Out-Null
+        Write-Host "Registry Set: $Path \ $Name = $Value"
+    }
+    catch {
+        Write-Host "Registry Set failed: $Path \ $Name"
+    }
+}
+
 try {
     Write-Host "Reverting Laptop Productivity Tweaks..."
 
     # Re-enable Game Bar (Default behavior)
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 1 /f | Out-Null
-    reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 1 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Type DWord -Value 1
+    Set-RegistryValueSafe -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_Enabled" -Type DWord -Value 1
 
     # Re-enable Xbox Services (Set to Manual usually)
     $xboxServices = @("XblAuthManager", "XblGameSave", "XboxNetApiSvc", "XboxGipSvc")
@@ -34,8 +53,8 @@ try {
     }
 
     # Re-enable Suggestions
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338389Enabled" /t REG_DWORD /d 1 /f | Out-Null
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /t REG_DWORD /d 1 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338389Enabled" -Type DWord -Value 1
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SystemPaneSuggestionsEnabled" -Type DWord -Value 1
 
     Write-Host "Revert complete. Note: Removed AppX packages cannot be easily restored without reinstalling from Store."
     Write-Host "Please restart your computer."

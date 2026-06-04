@@ -15,7 +15,5 @@
     "vi": "Thử gỡ Xbox Gaming Overlay bằng Remove-AppxPackage, dự phòng qua winget, nhằm loại bỏ dịch vụ và overlay Xbox chạy nền gây tốn CPU, RAM, GPU, giúp tăng hiệu năng và giảm gián đoạn trong game.",
     "en": "Disables Xbox Game Bar overlay."
   },
-  "category": [
-    "Performance"
-  ]
+  "category": ["Performance"]
 }

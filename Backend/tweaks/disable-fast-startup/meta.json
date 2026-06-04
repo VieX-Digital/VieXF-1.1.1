@@ -4,10 +4,7 @@
     "en": "Disable Fast Startup"
   },
   "name": "disable-fast-startup",
-  "category": [
-    "Performance",
-    "General"
-  ],
+  "category": ["Performance", "General"],
   "description": {
     "vi": "Tắt Fast Startup để sửa lỗi và giải phóng dung lượng.",
     "en": "Disables Fast Startup to free up hibernation file."

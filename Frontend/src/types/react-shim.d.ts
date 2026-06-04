@@ -9,3 +9,8 @@ declare namespace JSX {
     [elemName: string]: any
   }
 }
+
+declare module "*.png" {
+  const value: string
+  export default value
+}

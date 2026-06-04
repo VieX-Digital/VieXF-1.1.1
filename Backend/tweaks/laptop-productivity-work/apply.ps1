@@ -50,19 +50,22 @@ function Disable-ScheduledTaskSafe {
     }
 }
 
-function Invoke-RegExe {
+function Set-RegistryValueSafe {
     param(
-        [Parameter(Mandatory)] [ValidateSet('add', 'delete')] [string] $Action,
-        [Parameter(Mandatory)] [string] $Key,
-        [Parameter(Mandatory)] [string] $Rest
+        [Parameter(Mandatory)] [string] $Path,
+        [Parameter(Mandatory)] [string] $Name,
+        [Parameter(Mandatory)] [string] $Type,
+        [Parameter(Mandatory)] $Value
     )
     try {
-        $regArgs = @($Action, $Key) + ($Rest -split ' ')
-        & reg.exe $Action $Key $Rest.Split(' ') | Out-Null
-        Write-Log "Registry ${Action}: $Key"
+        if (-not (Test-Path $Path)) {
+            New-Item -Path $Path -Force | Out-Null
+        }
+        Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force | Out-Null
+        Write-Log "Registry Set: $Path \ $Name = $Value"
     }
     catch {
-        Write-Log "Registry failed: $Key" 'WARN'
+        Write-Log "Registry Set failed: $Path \ $Name" 'WARN'
     }
 }
 #endregion
@@ -86,9 +89,9 @@ try {
 
     # 3. Disable Game Bar & Xbox (Not needed for work)
     Write-Log "Disabling Game Bar & Xbox features..."
-    # Registry: HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 0 /f | Out-Null
-    reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f | Out-Null
+    # Registry: HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Type DWord -Value 0
+    Set-RegistryValueSafe -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_Enabled" -Type DWord -Value 0
     
     # safe services disable
     $xboxServices = @("XblAuthManager", "XblGameSave", "XboxNetApiSvc", "XboxGipSvc")
@@ -124,10 +127,10 @@ try {
 
     # 5. Productivity / Privacy Tweaks
     # Disable "Get tips, tricks, and suggestions as you use Windows"
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338389Enabled" /t REG_DWORD /d 0 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338389Enabled" -Type DWord -Value 0
     
     # Disable "Suggested apps in Start Menu"
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /t REG_DWORD /d 0 /f | Out-Null
+    Set-RegistryValueSafe -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SystemPaneSuggestionsEnabled" -Type DWord -Value 0
 
     # Enable Hibernation (Important for Laptops)
     Write-Log "Enabling Hibernation..."
@@ -145,3 +148,46 @@ catch {
     Write-Log "FATAL ERROR: $($_.Exception.Message)" 'ERROR'
     throw
 }
+
+
+# ==========================================
+# WIRED WALLPAPER SETTINGS (GEN Z TECH BRO STYLE)
+# ==========================================
+try {
+    $wallpaperPath = "D:\WorkSpace\VieXF-1.1.1-main\VieXF-1.1.1-main\Frontend\Wallpaper\ChatGPT Image 16_30_55 11 thg 5, 2026.png"
+
+    # 1. Thiet lap registry cho wallpaper & style (Style 10 = Fill, tu dong responsive bat ke man to nho)
+    $desktopPath = "HKCU:\Control Panel\Desktop"
+    Set-ItemProperty -Path $desktopPath -Name "Wallpaper" -Value $wallpaperPath -Force | Out-Null
+    Set-ItemProperty -Path $desktopPath -Name "WallpaperStyle" -Value "10" -Force | Out-Null
+    Set-ItemProperty -Path $desktopPath -Name "TileWallpaper" -Value "0" -Force | Out-Null
+
+    # 2. Lock cung khong cho user doi wallpaper lung tung
+    $activeDesktopPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\ActiveDesktop"
+    if (-not (Test-Path $activeDesktopPath)) {
+        New-Item -Path $activeDesktopPath -Force | Out-Null
+    }
+    Set-ItemProperty -Path $activeDesktopPath -Name "NoChangingWallPaper" -Value 1 -Type DWord -Force | Out-Null
+
+    $systemPoliciesPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+    if (-not (Test-Path $systemPoliciesPath)) {
+        New-Item -Path $systemPoliciesPath -Force | Out-Null
+    }
+    Set-ItemProperty -Path $systemPoliciesPath -Name "Wallpaper" -Value $wallpaperPath -Type String -Force | Out-Null
+    Set-ItemProperty -Path $systemPoliciesPath -Name "WallpaperStyle" -Value "10" -Type String -Force | Out-Null
+
+    # 3. Force API he thong nap lai wallpaper ngay lap tuc cho muot
+    $code = @'
+    using System;
+    using System.Runtime.InteropServices;
+    public class Wallpaper {
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+    }
+'@
+    Add-Type -TypeDefinition $code -ErrorAction SilentlyContinue
+    [Wallpaper]::SystemParametersInfo(20, 0, $wallpaperPath, 3) | Out-Null
+} catch {
+    # Keep silent to prevent application crash
+}
+# ==========================================

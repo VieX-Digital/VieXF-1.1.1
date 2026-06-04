@@ -4,10 +4,7 @@
     "en": "Classic Context Menu"
   },
   "name": "revert-context-menu",
-  "category": [
-    "General",
-    "Appearance"
-  ],
+  "category": ["General", "Appearance"],
   "recommended": true,
   "description": {
     "vi": "Khôi phục menu chuột phải kiểu Windows 10.",

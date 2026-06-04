@@ -1,22 +1,24 @@
 import { InputHTMLAttributes } from "react"
 
 interface ToggleProps extends InputHTMLAttributes<HTMLInputElement> {
-    label?: string
+  label?: string
 }
 
 const Toggle = ({ className, checked, onChange, disabled, ...props }: ToggleProps) => {
-    return (
-        <label className={`relative inline-flex items-center cursor-pointer shrink-0 ${className || ""}`}>
-            <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={checked}
-                onChange={onChange}
-                disabled={disabled}
-                {...props}
-            />
-            <div
-                className="
+  return (
+    <label
+      className={`relative inline-flex items-center cursor-pointer shrink-0 ${className || ""}`}
+    >
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={checked}
+        onChange={onChange}
+        disabled={disabled}
+        {...props}
+      />
+      <div
+        className="
           w-9 h-5 rounded-full peer 
           bg-vie-border peer-focus:outline-none 
           peer-checked:bg-vie-primary 
@@ -27,9 +29,9 @@ const Toggle = ({ className, checked, onChange, disabled, ...props }: ToggleProp
           hover:bg-vie-border-hover
           transition-colors duration-200
         "
-            ></div>
-        </label>
-    )
+      ></div>
+    </label>
+  )
 }
 
 export default Toggle
